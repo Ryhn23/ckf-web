@@ -113,7 +113,7 @@ export default function MediaAdmin() {
         <EmptyState icon="fa-images" title="Belum ada media" description="Unggah file pertama melalui formulir di atas." />
       ) : (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             {media.map((item) => (
               <div key={item.id} className="card group overflow-hidden">
                 {item.mimeType.startsWith('image/') ? (

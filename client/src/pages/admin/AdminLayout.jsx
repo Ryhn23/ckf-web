@@ -44,6 +44,24 @@ export default function AdminLayout() {
   const { user, loading, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ckf_admin_sidebar');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const toggleSidebar = () => {
+    setSidebarOpen((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('ckf_admin_sidebar', String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   if (loading) return <Spinner label="Memeriksa sesi…" />;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
@@ -62,16 +80,32 @@ export default function AdminLayout() {
       <Helmet>
         <meta name="robots" content="noindex" />
       </Helmet>
+
       {/* Sidebar desktop */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex">
-        <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-4">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700 text-white">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-          </span>
-          <div>
-            <p className="font-heading text-sm font-bold text-slate-900">CKF Admin</p>
-            <p className="text-xs text-slate-400">Cinta Kasih Fatimah</p>
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 ease-in-out lg:flex ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700 text-white shadow-sm">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
+            </span>
+            <div>
+              <p className="font-heading text-sm font-bold text-slate-900">CKF Admin</p>
+              <p className="text-xs text-slate-400">Cinta Kasih Fatimah</p>
+            </div>
           </div>
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+            title="Sembunyikan Sidebar"
+            aria-label="Sembunyikan Sidebar"
+          >
+            <FontAwesomeIcon icon={['fa-solid', 'fa-chevron-left']} className="w-3.5" />
+          </button>
         </div>
         {sidebar}
       </aside>
@@ -82,8 +116,18 @@ export default function AdminLayout() {
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
           <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-              <p className="font-heading text-sm font-bold text-slate-900">CKF Admin</p>
-              <button type="button" onClick={() => setMobileOpen(false)} className="text-slate-400 hover:text-slate-600" aria-label="Tutup menu">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700 text-white shadow-sm">
+                  <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
+                </span>
+                <p className="font-heading text-sm font-bold text-slate-900">CKF Admin</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                aria-label="Tutup menu"
+              >
                 <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
               </button>
             </div>
@@ -93,19 +137,31 @@ export default function AdminLayout() {
       )}
 
       {/* Konten */}
-      <div className="lg:pl-64">
+      <div className={`transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:pl-64' : 'lg:pl-0'}`}>
         <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur sm:px-6">
-          <button
-            type="button"
-            onClick={() => setMobileOpen(true)}
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
-            aria-label="Buka menu"
-          >
-            <FontAwesomeIcon icon={['fa-solid', 'fa-bars']} />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
+              aria-label="Buka menu"
+            >
+              <FontAwesomeIcon icon={['fa-solid', 'fa-bars']} />
+            </button>
 
-          <div className="hidden text-sm font-semibold text-slate-500 sm:block">
-            Panel Manajemen Cinta Kasih Fatimah
+            <button
+              type="button"
+              onClick={toggleSidebar}
+              className="hidden rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-teal-700 lg:inline-flex"
+              title={sidebarOpen ? 'Sembunyikan Sidebar' : 'Tampilkan Sidebar'}
+              aria-label={sidebarOpen ? 'Sembunyikan Sidebar' : 'Tampilkan Sidebar'}
+            >
+              <FontAwesomeIcon icon={['fa-solid', sidebarOpen ? 'fa-bars-staggered' : 'fa-bars']} />
+            </button>
+
+            <div className="hidden text-sm font-semibold text-slate-600 sm:block">
+              Panel Manajemen Cinta Kasih Fatimah
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -129,7 +185,7 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        <main className="p-4 sm:p-6 lg:p-8">
+        <main className="w-full p-4 sm:p-6 lg:p-8 xl:p-10">
           <Outlet />
         </main>
       </div>

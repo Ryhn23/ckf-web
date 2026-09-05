@@ -94,45 +94,57 @@ export default function SettingsAdmin() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {GROUPS.map((group) => (
-          <div key={group.title} className="card p-6">
-            <h2 className="font-heading text-base font-bold text-slate-900">{group.title}</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              {group.fields.map((f) => (
-                <div key={f.key} className={f.textarea ? 'sm:col-span-2' : ''}>
-                  <label htmlFor={f.key} className="label">{f.label}</label>
-                  {f.textarea ? (
-                    <textarea
-                      id={f.key}
-                      rows={4}
-                      value={form[f.key] || ''}
-                      onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                      className="input"
-                    />
-                  ) : (
-                    <input
-                      id={f.key}
-                      value={form[f.key] || ''}
-                      onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                      className="input"
-                    />
-                  )}
-                </div>
-              ))}
+        <div className="grid gap-6 xl:grid-cols-2">
+          {GROUPS.map((group, idx) => (
+            <div
+              key={group.title}
+              className={`card p-6 sm:p-8 ${idx === 0 ? 'xl:col-span-2' : ''}`}
+            >
+              <h2 className="font-heading text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">
+                {group.title}
+              </h2>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                {group.fields.map((f) => (
+                  <div key={f.key} className={f.textarea ? 'sm:col-span-2' : ''}>
+                    <label htmlFor={f.key} className="label">{f.label}</label>
+                    {f.textarea ? (
+                      <textarea
+                        id={f.key}
+                        rows={4}
+                        value={form[f.key] || ''}
+                        onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                        className="input"
+                      />
+                    ) : (
+                      <input
+                        id={f.key}
+                        value={form[f.key] || ''}
+                        onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                        className="input"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
 
-        <div className="flex items-center gap-3">
-          <button type="submit" disabled={saving} className="btn-primary">
-            {saving ? 'Menyimpan…' : 'Simpan Pengaturan'}
-          </button>
-          {saved && (
-            <span className="flex items-center gap-2 text-sm font-semibold text-emerald-600">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} />
-              Pengaturan tersimpan
-            </span>
-          )}
+        <div className="card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200/80 bg-white/95 backdrop-blur">
+          <p className="text-xs text-slate-500 hidden sm:block">
+            Pastikan memeriksa kembali perubahan data sebelum menyimpan.
+          </p>
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+            {saved && (
+              <span className="flex items-center gap-2 text-sm font-semibold text-emerald-600">
+                <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} />
+                Pengaturan tersimpan
+              </span>
+            )}
+            <button type="submit" disabled={saving} className="btn-primary !px-6 !py-2.5 shadow-md w-full sm:w-auto">
+              {saving ? 'Menyimpan…' : 'Simpan Pengaturan'}
+            </button>
+          </div>
         </div>
       </form>
     </div>

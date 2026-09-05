@@ -80,10 +80,10 @@ export default function CategoriesAdmin() {
         <p className="mt-1 text-sm text-slate-500">Kelola kategori artikel blog.</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-12">
         {/* Form */}
-        <form onSubmit={handleSubmit} className="card h-fit p-6">
-          <h2 className="font-heading text-base font-bold text-slate-900">
+        <form onSubmit={handleSubmit} className="card h-fit p-6 lg:col-span-4 lg:sticky lg:top-20 lg:self-start">
+          <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             {editingId ? 'Edit Kategori' : 'Kategori Baru'}
           </h2>
 
@@ -124,7 +124,7 @@ export default function CategoriesAdmin() {
         </form>
 
         {/* Daftar */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-8">
           {categories.length === 0 ? (
             <EmptyState icon="fa-tags" title="Belum ada kategori" description="Tambahkan kategori pertama melalui formulir di samping." />
           ) : (

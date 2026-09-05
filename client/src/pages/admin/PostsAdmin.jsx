@@ -70,8 +70,8 @@ export default function PostsAdmin() {
         <input
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-          className="input max-w-xs"
-          placeholder="Cari judul…"
+          className="input w-full sm:w-72"
+          placeholder="Cari judul artikel…"
         />
       </div>
 
@@ -94,8 +94,8 @@ export default function PostsAdmin() {
             <tbody className="divide-y divide-slate-100">
               {posts.map((post) => (
                 <tr key={post.id} className="transition hover:bg-slate-50/60">
-                  <td className="max-w-xs px-5 py-3">
-                    <Link to={`/admin/posts/${post.id}/edit`} className="line-clamp-1 font-semibold text-slate-800 hover:text-teal-700">
+                  <td className="max-w-md xl:max-w-xl px-5 py-3">
+                    <Link to={`/admin/posts/${post.id}/edit`} className="line-clamp-2 font-semibold text-slate-800 hover:text-teal-700">
                       {post.title}
                     </Link>
                   </td>

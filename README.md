@@ -1,173 +1,171 @@
 # Cinta Kasih Fatimah (CKF Web)
 
-Platform web publik dan panel administrasi untuk **Yayasan Cinta Kasih Fatimah**: portal berita/blog program kemanusiaan dengan rich-text editor, galeri kegiatan, statistik dampak, formulir donasi & kontak terintegrasi, serta manajemen pengaturan yayasan dinamis.
+Public web portal and content management system for the Cinta Kasih Fatimah Foundation. The application features a dynamic blog with a rich-text editor, media gallery, impact statistics, donation and contact inquiry forms, and an administrative configuration panel.
 
-**Tech Stack:** React 18 (Vite) · Express.js · Prisma ORM · PostgreSQL 15 · Tailwind CSS · Nginx · Docker & Docker Compose
+**Stack:** React 18, Vite, Express.js, Prisma ORM, PostgreSQL 15, Tailwind CSS, Nginx, Docker.
 
 ---
 
-## 🚀 Cara Menjalankan Aplikasi
+## Getting Started
 
-Tersedia dua opsi: **Docker Compose** (otomatis & direkomendasikan) atau **Manual (Local Dev)**.
+You can run the entire stack using Docker Compose (recommended) or set up the development environment manually on your host machine.
 
-### Opsi A: Docker Compose (Otomatis — Sekali Perintah)
+### Method 1: Docker Compose (Recommended)
 
-Sangat direkomendasikan karena otomatis menyalakan PostgreSQL, menunggu database siap, mensinkronkan skema Prisma, melakukan **seeding data awal**, menyalakan Backend API, dan menyajikan Frontend SPA via Nginx:
+Docker Compose provisions PostgreSQL, the Express API, and an Nginx-backed frontend SPA. The backend entrypoint automatically waits for the database, synchronizes the Prisma schema, and runs idempotent initial seeds.
 
 ```bash
-# Jalankan seluruh stack (Database + Backend + Frontend + Auto Seed)
 docker compose up -d
 ```
 
-Setelah perintah selesai, akses:
-- 🌐 **Situs Publik:** [http://localhost:5173](http://localhost:5173) atau [http://localhost](http://localhost)
-- 🔐 **Panel Admin:** [http://localhost:5173/admin/login](http://localhost:5173/admin/login)
-- ⚙️ **Backend API (Direct):** [http://localhost:4000](http://localhost:4000) (atau via proxy [http://localhost:5173/api](http://localhost:5173/api))
-- 🗄️ **PostgreSQL:** `localhost:5433` (DB: `ckf_blog`, User: `postgres`, Pass: `postgres`)
+Once initialized, services are accessible at:
 
-**Kredensial Admin Default (Hasil Seed):**
-- **Email:** `admin@ckf.or.id`
-- **Password:** `admin123`
+| Service | URL / Port | Notes |
+| :--- | :--- | :--- |
+| Frontend Web | http://localhost:5173 or http://localhost | Public portal served via Nginx |
+| Admin Panel | http://localhost:5173/admin/login | CMS dashboard |
+| Backend API | http://localhost:4000 (direct) or http://localhost:5173/api | Express REST API |
+| PostgreSQL | localhost:5433 | Database: `ckf_blog`, User: `postgres`, Password: `postgres` |
 
----
+**Default Seed Credentials:**
+- Email: `admin@ckf.or.id`
+- Password: `admin123`
 
-### Opsi B: Local Development (Manual via Node.js)
+### Method 2: Local Development
 
-**Prasyarat:** Node.js ≥ 20, npm, Docker (untuk DB lokal).
+**Prerequisites:** Node.js 20+, npm, and Docker (to run local PostgreSQL).
 
 ```bash
-# 1. Install seluruh dependensi (root, client, server)
+# 1. Install dependencies across all workspaces
 npm run setup
 
-# 2. Nyalakan database PostgreSQL di background (port 5433)
+# 2. Start PostgreSQL container in background (port 5433)
 docker compose up -d db
 
-# 3. Sinkronkan skema database
+# 3. Synchronize database schema
 npm run migrate
 
-# 4. Jalankan seed data awal
+# 4. Seed initial records
 npm run seed
 
-# 5. Jalankan API (:4000) dan Vite Dev Server (:5173) secara bersamaan
+# 5. Start API (:4000) and Vite dev server (:5173) concurrently
 npm run dev
 ```
 
 ---
 
-## 📋 Daftar Script NPM (Root)
+## npm Scripts
 
-| Perintah | Deskripsi |
+Run these scripts from the repository root:
+
+| Script | Description |
 | :--- | :--- |
-| `npm run setup` | Install dependensi di root dan semua workspace (`client` + `server`) |
-| `npm run dev` | Menjalankan backend (:4000) dan frontend (:5173) secara concurrent |
-| `npm run dev:server` | Menjalankan hanya backend Express dengan nodemon |
-| `npm run dev:client` | Menjalankan hanya frontend Vite dev server |
-| `npm run migrate` | Menjalankan migrasi Prisma pada server |
-| `npm run seed` | Menjalankan skrip seed data awal secara idempoten |
-| `npm run build` | Mem-build bundle frontend produksi ke `client/dist` |
+| `npm run setup` | Install dependencies in root and all workspaces (`client` and `server`) |
+| `npm run dev` | Run backend (:4000) and frontend (:5173) concurrently |
+| `npm run dev:server` | Run Express server with nodemon |
+| `npm run dev:client` | Run Vite development server |
+| `npm run migrate` | Push Prisma schema changes |
+| `npm run seed` | Seed default admin, categories, sample posts, testimonials, and settings |
+| `npm run build` | Build production frontend bundle to `client/dist` |
 
 ---
 
-## 🛠️ Perbaikan & Optimasi Terbaru
-
-1. **Otomatisasi Penuh Docker Compose**:
-   - `server/docker-entrypoint.sh`: Otomatis menunggu kesiapan TCP PostgreSQL, melakukan `prisma db push`, menjalankan `seed.js` idempoten, dan boot Express server.
-   - `client/Dockerfile` & `client/nginx.conf`: Multi-stage build dengan Nginx reverse proxy untuk `/api` dan `/uploads` (`^~` priority rules), kompresi Gzip, caching, SPA fallback, serta dukungan IPv4/IPv6.
-2. **Perbaikan Hidrasi Settings (`SettingsContext.jsx`)**: Mengatasi kegagalan hidrasi setting yayasan (nama, kontak, sosmed, rekening) akibat path data yang salah (`res.data?.data` → `res?.data || res`).
-3. **Perbaikan Rendering Icon (`Footer.jsx` & `fa-icons.js`)**: Memperbaiki pemanggilan ikon kategori dan mendaftarkan ikon FontAwesome yang hilang (`faCompass`, `faGlobe`, `faHeart`, `faSpinner`, `faLinkedin`, `faTelegram`, `faTiktok`, `faTwitter`, dll).
-4. **Testimonial Dinamis (`Testimonials.jsx`)**: Terhubung langsung ke API `/api/testimonials` dengan penanganan avatar dan fallback.
-5. **Code-Splitting Modul Admin (`App.jsx`)**: Menggunakan `React.lazy()` & `<Suspense>` untuk semua halaman admin, memangkas ukuran bundle awal dari **~1.2 MB** menjadi **~530 KB** (>55% lebih ringan & cepat).
-
----
-
-## 📂 Struktur Proyek
+## Project Structure
 
 ```text
-├── docker-compose.yml        # Orkestrasi multi-kontainer: db, backend, frontend
-├── package.json              # Konfigurasi npm workspaces (client & server)
-├── client/                   # Frontend React SPA (Vite + Tailwind CSS)
-│   ├── Dockerfile            # Multi-stage build (Node Alpine -> Nginx Alpine)
-│   ├── nginx.conf            # Reverse proxy /api & /uploads, SPA fallback & caching
+├── docker-compose.yml        # Multi-container setup (db, backend, frontend)
+├── package.json              # npm workspaces configuration
+├── client/                   # Frontend React SPA (Vite, Tailwind CSS)
+│   ├── Dockerfile            # Multi-stage build (Node builder -> Nginx Alpine)
+│   ├── nginx.conf            # Reverse proxy (/api, /uploads), caching, SPA fallback
 │   └── src/
-│       ├── api/              # Axios client & service wrapper per resource
-│       ├── components/       # Layout, Navbar, Footer, Home, Blog, UI reusable
-│       ├── context/          # AuthContext (JWT auth), SettingsContext
+│       ├── api/              # Axios API clients per domain
+│       ├── components/       # Layout, Navbar, Footer, UI components
+│       ├── context/          # AuthContext (JWT cookie), SettingsContext
 │       ├── pages/
-│       │   ├── (publik)      # Home, About, Programs, BlogIndex, BlogDetail, Gallery, Donate, Contact
-│       │   └── admin/        # Dashboard, Posts, Editor, Categories, Media, Donations, Contact, Users, Settings
-│       └── lib/fa-icons.js   # Registrasi pustaka ikon FontAwesome
+│       │   ├── (public)      # Home, About, Programs, Blog, Gallery, Donate, Contact
+│       │   └── admin/        # Lazy-loaded dashboard, posts, media, settings
+│       └── lib/fa-icons.js   # FontAwesome icon library registration
 └── server/                   # Backend Express API (Node.js ESM)
-    ├── Dockerfile            # Node 20 Bookworm Slim (dengan dukungan OpenSSL & Sharp)
-    ├── docker-entrypoint.sh  # Script auto-wait DB, auto schema push, auto seed
+    ├── Dockerfile            # Node 20 Bookworm Slim with OpenSSL and native sharp
+    ├── docker-entrypoint.sh  # DB wait loop, automated schema push, seed script
     ├── prisma/
-    │   └── schema.prisma     # Model DB: User, Category, Post, Media, Testimonial, Setting, Donation, ContactMessage
+    │   └── schema.prisma     # Models: User, Category, Post, Media, Setting, Donation, Contact
     └── src/
-        ├── config/           # env.js, prisma.js
-        ├── controllers/      # Logika bisnis per modul
-        ├── middlewares/      # auth (JWT cookie), rateLimiter, validate (zod), error handler
-        ├── routes/           # Routing modular /api/*
-        ├── seed/seed.js      # Generator data awal idempoten + SVG cover generator
-        └── utils/            # ApiError, asyncHandler, jwt, file upload helper
+        ├── config/           # Environment and Prisma client configuration
+        ├── controllers/      # Route handlers and business logic
+        ├── middlewares/      # Authentication, validation, rate limiting, error handling
+        ├── routes/           # Modular route definitions
+        ├── seed/seed.js      # Seed generator with automated WebP cover generation
+        └── utils/            # JWT, custom errors, file upload pipeline
 ```
 
 ---
 
-## 🔌 Ringkasan Endpoint API
+## Architecture and Key Decisions
 
-Base URL: `http://localhost:5173/api` (atau `http://localhost:4000/api`).  
-Format Respons: Sukses `{ "data": ... }` | Error `{ "error": { "code", "message" } }`.
-
-### 1. Autentikasi & Pengguna
-- `POST /api/auth/login` — Login user/admin (mengembalikan JWT via `httpOnly` cookie).
-- `GET /api/auth/me` — Cek status profil pengguna yang sedang login.
-- `POST /api/auth/logout` — Hapus session/cookie.
-- `GET/POST/PUT/DELETE /api/users` 🔒 — Manajemen pengguna admin.
-
-### 2. Postingan & Kategori Blog
-- `GET /api/posts` — Daftar artikel terbit (dukungan query: `page, limit, category, q, sort`).
-- `GET /api/posts/featured` — Daftar 3 artikel unggulan (*featured*).
-- `GET /api/posts/:slug` — Detail artikel publik + auto increment views.
-- `POST/PUT/DELETE /api/posts` 🔒 — Operasi CRUD artikel (dukungan cover image WebP).
-- `GET /api/categories` — Daftar semua kategori program/kegiatan.
-- `POST/PUT/DELETE /api/categories` 🔒 — CRUD kategori.
-
-### 3. Media & Galeri
-- `GET /api/media/public` — Daftar galeri foto kegiatan untuk publik.
-- `GET/DELETE /api/media` 🔒 — Manajemen file media untuk admin.
-- `POST /api/media/upload` 🔒 — Upload gambar (auto resize & convert WebP via sharp).
-
-### 4. Donasi, Kontak & Pengaturan
-- `POST /api/donations` — Pengiriman formulir konfirmasi donasi publik.
-- `GET/PATCH/DELETE /api/donations` 🔒 — Manajemen data donasi masuk.
-- `POST /api/contact-messages` — Pengiriman pesan formulir kontak publik.
-- `GET/PATCH/DELETE /api/contact-messages` 🔒 — Manajemen pesan masuk.
-- `GET /api/testimonials` — Daftar testimoni penerima manfaat/donatur.
-- `GET /api/settings` — Pengaturan identitas yayasan publik.
-- `PUT /api/settings` 🔒 — Pembaruan konfigurasi yayasan oleh admin.
-- `GET /api/stats/dashboard` 🔒 — Data agregasi statistik & grafik untuk admin.
-
-*(Tanda 🔒 menunjukkan endpoint yang memerlukan akses Administrator).*
+- **Reverse Proxy:** The Nginx frontend container proxies `/api` and `/uploads` directly to the backend service over Docker internal networking. Regex rules for static asset caching use the `^~` modifier to prevent intercepting uploaded media requests.
+- **Code Splitting:** Admin views are split via `React.lazy` and wrapped in `Suspense` fallbacks, keeping the initial client bundle footprint around 530 KB.
+- **Authentication:** Sessions use httpOnly JWT cookies (`ckf_token`). Protected administrative routes enforce role checks via backend middleware.
+- **Media Pipeline:** Uploads are handled via Multer and converted to optimized WebP format at 1600x900 resolution using Sharp.
+- **Database Port Mapping:** PostgreSQL maps internally to `5432` and exposes host port `5433` to prevent conflicts with pre-existing local PostgreSQL instances.
 
 ---
 
-## 🐳 Manajemen Kontainer Docker
+## API Reference
+
+Base path: `/api` (or `http://localhost:4000/api`).  
+Responses follow standard envelope format: `{ "data": ... }` on success and `{ "error": { "code", "message" } }` on error.
+
+### Authentication & Users
+- `POST /api/auth/login` - Authenticate user, sets httpOnly JWT cookie.
+- `GET /api/auth/me` - Fetch authenticated user profile.
+- `POST /api/auth/logout` - Clear session cookie.
+- `GET|POST|PUT|DELETE /api/users` *(Admin)* - User account management.
+
+### Blog Posts & Categories
+- `GET /api/posts` - Paginated post listing (query params: `page`, `limit`, `category`, `q`, `sort`).
+- `GET /api/posts/featured` - Retrieve top featured posts.
+- `GET /api/posts/:slug` - Fetch post detail and increment view count.
+- `POST|PUT|DELETE /api/posts` *(Admin)* - Manage post content and cover images.
+- `GET /api/categories` - List all article and program categories.
+- `POST|PUT|DELETE /api/categories` *(Admin)* - Category management.
+
+### Media & Gallery
+- `GET /api/media/public` - Public gallery media items.
+- `GET|DELETE /api/media` *(Admin)* - Media asset management.
+- `POST /api/media/upload` *(Admin)* - Upload image asset.
+
+### Donations, Inquiries & Settings
+- `POST /api/donations` - Submit public donation confirmation.
+- `GET|PATCH|DELETE /api/donations` *(Admin)* - Manage donation submissions.
+- `POST /api/contact-messages` - Submit contact inquiry form.
+- `GET|PATCH|DELETE /api/contact-messages` *(Admin)* - Review inquiry submissions.
+- `GET /api/testimonials` - Fetch dynamic testimonials.
+- `GET /api/settings` - Public organization identity and contact metadata.
+- `PUT /api/settings` *(Admin)* - Update organization settings.
+- `GET /api/stats/dashboard` *(Admin)* - Aggregated metrics and category breakdown.
+
+---
+
+## Docker Operations
 
 ```bash
-# Menyalakan semua kontainer
+# Start all containers in detached mode
 docker compose up -d
 
-# Memantau logs secara live
+# View live container logs
 docker compose logs -f
 
-# Melihat status kontainer (memastikan healthy)
+# Inspect container status and healthchecks
 docker compose ps
 
-# Mem-build ulang setelah ada perubahan kode
+# Rebuild images after code updates
 docker compose up -d --build
 
-# Menghentikan kontainer
+# Stop running containers
 docker compose down
 
-# Menghentikan kontainer dan mereset volume data (Fresh start)
+# Stop containers and wipe persistent database volumes (reset state)
 docker compose down -v
 ```

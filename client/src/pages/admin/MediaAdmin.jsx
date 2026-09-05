@@ -70,8 +70,8 @@ export default function MediaAdmin() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">Media</h1>
-        <p className="mt-1 text-sm text-slate-500">Kelola gambar dan file yang diunggah.</p>
+        <h1 className="font-heading text-2xl font-bold text-slate-900">Pustaka Media & Berkas</h1>
+        <p className="mt-1 text-sm text-slate-500">Penyimpanan terpusat dokumentasi visual, dokumen kegiatan, dan berkas pendukung publikasi.</p>
       </div>
 
       {/* Upload */}
@@ -88,9 +88,9 @@ export default function MediaAdmin() {
             </span>
             <div>
               <p className="text-sm font-semibold text-slate-700">
-                {uploading ? `Mengunggah… ${progress}%` : 'Klik untuk pilih file'}
+                {uploading ? `Mengunggah berkas… ${progress}%` : 'Pilih berkas dari perangkat'}
               </p>
-              <p className="text-xs text-slate-400">JPG, PNG, GIF, WebP, PDF — maks 2 MB</p>
+              <p className="text-xs text-slate-400">Format didukung: JPG, PNG, GIF, WebP, PDF (Ukuran maksimal 2 MB)</p>
             </div>
           </label>
           <input ref={fileRef} id="file" type="file" accept="image/*,application/pdf" className="hidden" onChange={handleUpload} />
@@ -110,7 +110,7 @@ export default function MediaAdmin() {
 
       {/* Grid media */}
       {media.length === 0 ? (
-        <EmptyState icon="fa-images" title="Belum ada media" description="Unggah file pertama melalui formulir di atas." />
+        <EmptyState icon="fa-images" title="Belum Ada Berkas Media" description="Unggah berkas dokumentasi atau materi pendukung melalui area di atas." />
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">

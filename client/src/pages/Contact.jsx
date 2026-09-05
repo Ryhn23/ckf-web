@@ -33,10 +33,10 @@ export default function Contact() {
 
   return (
     <>
-      <Seo title="Kontak" description="Punya pertanyaan, ingin berdonasi, atau bergabung sebagai relawan? Sampaikan pesan Anda." />
+      <Seo title="Kontak" description="Hubungi Sekretariat Yayasan Cinta Kasih Fatimah untuk informasi program, donasi, kemitraan, atau relawan." />
       <PageHeader
-        title="Hubungi Kami"
-        subtitle="Punya pertanyaan, ingin berdonasi, atau bergabung sebagai relawan? Sampaikan pesan Anda."
+        title="Sekretariat Yayasan"
+        subtitle="Sampaikan pertanyaan, konfirmasi, atau penjajakan kerja sama program kepada tim perwakilan yayasan."
         crumbs={[{ label: 'Kontak' }]}
       />
 
@@ -44,9 +44,9 @@ export default function Contact() {
         {/* Info */}
         <div className="space-y-6 lg:col-span-2">
           {[
-            { icon: ['fa-solid', 'fa-location-dot'], title: 'Alamat', lines: settings.address ? [settings.address] : ['Jl. Kebajikan No. 17, Kel. Sukamaju', 'Kec. Harapanjaya, Indonesia 12345'] },
-            { icon: ['fa-solid', 'fa-phone'], title: 'Telepon / WhatsApp', lines: [settings.phone || '+62 812-3456-7890', 'Senin–Sabtu, 08.00–17.00 WIB'] },
-            { icon: ['fa-solid', 'fa-envelope'], title: 'Email', lines: settings.email ? [settings.email] : ['halo@ckf.or.id', 'donasi@ckf.or.id'] },
+            { icon: ['fa-solid', 'fa-location-dot'], title: 'Alamat Sekretariat', lines: settings.address ? [settings.address] : ['Jl. Kebajikan No. 17, Kel. Sukamaju', 'Kec. Harapanjaya, Indonesia 12345'] },
+            { icon: ['fa-solid', 'fa-phone'], title: 'Layanan Telepon & WhatsApp', lines: [settings.phone || '+62 812-3456-7890', 'Senin–Sabtu, 08.00–17.00 WIB'] },
+            { icon: ['fa-solid', 'fa-envelope'], title: 'Korespondensi Email', lines: settings.email ? [settings.email] : ['halo@ckf.or.id', 'donasi@ckf.or.id'] },
           ].map((item) => (
             <div key={item.title} className="card flex items-start gap-4 p-6">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-lg text-teal-700">
@@ -62,10 +62,9 @@ export default function Contact() {
           ))}
 
           <div className="card bg-gradient-to-br from-teal-700 to-teal-900 p-6 text-white">
-            <h3 className="font-heading text-lg font-bold">Kantor Yayasan</h3>
+            <h3 className="font-heading text-lg font-bold">Kunjungan Kantor</h3>
             <p className="mt-2 text-sm leading-relaxed text-teal-100">
-              Kami menerima kunjungan dengan perjanjian terlebih dahulu. Silakan hubungi via
-              WhatsApp untuk menjadwalkan.
+              Pelayanan audiensi dan kunjungan resmi diselenggarakan melalui konfirmasi jadwal terlebih dahulu bersama sekretariat.
             </p>
           </div>
         </div>
@@ -77,40 +76,41 @@ export default function Contact() {
               <span className="flex h-16 w-16 items-center justify-center rounded-full bg-teal-100 text-2xl text-teal-700">
                 <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
               </span>
-              <h2 className="mt-5 font-heading text-2xl font-bold text-slate-900">Pesan Terkirim!</h2>
+              <h2 className="mt-5 font-heading text-2xl font-bold text-slate-900">Pesan Telah Diterima</h2>
               <p className="mt-3 max-w-sm text-sm text-slate-600">
-                Terima kasih. Tim kami akan membalas pesan Anda secepat mungkin.
+                Terima kasih atas komunikasi Anda. Sekretariat yayasan akan menindaklanjuti pesan Anda pada hari dan jam kerja.
               </p>
               <button type="button" onClick={() => setSuccess(false)} className="btn-outline mt-6">
-                Kirim Pesan Lain
+                Kirim Pesan Lainnya
               </button>
             </div>
           ) : (
             <>
-              <h2 className="font-heading text-xl font-bold text-slate-900">Kirim Pesan</h2>
+              <h2 className="font-heading text-xl font-bold text-slate-900">Formulir Pesan & Korespondensi</h2>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="c-name" className="text-sm font-semibold text-slate-700">Nama *</label>
+                  <label htmlFor="c-name" className="text-sm font-semibold text-slate-700">Nama Lengkap *</label>
                   <input id="c-name" value={form.name} onChange={set('name')} required className="input mt-1.5" placeholder="Nama Anda" />
                 </div>
                 <div>
-                  <label htmlFor="c-email" className="text-sm font-semibold text-slate-700">Email *</label>
-                  <input id="c-email" type="email" value={form.email} onChange={set('email')} required className="input mt-1.5" placeholder="email@contoh.com" />
+                  <label htmlFor="c-email" className="text-sm font-semibold text-slate-700">Alamat Email *</label>
+                  <input id="c-email" type="email" value={form.email} onChange={set('email')} required className="input mt-1.5" placeholder="alamat@email.com" />
                 </div>
               </div>
               <div className="mt-4">
-                <label htmlFor="c-subject" className="text-sm font-semibold text-slate-700">Perihal</label>
+                <label htmlFor="c-subject" className="text-sm font-semibold text-slate-700">Perihal *</label>
                 <select id="c-subject" value={form.subject} onChange={set('subject')} className="input mt-1.5">
-                  <option value="">— Pilih perihal —</option>
-                  <option>Informasi Donasi</option>
-                  <option>Pendaftaran Relawan</option>
-                  <option>Kemitraan Program</option>
+                  <option value="">— Pilih Bidang Perihal —</option>
+                  <option>Informasi & Konfirmasi Donasi</option>
+                  <option>Partisipasi Relawan</option>
+                  <option>Kemitraan & Kerja Sama Program</option>
+                  <option>Audiensi & Pengajuan Bantuan</option>
                   <option>Lainnya</option>
                 </select>
               </div>
               <div className="mt-4">
-                <label htmlFor="c-message" className="text-sm font-semibold text-slate-700">Pesan *</label>
-                <textarea id="c-message" rows={5} value={form.message} onChange={set('message')} required className="input mt-1.5" placeholder="Tuliskan pesan Anda…" />
+                <label htmlFor="c-message" className="text-sm font-semibold text-slate-700">Isi Pesan *</label>
+                <textarea id="c-message" rows={5} value={form.message} onChange={set('message')} required className="input mt-1.5" placeholder="Uraikan pesan, maksud kerja sama, atau pertanyaan Anda…" />
               </div>
 
               {error && (
@@ -121,7 +121,7 @@ export default function Contact() {
               )}
 
               <button type="submit" disabled={submitting} className="btn-primary mt-6 w-full justify-center disabled:opacity-60">
-                {submitting ? 'Mengirim…' : 'Kirim Pesan'}
+                {submitting ? 'Mengirimkan…' : 'Kirimkan Pesan'}
               </button>
             </>
           )}

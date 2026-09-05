@@ -56,17 +56,17 @@ export default function ContactAdmin() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-slate-900">Pesan</h1>
-          <p className="mt-1 text-sm text-slate-500">Pesan masuk dari formulir kontak.</p>
+          <h1 className="font-heading text-2xl font-bold text-slate-900">Korespondensi & Pesan Masuk</h1>
+          <p className="mt-1 text-sm text-slate-500">Daftar aspirasi, permohonan kemitraan, dan komunikasi publik melalui formulir kontak.</p>
         </div>
         <label className="flex items-center gap-2 text-sm font-semibold text-slate-600">
           <input type="checkbox" checked={unreadOnly} onChange={(e) => { setUnreadOnly(e.target.checked); setPage(1); }} className="h-4 w-4 accent-teal-700" />
-          Hanya yang belum dibaca
+          Tampilkan hanya pesan belum dibaca
         </label>
       </div>
 
       {messages.length === 0 ? (
-        <EmptyState icon="fa-inbox" title="Tidak ada pesan" description="Pesan dari formulir kontak akan muncul di sini." />
+        <EmptyState icon="fa-inbox" title="Tidak Ada Pesan" description="Pesan korespondensi yang masuk dari publik akan ditampilkan di sini." />
       ) : (
         <>
           <div className="card divide-y divide-slate-100">

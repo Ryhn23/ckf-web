@@ -10,9 +10,9 @@ import { formatDate } from '../../utils/formatDate';
 const PAGE_SIZE = 15;
 
 const STATUS_META = {
-  PENDING: { label: 'Menunggu', badge: 'bg-amber-100 text-amber-800' },
-  PROCESSED: { label: 'Diproses', badge: 'bg-emerald-100 text-emerald-800' },
-  REJECTED: { label: 'Ditolak', badge: 'bg-red-100 text-red-700' },
+  PENDING: { label: 'Menunggu Verifikasi', badge: 'bg-amber-100 text-amber-800' },
+  PROCESSED: { label: 'Terverifikasi & Disalurkan', badge: 'bg-emerald-100 text-emerald-800' },
+  REJECTED: { label: 'Tidak Valid / Dibatalkan', badge: 'bg-red-100 text-red-700' },
 };
 
 export default function DonationsAdmin() {
@@ -38,7 +38,7 @@ export default function DonationsAdmin() {
   }
 
   async function handleDelete(donation) {
-    if (!window.confirm(`Hapus donasi ${donation.reference}?`)) return;
+    if (!window.confirm(`Hapus catatan donasi nomor referensi ${donation.reference}?`)) return;
     setDeletingId(donation.id);
     try {
       await deleteDonation(donation.id);
@@ -51,19 +51,19 @@ export default function DonationsAdmin() {
     }
   }
 
-  if (loading) return <Spinner label="Memuat donasi…" />;
+  if (loading) return <Spinner label="Memuat data donasi…" />;
   if (error) return <EmptyState icon="fa-triangle-exclamation" title="Gagal memuat donasi" description={errMsg(error)} />;
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">Donasi</h1>
-        <p className="mt-1 text-sm text-slate-500">Kelola donasi yang masuk dari halaman publik.</p>
+        <h1 className="font-heading text-2xl font-bold text-slate-900">Administrasi Donasi</h1>
+        <p className="mt-1 text-sm text-slate-500">Verifikasi, validasi, dan pembukuan donasi yang dihimpun melalui kanal publik.</p>
       </div>
 
       {/* Filter status */}
       <div className="flex flex-wrap gap-2">
-        {[['', 'Semua'], ['PENDING', 'Menunggu'], ['PROCESSED', 'Diproses'], ['REJECTED', 'Ditolak']].map(([value, label]) => (
+        {[['', 'Seluruh Status'], ['PENDING', 'Menunggu Verifikasi'], ['PROCESSED', 'Terverifikasi'], ['REJECTED', 'Dibatalkan']].map(([value, label]) => (
           <button
             key={value}
             type="button"
@@ -78,7 +78,7 @@ export default function DonationsAdmin() {
       </div>
 
       {donations.length === 0 ? (
-        <EmptyState icon="fa-hand-holding-heart" title="Belum ada donasi" description="Donasi dari halaman publik akan muncul di sini." />
+        <EmptyState icon="fa-hand-holding-heart" title="Tidak Ada Catatan Donasi" description="Data konfirmasi donasi dari publik akan tercatat pada daftar ini." />
       ) : (
         <>
           <div className="card overflow-x-auto">

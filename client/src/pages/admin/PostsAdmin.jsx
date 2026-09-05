@@ -51,33 +51,33 @@ export default function PostsAdmin() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-slate-900">Artikel</h1>
-          <p className="mt-1 text-sm text-slate-500">Kelola artikel blog Cinta Kasih Fatimah.</p>
+          <h1 className="font-heading text-2xl font-bold text-slate-900">Manajemen Artikel & Publikasi</h1>
+          <p className="mt-1 text-sm text-slate-500">Kelola dan publikasikan warta kegiatan, edukasi, dan dokumentasi program yayasan.</p>
         </div>
         <Link to="/admin/posts/new" className="btn-primary">
           <FontAwesomeIcon icon={['fa-solid', 'fa-plus']} />
-          Artikel Baru
+          Tambah Artikel Baru
         </Link>
       </div>
 
       {/* Filter */}
       <div className="flex flex-wrap gap-3">
         <select value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }} className="input !w-auto">
-          <option value="">Semua status</option>
-          <option value="PUBLISHED">Terbit</option>
-          <option value="DRAFT">Draf</option>
+          <option value="">Semua Status Publikasi</option>
+          <option value="PUBLISHED">Terbit (Publik)</option>
+          <option value="DRAFT">Draf (Privat)</option>
         </select>
         <input
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           className="input w-full sm:w-72"
-          placeholder="Cari judul artikel…"
+          placeholder="Cari berdasarkan judul artikel…"
         />
       </div>
 
       {/* Tabel */}
       {posts.length === 0 ? (
-        <EmptyState icon="fa-newspaper" title="Belum ada artikel" description="Mulai dengan membuat artikel pertama." />
+        <EmptyState icon="fa-newspaper" title="Belum Ada Artikel" description="Silakan buat artikel publikasi baru melalui tombol di atas." />
       ) : (
         <div className="card overflow-x-auto">
           <table className="w-full min-w-[640px] text-left text-sm">

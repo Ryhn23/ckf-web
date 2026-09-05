@@ -12,12 +12,11 @@ export default function ProgramsGrid() {
       <div className="container-page py-16 lg:py-24">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <span className="mb-3 inline-block rounded-full bg-teal-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
-            Program Kami
+            Pilar Program
           </span>
-          <h2 className="text-3xl font-bold md:text-4xl">Bidang yang Kami Layani</h2>
+          <h2 className="text-3xl font-bold md:text-4xl">Fokus Pelayanan Yayasan</h2>
           <p className="mt-4 text-slate-500">
-            Enam pilar program yang menjadi fokus kerja Cinta Kasih Fatimah — dari ruang kelas hingga
-            dapur keluarga.
+            Inisiatif strategis Yayasan Cinta Kasih Fatimah dalam mewujudkan transformasi sosial, pendidikan, dan kesehatan berkelanjutan.
           </p>
         </div>
 
@@ -44,7 +43,7 @@ export default function ProgramsGrid() {
                   <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-500">{cat.description}</p>
                 )}
                 <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-700">
-                  Lihat Artikel
+                  Dokumentasi & Berita
                   <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} className="transition group-hover:translate-x-1" />
                 </span>
               </Link>
@@ -54,7 +53,7 @@ export default function ProgramsGrid() {
 
         <div className="mt-10 text-center">
           <Link to="/program" className="btn-outline">
-            Pahami Semua Program Kami
+            Seluruh Program Pelayanan
             <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
           </Link>
         </div>

@@ -85,19 +85,19 @@ export default function UsersAdmin() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">Pengguna</h1>
-        <p className="mt-1 text-sm text-slate-500">Kelola akun admin dan editor.</p>
+        <h1 className="font-heading text-2xl font-bold text-slate-900">Manajemen Pengguna & Otoritas</h1>
+        <p className="mt-1 text-sm text-slate-500">Pengelolaan akun administrator dan staf pengelola konten sistem informasi yayasan.</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Form */}
         <form onSubmit={handleSubmit} className="card h-fit p-6 lg:col-span-4 lg:sticky lg:top-20 lg:self-start">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
-            {editingId ? 'Edit Pengguna' : 'Pengguna Baru'}
+            {editingId ? 'Perbarui Data Pengguna' : 'Registrasi Pengguna Baru'}
           </h2>
 
-          <label htmlFor="name" className="label mt-4">Nama</label>
-          <input id="name" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className="input" placeholder="Nama lengkap" />
+          <label htmlFor="name" className="label mt-4">Nama Lengkap</label>
+          <input id="name" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className="input" placeholder="Nama sesuai identitas" />
 
           <label htmlFor="email" className="label mt-4">Email</label>
           <input

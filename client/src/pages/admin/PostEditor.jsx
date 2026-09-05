@@ -161,27 +161,27 @@ export default function PostEditor() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-heading text-xl sm:text-2xl font-bold text-slate-900">
-                {isNew ? 'Buat Artikel Baru' : 'Edit Artikel'}
+                {isNew ? 'Penyusunan Artikel Baru' : 'Penyuntingan Artikel'}
               </h1>
               <span
                 className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                   form.status === 'PUBLISHED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                 }`}
               >
-                {form.status === 'PUBLISHED' ? 'Terbit' : 'Draf'}
+                {form.status === 'PUBLISHED' ? 'Telah Diterbitkan' : 'Draf Dokumen'}
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-500">
               {isNew
-                ? 'Tulis artikel atau berita liputan kegiatan Yayasan Cinta Kasih Fatimah.'
-                : `ID: ${id}`}
+                ? 'Penyusunan rilis berita resmi, liputan kegiatan, atau materi edukasi yayasan.'
+                : `Nomor Identifikasi: ${id}`}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <Link to="/admin/posts" className="btn-outline !py-2 !px-4 text-xs sm:text-sm">
-            Batal
+            Batalkan
           </Link>
           <button
             type="button"
@@ -195,7 +195,7 @@ export default function PostEditor() {
             }}
             className="btn-outline !border-slate-300 !bg-slate-50 !py-2 !px-4 text-xs sm:text-sm hover:!bg-slate-100"
           >
-            Simpan Draf
+            Simpan sebagai Draf
           </button>
           <button
             type="button"
@@ -209,7 +209,7 @@ export default function PostEditor() {
             }}
             className="btn-primary !py-2 !px-5 text-xs sm:text-sm shadow-sm"
           >
-            {submitting ? 'Menyimpan…' : isNew ? 'Publikasikan' : 'Simpan & Terbitkan'}
+            {submitting ? 'Menyimpan…' : isNew ? 'Publikasikan Sekarang' : 'Simpan & Perbarui'}
           </button>
         </div>
       </div>
@@ -237,7 +237,7 @@ export default function PostEditor() {
                 value={form.title}
                 onChange={handleTitleChange}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-5 py-3.5 font-heading text-lg sm:text-2xl font-bold text-slate-900 placeholder:text-slate-300 transition focus:border-teal-600 focus:bg-white focus:outline-none focus:ring-4 focus:ring-teal-600/10"
-                placeholder="Tulis judul artikel yang menarik…"
+                placeholder="Masukkan judul artikel publikasi…"
               />
             </div>
 
@@ -245,7 +245,7 @@ export default function PostEditor() {
             <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="slug" className="label">
-                  URL / Slug
+                  Tautan Permanen (Slug URL)
                 </label>
                 <button
                   type="button"
@@ -255,7 +255,7 @@ export default function PostEditor() {
                   }}
                   className="text-xs font-semibold text-teal-700 hover:underline"
                 >
-                  Generate dari Judul
+                  Generate Otomatis
                 </button>
               </div>
               <div className="flex items-center rounded-xl border border-slate-200 bg-slate-50 px-3 py-1 transition focus-within:border-teal-600 focus-within:bg-white focus-within:ring-2 focus-within:ring-teal-600/20">
@@ -277,7 +277,7 @@ export default function PostEditor() {
             <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="excerpt" className="label">
-                  Ringkasan Singkat (Excerpt)
+                  Ikhtisar Singkat (Excerpt)
                 </label>
                 <span className="text-xs font-medium text-slate-400">
                   {form.excerpt.length}/300 karakter
@@ -290,7 +290,7 @@ export default function PostEditor() {
                 value={form.excerpt}
                 onChange={(e) => set('excerpt', e.target.value)}
                 className="input text-sm leading-relaxed"
-                placeholder="Tulis ringkasan singkat artikel dalam 1–2 kalimat untuk kartu beranda dan SEO pratinjau…"
+                placeholder="Tuliskan ikhtisar atau rangkuman pokok artikel untuk tampilan kartu publikasi dan optimasi mesin pencari (SEO)…"
               />
             </div>
 
@@ -298,12 +298,12 @@ export default function PostEditor() {
             <div>
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                 <label htmlFor="content" className="label !mb-0 text-base font-bold text-slate-800">
-                  Isi Konten Artikel <span className="text-red-500">*</span>
+                  Batang Tubuh Artikel <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-3 text-xs font-medium text-slate-400">
                   <span>{wordCount} kata</span>
                   <span>·</span>
-                  <span>~{readingTime} menit baca</span>
+                  <span>Estimasi baca: ~{readingTime} menit</span>
                 </div>
               </div>
 
@@ -313,12 +313,12 @@ export default function PostEditor() {
                 value={form.content}
                 onChange={(html) => set('content', html)}
                 modules={quillModules}
-                placeholder="Tulis seluruh isi artikel, panduan, atau berita liputan di sini…"
+                placeholder="Tuliskan naskah lengkap artikel, laporan kegiatan, atau materi edukasi di sini…"
               />
 
               <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
-                <p>Tips: Gunakan Heading 2 &amp; 3 untuk memecah topik, dan format kutipan (quote) untuk poin penting.</p>
-                <span className="hidden sm:inline">Editor WYSIWYG CKF</span>
+                <p>Panduan: Gunakan format Judul Bagian (H2 &amp; H3) untuk menstrukturkan topik bahasan secara sistematis.</p>
+                <span className="hidden sm:inline">Modul Editor Naskah</span>
               </div>
             </div>
           </div>
@@ -329,12 +329,12 @@ export default function PostEditor() {
           {/* Panel Publikasi */}
           <div className="card p-6">
             <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
-              Status &amp; Visibilitas
+              Status &amp; Visibilitas Publikasi
             </h2>
 
             <div className="mt-4">
               <label htmlFor="status" className="label">
-                Status Publikasi
+                Status Dokumen
               </label>
               <select
                 id="status"
@@ -342,8 +342,8 @@ export default function PostEditor() {
                 onChange={(e) => set('status', e.target.value)}
                 className="input"
               >
-                <option value="DRAFT">Draf (Disimpan privat)</option>
-                <option value="PUBLISHED">Terbit (Dapat diakses publik)</option>
+                <option value="DRAFT">Draf Dokumen (Tersimpan Privat)</option>
+                <option value="PUBLISHED">Terbit (Dapat Diakses Publik)</option>
               </select>
             </div>
 
@@ -356,9 +356,9 @@ export default function PostEditor() {
                   className="mt-0.5 h-4 w-4 rounded accent-teal-700"
                 />
                 <div>
-                  <span>Tampilkan di Carousel Beranda</span>
+                  <span>Sematan Beranda Utama (Featured)</span>
                   <p className="text-xs font-normal text-slate-400 mt-0.5">
-                    Artikel unggulan akan diprioritaskan di slider beranda utama.
+                    Artikel terpilih akan ditampilkan sebagai warta utama pada slider halaman muka.
                   </p>
                 </div>
               </label>
@@ -370,7 +370,7 @@ export default function PostEditor() {
               disabled={submitting || !categoriesReady}
               className="btn-primary mt-6 w-full justify-center !py-3 shadow-md"
             >
-              {submitting ? 'Menyimpan…' : isNew ? 'Simpan Artikel' : 'Simpan Perubahan'}
+              {submitting ? 'Menyimpan…' : isNew ? 'Simpan Naskah Artikel' : 'Simpan Pembaruan Data'}
             </button>
           </div>
 

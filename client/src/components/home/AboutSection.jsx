@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSettings } from '../../context/SettingsContext';
 
 const CHECKLIST = [
-  'Transparan & akuntabel — laporan kegiatan dipublikasikan rutin',
-  'Program berbasis kebutuhan riil di lapangan',
-  'Relawan terlatih di berbagai wilayah',
-  'Kemitraan dengan pemerintah & dunia usaha',
+  'Transparan dan akuntabel — laporan penyaluran dipublikasikan berkala',
+  'Program berbasis asesmen kebutuhan nyata di lapangan',
+  'Didukung relawan berdedikasi dan terverifikasi di berbagai wilayah',
+  'Sinergi kemitraan strategis dengan pemerintah dan sektor swasta',
 ];
 
 export default function AboutSection() {
@@ -29,7 +29,7 @@ export default function AboutSection() {
             </span>
             <div>
               <p className="font-heading text-lg font-bold text-slate-900">Sejak {sinceYear}</p>
-              <p className="text-xs text-slate-500">Melayani tanpa henti</p>
+              <p className="text-xs text-slate-500">Dedikasi untuk kemanusiaan</p>
             </div>
           </div>
         </div>
@@ -37,17 +37,14 @@ export default function AboutSection() {
         {/* Teks */}
         <div>
           <span className="mb-3 inline-block rounded-full bg-teal-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
-            Tentang Kami
+            Profil Lembaga
           </span>
           <h2 className="text-3xl font-bold leading-snug md:text-4xl">
-            Kebaikan yang Tumbuh dari Kepekaan Hati
+            Dedikasi Berkelanjutan untuk Kemaslahatan Masyarakat
           </h2>
           <p className="mt-5 leading-relaxed text-slate-600">
             {settings.about_text ||
-              'Cinta Kasih Fatimah lahir dari kepedulian sederhana: memastikan setiap anak mendapat '
-              + 'pendidikan layak, setiap keluarga memiliki akses kesehatan, dan setiap komunitas '
-              + 'berdaya menentukan masa depannya sendiri. Kami percaya perubahan besar dimulai dari '
-              + 'langkah-langkah kecil yang konsisten.'}
+              'Yayasan Cinta Kasih Fatimah berkhidmat memfasilitasi akses pendidikan bermutu, pelayanan kesehatan promotif-preventif, serta pemberdayaan sosial ekonomi keluarga prasejahtera melalui program yang berkelanjutan dan terukur.'}
           </p>
           <ul className="mt-6 space-y-3">
             {CHECKLIST.map((item) => (
@@ -60,7 +57,7 @@ export default function AboutSection() {
             ))}
           </ul>
           <Link to="/tentang" className="btn-primary mt-8">
-            Selengkapnya Tentang Kami
+            Profil Lengkap Yayasan
             <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
           </Link>
         </div>

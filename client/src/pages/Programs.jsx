@@ -21,8 +21,8 @@ export default function Programs() {
     <>
       <Seo title="Program & Kegiatan" description="Enam pilar program Cinta Kasih Fatimah: pendidikan, kesehatan, beasiswa, sosial, kegiatan internal, dan pengumuman." />
       <PageHeader
-        title="Program Kami"
-        subtitle="Enam pilar program yang menjadi fokus kerja Cinta Kasih Fatimah — dari ruang kelas hingga dapur keluarga."
+        title="Program Pelayanan"
+        subtitle="Rangkaian pilar program terstruktur Yayasan Cinta Kasih Fatimah dalam bidang pendidikan, kesehatan, dan kesejahteraan sosial."
         crumbs={[{ label: 'Program' }]}
       />
 

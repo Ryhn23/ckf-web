@@ -29,8 +29,7 @@ export default function Footer() {
             <span className="font-heading text-base font-bold text-white">{settings.foundation_name || 'Cinta Kasih Fatimah'}</span>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-teal-200">
-            Cinta Kasih Fatimah hadir untuk berbagi harapan melalui pendidikan, kesehatan, dan
-            pemberdayaan masyarakat — agar setiap kebaikan berbuah perubahan nyata.
+            Yayasan Cinta Kasih Fatimah berkhidmat dalam penyelenggaraan program kemanusiaan, pemenuhan hak pendidikan, dan peningkatan derajat kesehatan masyarakat secara profesional dan akuntabel.
           </p>
           <div className="mt-5 flex gap-3">
             {socials.map((s) => (

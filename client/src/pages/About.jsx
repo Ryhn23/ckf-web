@@ -5,10 +5,10 @@ import Seo from '../components/Seo';
 import { useSettings } from '../context/SettingsContext';
 
 const VALUES = [
-  { icon: ['fa-solid', 'fa-eye'], title: 'Transparan', desc: 'Setiap rupiah donasi dipublikasikan penggunaannya dalam laporan berkala.' },
-  { icon: ['fa-solid', 'fa-hand-holding-heart'], title: 'Empati', desc: 'Kami hadir dengan hati, mendengar kebutuhan riil masyarakat terlayani.' },
-  { icon: ['fa-solid', 'fa-people-roof'], title: 'Kolaboratif', desc: 'Bekerja bersama pemerintah, dunia usaha, dan relawan untuk dampak maksimal.' },
-  { icon: ['fa-solid', 'fa-arrows-rotate'], title: 'Berkelanjutan', desc: 'Program dirancang agar mandiri dan berkelanjutan, bukan sekadar bantuan sesaat.' },
+  { icon: ['fa-solid', 'fa-eye'], title: 'Akuntabilitas', desc: 'Pengelolaan dan laporan penyaluran donasi dipublikasikan secara transparan dan berkala.' },
+  { icon: ['fa-solid', 'fa-hand-holding-heart'], title: 'Kepedulian Sosial', desc: 'Merespons kebutuhan riil masyarakat prasejahtera dengan pendekatan kemanusiaan yang berkeadilan.' },
+  { icon: ['fa-solid', 'fa-people-roof'], title: 'Kolaborasi Strategis', desc: 'Bermitra dengan pemerintah, sektor swasta, dan komunitas demi optimalisasi dampak program.' },
+  { icon: ['fa-solid', 'fa-arrows-rotate'], title: 'Keberlanjutan', desc: 'Perancangan program yang berorientasi pada kemandirian jangka panjang penerima manfaat.' },
 ];
 
 const TEAM = [
@@ -28,7 +28,7 @@ export default function About() {
       <Seo title="Tentang Kami" description="Kenali visi, misi, dan nilai-nilai yang menjadi dasar kerja Cinta Kasih Fatimah." />
       <PageHeader
         title={`Tentang ${settings.foundation_name || 'Cinta Kasih Fatimah'}`}
-        subtitle="Mengenal lebih dekat siapa kami, apa yang kami percaya, dan orang-orang di balik setiap program."
+        subtitle="Mengenal komitmen, visi misi, serta struktur pengurus dalam menjalankan program kemanusiaan."
         crumbs={[{ label: 'Tentang' }]}
       />
 
@@ -37,31 +37,30 @@ export default function About() {
         <div className="container-page grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
           <div>
             <span className="mb-3 inline-block rounded-full bg-teal-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
-              Cerita Kami
+              Latar Belakang
             </span>
-            <h2 className="text-3xl font-bold leading-snug">Dari Kepedulian Sederhana, Menjadi Gerakan</h2>
+            <h2 className="text-3xl font-bold leading-snug">Sejarah dan Komitmen Yayasan</h2>
             <div className="mt-6 space-y-4 leading-relaxed text-slate-600">
               <p>
-                {settings.foundation_name || 'Cinta Kasih Fatimah'} berdiri pada 2017 dari sekelompok kecil relawan yang prihatin melihat
-                anak-anak putus sekolah dan keluarga yang kesulitan mengakses layanan kesehatan.
-                Dari aksi-aksi kecil — mengumpulkan buku, menyalurkan paket sembako, hingga
-                mendampingi pemeriksaan kesehatan — kami belajar bahwa perubahan besar lahir dari
-                konsistensi.
+                {settings.foundation_name || 'Yayasan Cinta Kasih Fatimah'} didirikan sebagai wujud kepedulian
+                terhadap kesenjangan akses pendidikan formal dan layanan kesehatan bagi masyarakat prasejahtera.
+                Berangkat dari inisiatif advokasi beasiswa dan distribusi kebutuhan dasar, yayasan terus
+                mengembangkan tata kelola program yang terstruktur dan terintegrasi.
               </p>
               <p>
-                Hari ini, bersama ratusan relawan dan ribuan donatur, kami menjalankan enam pilar
-                program di berbagai wilayah. Prinsipnya tidak pernah berubah: dengarkan, layani
-                dengan hati, dan laporkan secara transparan.
+                Hingga kini, berlandaskan amanah dari para donatur dan dedikasi segenap relawan lapangan, yayasan
+                menjalankan program pelayanan strategis secara terencana, berkeadilan, dan dapat dipertanggungjawabkan
+                melalui pelaporan berkala secara akuntabel.
               </p>
             </div>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
             {[
-              { icon: ['fa-solid', 'fa-flag'], title: 'Visi', desc: 'Masyarakat yang sehat, terdidik, dan berdaya menentukan masa depannya sendiri.' },
-              { icon: ['fa-solid', 'fa-bullseye'], title: 'Misi', desc: 'Menyalurkan bantuan tepat sasaran, membangun kapasitas lokal, dan menjaga kepercayaan publik.' },
-              { icon: ['fa-solid', 'fa-scale-balanced'], title: 'Integritas', desc: 'Tata kelola yayasan yang sehat, audit rutin, dan kepatuhan penuh terhadap regulasi.' },
-              { icon: ['fa-solid', 'fa-lightbulb'], title: 'Inovasi', desc: 'Menggunakan data dan teknologi untuk menjangkau lebih banyak penerima manfaat.' },
+              { icon: ['fa-solid', 'fa-flag'], title: 'Visi', desc: 'Mewujudkan kemandirian masyarakat yang berdaya, terdidik, dan sehat sejahtera.' },
+              { icon: ['fa-solid', 'fa-bullseye'], title: 'Misi', desc: 'Menyelenggarakan bantuan tepat sasaran, pembinaan kapasitas, serta menjaga tata kelola lembaga yang akuntabel.' },
+              { icon: ['fa-solid', 'fa-scale-balanced'], title: 'Integritas', desc: 'Menerapkan tata kelola organisasi yang transparan, audit berkala, dan kepatuhan terhadap regulasi.' },
+              { icon: ['fa-solid', 'fa-lightbulb'], title: 'Inovasi', desc: 'Mengoptimalkan sistem data dan teknologi untuk memperluas jangkauan penerima manfaat secara terukur.' },
             ].map((item) => (
               <div key={item.title} className="card p-6">
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-lg text-teal-700">
@@ -80,9 +79,9 @@ export default function About() {
         <div className="container-page py-16 lg:py-24">
           <div className="mx-auto mb-12 max-w-2xl text-center">
             <span className="mb-3 inline-block rounded-full bg-teal-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
-              Nilai Kami
+              Nilai Organisasi
             </span>
-            <h2 className="text-3xl font-bold md:text-4xl">Empat Pilar yang Kami Pegang</h2>
+            <h2 className="text-3xl font-bold md:text-4xl">Prinsip Pelayanan Yayasan</h2>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {VALUES.map((v) => (
@@ -103,9 +102,9 @@ export default function About() {
         <div className="container-page py-16 lg:py-24">
           <div className="mx-auto mb-12 max-w-2xl text-center">
             <span className="mb-3 inline-block rounded-full bg-teal-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
-              Tim Kami
+              Struktur Organisasi
             </span>
-            <h2 className="text-3xl font-bold md:text-4xl">Orang-orang di Balik Gerakan</h2>
+            <h2 className="text-3xl font-bold md:text-4xl">Susunan Dewan Pengurus</h2>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {TEAM.map((member) => (
@@ -122,12 +121,12 @@ export default function About() {
           </div>
 
           <div className="mt-14 rounded-3xl bg-gradient-to-br from-teal-700 to-teal-900 px-6 py-12 text-center">
-            <h3 className="text-2xl font-bold text-white">Ingin Bergabung dengan Kami?</h3>
+            <h3 className="text-2xl font-bold text-white">Kemitraan dan Partisipasi Program</h3>
             <p className="mx-auto mt-3 max-w-xl text-sm text-teal-100">
-              Baik sebagai relawan, donatur, maupun mitra program — pintu kami selalu terbuka.
+              Yayasan membuka kesempatan kolaborasi strategis bagi instansi, donatur, maupun relawan dalam memperluas dampak kemanusiaan.
             </p>
             <Link to="/kontak" className="btn-accent mt-6">
-              Hubungi Kami
+              Hubungi Sekretariat
               <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
             </Link>
           </div>

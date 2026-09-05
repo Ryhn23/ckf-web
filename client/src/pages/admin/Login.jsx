@@ -34,8 +34,8 @@ export default function Login() {
           <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-700 text-2xl text-white shadow-card">
             <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
           </span>
-          <h1 className="mt-4 font-heading text-2xl font-bold text-slate-900">Login Admin CKF</h1>
-          <p className="mt-1 text-sm text-slate-500">Masuk untuk mengelola situs Cinta Kasih Fatimah</p>
+          <h1 className="mt-4 font-heading text-2xl font-bold text-slate-900">Autentikasi Administrator</h1>
+          <p className="mt-1 text-sm text-slate-500">Masuk ke Sistem Informasi Manajemen Yayasan Cinta Kasih Fatimah</p>
         </div>
 
         <form onSubmit={handleSubmit} className="card p-8">
@@ -51,7 +51,7 @@ export default function Login() {
             onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
           />
 
-          <label htmlFor="password" className="label mt-4">Password</label>
+          <label htmlFor="password" className="label mt-4">Kata Sandi</label>
           <input
             id="password"
             type="password"
@@ -71,7 +71,7 @@ export default function Login() {
           )}
 
           <button type="submit" disabled={submitting} className="btn-primary mt-6 w-full justify-center">
-            {submitting ? 'Memproses…' : 'Masuk'}
+            {submitting ? 'Memverifikasi Kredensial…' : 'Masuk ke Sistem'}
           </button>
         </form>
       </div>

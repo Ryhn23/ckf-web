@@ -8,44 +8,44 @@ import EmptyState from '../../components/ui/EmptyState';
 
 const GROUPS = [
   {
-    title: 'Identitas Yayasan',
+    title: 'Identitas & Profil Yayasan',
     fields: [
-      { key: 'foundation_name', label: 'Nama Yayasan' },
-      { key: 'tagline', label: 'Tagline' },
-      { key: 'about_text', label: 'Tentang Kami (teks beranda)', textarea: true },
+      { key: 'foundation_name', label: 'Nama Resmi Yayasan' },
+      { key: 'tagline', label: 'Motto / Semboyan Lembaga' },
+      { key: 'about_text', label: 'Deskripsi Profil Lembaga (Halaman Beranda)', textarea: true },
     ],
   },
   {
-    title: 'Kontak',
+    title: 'Sekretariat & Kontak Resmi',
     fields: [
-      { key: 'email', label: 'Email' },
-      { key: 'phone', label: 'Telepon' },
-      { key: 'address', label: 'Alamat' },
+      { key: 'email', label: 'Alamat Email Resmi' },
+      { key: 'phone', label: 'Nomor Telepon / WhatsApp Layanan' },
+      { key: 'address', label: 'Alamat Lengkap Kantor Sekretariat' },
     ],
   },
   {
-    title: 'Media Sosial',
+    title: 'Kanal Media Sosial Resmi',
     fields: [
-      { key: 'social_facebook', label: 'Facebook' },
-      { key: 'social_instagram', label: 'Instagram' },
-      { key: 'social_youtube', label: 'YouTube' },
-      { key: 'social_x', label: 'X (Twitter)' },
+      { key: 'social_facebook', label: 'Tautan Facebook' },
+      { key: 'social_instagram', label: 'Tautan Instagram' },
+      { key: 'social_youtube', label: 'Tautan YouTube' },
+      { key: 'social_x', label: 'Tautan X (Twitter)' },
     ],
   },
   {
-    title: 'Statistik Beranda',
+    title: 'Indikator Kinerja & Capaian (Statistik)',
     fields: [
-      { key: 'stat_beneficiaries', label: 'Penerima Manfaat' },
-      { key: 'stat_programs', label: 'Program' },
-      { key: 'stat_volunteers', label: 'Relawan' },
-      { key: 'stat_years', label: 'Tahun Berdiri' },
+      { key: 'stat_beneficiaries', label: 'Total Penerima Manfaat' },
+      { key: 'stat_programs', label: 'Total Program Terlaksana' },
+      { key: 'stat_volunteers', label: 'Total Relawan Terlibat' },
+      { key: 'stat_years', label: 'Masa Berkhidmat (Tahun)' },
     ],
   },
   {
-    title: 'Donasi',
+    title: 'Rekening Perbendaharaan Donasi',
     fields: [
-      { key: 'donation_bank_name', label: 'Nama Bank' },
-      { key: 'donation_account_number', label: 'Nomor Rekening' },
+      { key: 'donation_bank_name', label: 'Nama Bank Penerima' },
+      { key: 'donation_account_number', label: 'Nomor Rekening & Atas Nama' },
     ],
   },
 ];
@@ -82,8 +82,8 @@ export default function SettingsAdmin() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">Pengaturan</h1>
-        <p className="mt-1 text-sm text-slate-500">Kelola informasi situs yang tampil di halaman publik.</p>
+        <h1 className="font-heading text-2xl font-bold text-slate-900">Konfigurasi Pengaturan Sistem</h1>
+        <p className="mt-1 text-sm text-slate-500">Kelola informasi kelembagaan, kontak sekretariat, dan parameter yang ditampilkan pada situs publik.</p>
       </div>
 
       {errorText && (

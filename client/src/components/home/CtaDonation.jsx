@@ -11,22 +11,21 @@ export default function CtaDonation() {
           <div className="pointer-events-none absolute -bottom-20 -right-12 h-64 w-64 rounded-full bg-amber-400/10" />
 
           <h2 className="relative mx-auto max-w-2xl text-3xl font-bold leading-snug text-white md:text-4xl">
-            Satu Kebaikan Kecil Anda, Dampak Besar bagi Mereka
+            Sinergi Kebaikan untuk Dampak Sosial yang Nyata
           </h2>
           <p className="relative mx-auto mt-4 max-w-xl text-sm leading-relaxed text-teal-100 md:text-base">
-            Donasi Anda disalurkan langsung ke program pendidikan, kesehatan, dan pemberdayaan —
-            dengan laporan yang transparan.
+            Donasi Anda disalurkan secara langsung ke program pendidikan, kesehatan, dan pemberdayaan masyarakat dengan pertanggungjawaban publik yang transparan.
           </p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
             <Link to="/donasi" className="btn-accent">
               <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-              Donasi Sekarang
+              Salurkan Donasi
             </Link>
             <Link
               to="/program"
               className="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
             >
-              Pahami Program Kami
+              Pelajari Program
             </Link>
           </div>
         </div>

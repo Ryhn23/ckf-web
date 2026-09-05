@@ -231,9 +231,9 @@ const TESTIMONIALS = [
 ];
 
 const SETTINGS = [
-  ['foundation_name', 'Cinta Kasih Fatimah'],
-  ['tagline', 'Membangun masa depan melalui pendidikan dan kemanusiaan'],
-  ['about_text', 'Cinta Kasih Fatimah berdiri sejak 2011 dengan misi menghadirkan akses pendidikan, kesehatan, dan kesempatan ekonomi yang layak bagi masyarakat prasejahtera. Melalui program beasiswa, klinik keliling, dapur umum, dan pemberdayaan ekonomi, kami percaya perubahan besar dimulai dari langkah kecil yang konsisten.'],
+  ['foundation_name', 'Yayasan Cinta Kasih Fatimah'],
+  ['tagline', 'Berkhidmat untuk Pendidikan, Kesehatan, dan Kesejahteraan Masyarakat'],
+  ['about_text', 'Yayasan Cinta Kasih Fatimah berkhidmat dalam menyediakan akses pendidikan bermutu, penguatan pelayanan kesehatan masyarakat, serta program pemberdayaan sosial ekonomi yang berkelanjutan, transparan, dan akuntabel.'],
   ['email', 'info@ckf.or.id'],
   ['phone', '+62 812-3456-7890'],
   ['address', 'Jl. Merdeka No. 123, Jakarta'],
@@ -245,8 +245,8 @@ const SETTINGS = [
   ['stat_programs', '350'],
   ['stat_volunteers', '800'],
   ['stat_years', '15'],
-  ['donation_bank_name', 'Bank Harapan'],
-  ['donation_account_number', '1234567890 a.n. Cinta Kasih Fatimah'],
+  ['donation_bank_name', 'Bank Syariah Indonesia (BSI)'],
+  ['donation_account_number', '1234567890 a.n. Yayasan Cinta Kasih Fatimah'],
 ];
 
 /* ------------------------------------------------------------------ */

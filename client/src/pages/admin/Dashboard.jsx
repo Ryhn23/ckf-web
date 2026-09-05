@@ -9,10 +9,10 @@ import EmptyState from '../../components/ui/EmptyState';
 import { formatDate } from '../../utils/formatDate';
 
 const CARDS = [
-  { key: 'totalPosts', label: 'Total Artikel', icon: 'fa-newspaper', color: 'bg-teal-50 text-teal-700' },
-  { key: 'published', label: 'Terbit', icon: 'fa-circle-check', color: 'bg-emerald-50 text-emerald-700' },
-  { key: 'drafts', label: 'Draf', icon: 'fa-file-pen', color: 'bg-amber-50 text-amber-700' },
-  { key: 'totalViews', label: 'Total Tayangan', icon: 'fa-eye', color: 'bg-sky-50 text-sky-700' },
+  { key: 'totalPosts', label: 'Total Publikasi Artikel', icon: 'fa-newspaper', color: 'bg-teal-50 text-teal-700' },
+  { key: 'published', label: 'Telah Diterbitkan', icon: 'fa-circle-check', color: 'bg-emerald-50 text-emerald-700' },
+  { key: 'drafts', label: 'Draf Dokumen', icon: 'fa-file-pen', color: 'bg-amber-50 text-amber-700' },
+  { key: 'totalViews', label: 'Total Pembaca', icon: 'fa-eye', color: 'bg-sky-50 text-sky-700' },
 ];
 
 const STATUS_BADGE = {
@@ -39,8 +39,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-500">Ringkasan aktivitas situs Cinta Kasih Fatimah.</p>
+        <h1 className="font-heading text-2xl font-bold text-slate-900">Dasbor Eksekutif</h1>
+        <p className="mt-1 text-sm text-slate-500">Ringkasan metrik kinerja publikasi dan interaksi situs Yayasan Cinta Kasih Fatimah.</p>
       </div>
 
       {/* Kartu statistik */}
@@ -63,9 +63,9 @@ export default function Dashboard() {
       <div className="grid gap-6 lg:grid-cols-5">
         {/* Grafik views per kategori */}
         <div className="card p-6 lg:col-span-3">
-          <h2 className="font-heading text-lg font-bold text-slate-900">Tayangan per Kategori</h2>
+          <h2 className="font-heading text-lg font-bold text-slate-900">Distribusi Pembaca per Bidang Program</h2>
           {chartData.length === 0 ? (
-            <p className="mt-4 text-sm text-slate-500">Belum ada data tayangan.</p>
+            <p className="mt-4 text-sm text-slate-500">Belum ada data distribusi pembaca.</p>
           ) : (
             <div className="mt-4 h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -84,13 +84,13 @@ export default function Dashboard() {
         {/* Artikel terbaru */}
         <div className="card p-6 lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading text-lg font-bold text-slate-900">Artikel Terbaru</h2>
+            <h2 className="font-heading text-lg font-bold text-slate-900">Publikasi Terkini</h2>
             <Link to="/admin/posts" className="text-sm font-semibold text-teal-700 hover:underline">
-              Lihat semua
+              Lihat seluruh arsip
             </Link>
           </div>
           {stats.recentPosts?.length === 0 ? (
-            <p className="mt-4 text-sm text-slate-500">Belum ada artikel.</p>
+            <p className="mt-4 text-sm text-slate-500">Belum ada data publikasi artikel.</p>
           ) : (
             <ul className="mt-4 space-y-3">
               {stats.recentPosts.map((post) => (

@@ -10,9 +10,9 @@ import { getFeaturedPosts } from '../../api/posts';
 
 const FALLBACK_SLIDES = [
   {
-    title: 'Berbagi Harapan, Membangun Masa Depan',
+    title: 'Mewujudkan Kemandirian dan Kesejahteraan Masyarakat',
     excerpt:
-      'Cinta Kasih Fatimah mendampingi anak-anak dan keluarga kurang mampu melalui program pendidikan, kesehatan, dan pemberdayaan ekonomi.',
+      'Yayasan Cinta Kasih Fatimah mengelola program terpadu di bidang pendidikan, layanan kesehatan, dan pemberdayaan sosial ekonomi secara transparan dan berkelanjutan.',
   },
 ];
 
@@ -65,7 +65,7 @@ export default function HeroCarousel() {
                       </Link>
                     ) : (
                       <Link to="/tentang" className="btn-accent">
-                        Kenali Kami
+                        Profil Yayasan
                         <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
                       </Link>
                     )}

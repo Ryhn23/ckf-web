@@ -101,8 +101,8 @@ export default function AdminLayout() {
             type="button"
             onClick={toggleSidebar}
             className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
-            title="Sembunyikan Sidebar"
-            aria-label="Sembunyikan Sidebar"
+            title="Sembunyikan Bilah Samping"
+            aria-label="Sembunyikan Bilah Samping"
           >
             <FontAwesomeIcon icon={['fa-solid', 'fa-chevron-left']} className="w-3.5" />
           </button>
@@ -144,7 +144,7 @@ export default function AdminLayout() {
               type="button"
               onClick={() => setMobileOpen(true)}
               className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
-              aria-label="Buka menu"
+              aria-label="Buka Navigasi"
             >
               <FontAwesomeIcon icon={['fa-solid', 'fa-bars']} />
             </button>
@@ -153,21 +153,21 @@ export default function AdminLayout() {
               type="button"
               onClick={toggleSidebar}
               className="hidden rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-teal-700 lg:inline-flex"
-              title={sidebarOpen ? 'Sembunyikan Sidebar' : 'Tampilkan Sidebar'}
-              aria-label={sidebarOpen ? 'Sembunyikan Sidebar' : 'Tampilkan Sidebar'}
+              title={sidebarOpen ? 'Sembunyikan Bilah Samping' : 'Tampilkan Bilah Samping'}
+              aria-label={sidebarOpen ? 'Sembunyikan Bilah Samping' : 'Tampilkan Bilah Samping'}
             >
               <FontAwesomeIcon icon={['fa-solid', sidebarOpen ? 'fa-bars-staggered' : 'fa-bars']} />
             </button>
 
-            <div className="hidden text-sm font-semibold text-slate-600 sm:block">
-              Panel Manajemen Cinta Kasih Fatimah
+            <div className="hidden text-sm font-semibold text-slate-700 sm:block">
+              Sistem Informasi Manajemen Yayasan Cinta Kasih Fatimah
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <Link to="/" target="_blank" className="btn-outline !px-3 !py-2 text-xs">
               <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} />
-              <span className="hidden sm:inline">Lihat Situs</span>
+              <span className="hidden sm:inline">Pratinjau Situs</span>
             </Link>
             <div className="flex items-center gap-2">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-800">
@@ -180,7 +180,7 @@ export default function AdminLayout() {
             </div>
             <button type="button" onClick={handleLogout} className="btn-danger !px-3 !py-2 text-xs">
               <FontAwesomeIcon icon={['fa-solid', 'fa-right-from-bracket']} />
-              <span className="hidden sm:inline">Keluar</span>
+              <span className="hidden sm:inline">Keluar Sesi</span>
             </button>
           </div>
         </header>

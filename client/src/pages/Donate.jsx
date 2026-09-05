@@ -64,16 +64,16 @@ export default function Donate() {
             <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-100 text-2xl text-teal-700">
               <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
             </span>
-            <h2 className="mt-5 font-heading text-2xl font-bold text-slate-900">Terima Kasih, {success.name}!</h2>
+            <h2 className="mt-5 font-heading text-2xl font-bold text-slate-900">Terima Kasih, {success.name}</h2>
             <p className="mt-3 text-sm leading-relaxed text-slate-600">
-              Niat baik Anda senilai <strong>{formatRupiah(success.amount)}</strong> telah kami catat
-              (No. <span className="font-mono">{success.reference}</span>). Tim kami akan menghubungi
-              Anda melalui email/telepon untuk informasi transfer dan penyaluran donasi.
+              Konfirmasi donasi Anda sebesar <strong>{formatRupiah(success.amount)}</strong> telah berhasil tercatat
+              (Nomor Registrasi: <span className="font-mono">{success.reference}</span>). Tim sekretariat kami akan
+              menyampaikan konfirmasi verifikasi dan bukti penerimaan melalui kontak yang terdaftar.
             </p>
             <div className="mt-8 flex justify-center gap-3">
               <Link to="/" className="btn-outline">Kembali ke Beranda</Link>
               <button type="button" onClick={() => setSuccess(null)} className="btn-primary">
-                Donasi Lagi
+                Donasi Baru
               </button>
             </div>
           </div>
@@ -84,17 +84,17 @@ export default function Donate() {
 
   return (
     <>
-      <Seo title="Donasi" description="Salurkan kebaikan Anda. Setiap donasi dilaporkan secara transparan dan disalurkan tepat sasaran." />
+      <Seo title="Donasi" description="Salurkan donasi Anda untuk mendukung program kemanusiaan, pendidikan, dan kesehatan secara transparan dan akuntabel." />
       <PageHeader
-        title="Donasi"
-        subtitle="Salurkan kebaikan Anda. Setiap donasi dilaporkan secara transparan dan disalurkan tepat sasaran."
+        title="Penyaluran Donasi"
+        subtitle="Dukungan Anda disalurkan secara terukur dan dilaporkan secara berkala kepada publik."
         crumbs={[{ label: 'Donasi' }]}
       />
 
       <section className="container-page grid gap-8 py-12 lg:grid-cols-5 lg:py-16">
         {/* Form */}
         <form onSubmit={handleSubmit} className="card p-6 lg:col-span-3 md:p-8">
-          <h2 className="font-heading text-xl font-bold text-slate-900">Form Donasi</h2>
+          <h2 className="font-heading text-xl font-bold text-slate-900">Formulir Donasi</h2>
 
           <label className="mt-6 block text-sm font-semibold text-slate-700" htmlFor="amount">
             Nominal Donasi
@@ -122,26 +122,26 @@ export default function Donate() {
             value={form.amount}
             onChange={set('amount')}
             className="input mt-2"
-            placeholder="Atau masukkan nominal lain"
+            placeholder="Atau masukkan nominal spesifik"
           />
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="name" className="text-sm font-semibold text-slate-700">Nama Lengkap *</label>
-              <input id="name" value={form.name} onChange={set('name')} required className="input mt-1.5" placeholder="Nama Anda" />
+              <input id="name" value={form.name} onChange={set('name')} required className="input mt-1.5" placeholder="Nama sesuai identitas" />
             </div>
             <div>
-              <label htmlFor="email" className="text-sm font-semibold text-slate-700">Email</label>
-              <input id="email" type="email" value={form.email} onChange={set('email')} className="input mt-1.5" placeholder="email@contoh.com" />
+              <label htmlFor="email" className="text-sm font-semibold text-slate-700">Alamat Email</label>
+              <input id="email" type="email" value={form.email} onChange={set('email')} className="input mt-1.5" placeholder="alamat@email.com" />
             </div>
             <div>
-              <label htmlFor="phone" className="text-sm font-semibold text-slate-700">No. Telepon</label>
+              <label htmlFor="phone" className="text-sm font-semibold text-slate-700">Nomor Telepon / WhatsApp</label>
               <input id="phone" value={form.phone} onChange={set('phone')} className="input mt-1.5" placeholder="08xxxxxxxxxx" />
             </div>
             <div>
-              <label htmlFor="programId" className="text-sm font-semibold text-slate-700">Program (opsional)</label>
+              <label htmlFor="programId" className="text-sm font-semibold text-slate-700">Alokasi Program (Opsional)</label>
               <select id="programId" value={form.programId} onChange={set('programId')} className="input mt-1.5">
-                <option value="">Penyaluran sesuai kebutuhan</option>
+                <option value="">Penyaluran umum (prioritas mendesak)</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
@@ -150,8 +150,8 @@ export default function Donate() {
           </div>
 
           <div className="mt-4">
-            <label htmlFor="message" className="text-sm font-semibold text-slate-700">Pesan / Doa (opsional)</label>
-            <textarea id="message" rows={3} value={form.message} onChange={set('message')} className="input mt-1.5" placeholder="Tuliskan pesan atau doa untuk penerima manfaat…" />
+            <label htmlFor="message" className="text-sm font-semibold text-slate-700">Pesan / Doa (Opsional)</label>
+            <textarea id="message" rows={3} value={form.message} onChange={set('message')} className="input mt-1.5" placeholder="Sampaikan pesan atau amanah khusus untuk penerima manfaat…" />
           </div>
 
           {error && (
@@ -162,23 +162,23 @@ export default function Donate() {
           )}
 
           <button type="submit" disabled={submitting} className="btn-accent mt-6 w-full justify-center disabled:opacity-60">
-            {submitting ? 'Mengirim…' : 'Kirim Niat Donasi'}
+            {submitting ? 'Memproses…' : 'Konfirmasi Donasi'}
           </button>
           <p className="mt-3 text-center text-xs text-slate-400">
-            Donasi Anda akan diverifikasi dan dikonfirmasi oleh tim kami sebelum penyaluran.
+            Data donasi Anda diverifikasi oleh tim perbendaharaan yayasan untuk pencatatan dan penerbitan bukti sah.
           </p>
         </form>
 
         {/* Info samping */}
         <aside className="space-y-6 lg:col-span-2">
           <div className="card p-6">
-            <h3 className="font-heading text-lg font-bold text-slate-900">Mengapa Donasi ke CKF?</h3>
+            <h3 className="font-heading text-lg font-bold text-slate-900">Komitmen Pengelolaan Donasi</h3>
             <ul className="mt-4 space-y-3">
               {[
-                'Laporan penggunaan dana dipublikasikan rutin',
-                'Donasi dapat ditunjuk untuk program tertentu',
-                'Konfirmasi & bukti penyaluran dikirim ke donatur',
-                'Relawan lokal memastikan bantuan sampai tepat sasaran',
+                'Laporan pertanggungjawaban penggunaan dana diaudit dan dipublikasikan',
+                'Donatur dapat memilih alokasi program sesuai preferensi',
+                'Bukti penerimaan dan perkembangan penyaluran disampaikan berkala',
+                'Verifikasi lapangan dilakukan langsung untuk menjamin ketepatan sasaran',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
                   <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-teal-100 text-[10px] text-teal-700">
@@ -191,14 +191,13 @@ export default function Donate() {
           </div>
 
           <div className="card bg-gradient-to-br from-teal-700 to-teal-900 p-6 text-white">
-            <h3 className="font-heading text-lg font-bold">Rekening Donasi</h3>
+            <h3 className="font-heading text-lg font-bold">Rekening Resmi Yayasan</h3>
             <p className="mt-3 text-sm text-teal-100">{settings.donation_bank_name || 'Bank Amanah'}</p>
             <p className="mt-2 font-mono text-xl font-bold tracking-wider text-amber-300">
               {settings.donation_account_number || '1234-5678-9010'}
             </p>
             <p className="mt-4 text-xs leading-relaxed text-teal-200">
-              Setelah transfer, mohon isi form di samping agar donasi Anda dapat kami catat dan
-              dilaporkan.
+              Setelah melakukan transaksi transfer, mohon melengkapi formulir konfirmasi agar donasi Anda dapat segera diverifikasi dan dicatat dalam laporan keuangan yayasan.
             </p>
           </div>
         </aside>

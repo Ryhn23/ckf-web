@@ -23,21 +23,71 @@ import userRoutes from './routes/user.routes.js';
 
 const app = express();
 
-app.use(helmet());
-const allowedOrigins = (env.clientOrigin || '').split(',').map((s) => s.trim());
-
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
-        callback(null, true);
-      } else {
-        callback(new Error(`Origin ${origin} tidak diizinkan oleh CORS`));
-      }
-    },
-    credentials: true,
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
   }),
 );
+
+const allowedOrigins = (env.clientOrigin || '')
+  .split(/[,;]/)
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const isOriginAllowed = (origin) => {
+  // Allow requests with no origin (e.g. mobile apps, curl, server-to-server, same-origin)
+  if (!origin) return true;
+
+  // Direct match or wildcard from CLIENT_ORIGIN
+  if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+    return true;
+  }
+
+  // Check wildcards in allowedOrigins (e.g. https://*.cintakasihfatimah.com)
+  for (const allowed of allowedOrigins) {
+    if (allowed.includes('*')) {
+      const escaped = allowed.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*');
+      if (new RegExp(`^${escaped}$`, 'i').test(origin)) {
+        return true;
+      }
+    }
+  }
+
+  // cintakasihfatimah.com and all its subdomains (http/https, optional port)
+  if (/^https?:\/\/([a-z0-9-]+\.)*cintakasihfatimah\.com(:\d+)?$/i.test(origin)) {
+    return true;
+  }
+
+  // localhost and all its subdomains (http/https, optional port)
+  if (/^https?:\/\/([a-z0-9-]+\.)*localhost(:\d+)?$/i.test(origin)) {
+    return true;
+  }
+
+  // 127.0.0.1 and IPv6 [::1] (http/https, optional port)
+  if (/^https?:\/\/(127\.0\.0\.1|\[::1\])(:\d+)?$/i.test(origin)) {
+    return true;
+  }
+
+  return false;
+};
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isOriginAllowed(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Set-Cookie'],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
 app.use(compression());

@@ -34,7 +34,7 @@ services:
       JWT_SECRET: "ckf-super-secret-production-jwt-key-2026"
       JWT_EXPIRES: "7d"
       COOKIE_SECURE: "false"
-      CLIENT_ORIGIN: "http://localhost:5173,http://localhost:80,http://localhost"
+      CLIENT_ORIGIN: "http://localhost:5173,http://localhost:80,http://localhost,https://cintakasihfatimah.com,https://*.cintakasihfatimah.com,http://cintakasihfatimah.com,http://*.cintakasihfatimah.com"
       UPLOAD_DIR: "./uploads"
       MAX_UPLOAD_MB: "10"
     ports:

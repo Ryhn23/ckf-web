@@ -3,7 +3,7 @@ import env from './config/env.js';
 import prisma from './config/prisma.js';
 
 const server = app.listen(env.port, () => {
-  console.log(`🚀 CKF API berjalan di http://localhost:${env.port} (${env.nodeEnv})`);
+  console.log(`CKF API berjalan di http://localhost:${env.port} (${env.nodeEnv})`);
 });
 
 // Graceful shutdown

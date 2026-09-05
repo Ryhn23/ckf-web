@@ -317,7 +317,7 @@ export default function PostEditor() {
               />
 
               <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
-                <p>💡 Gunakan Heading 2 &amp; 3 untuk memecah topik, dan format kutipan (quote) untuk poin penting.</p>
+                <p>Tips: Gunakan Heading 2 &amp; 3 untuk memecah topik, dan format kutipan (quote) untuk poin penting.</p>
                 <span className="hidden sm:inline">Editor WYSIWYG CKF</span>
               </div>
             </div>
@@ -342,8 +342,8 @@ export default function PostEditor() {
                 onChange={(e) => set('status', e.target.value)}
                 className="input"
               >
-                <option value="DRAFT">📁 Draf (Disimpan privat)</option>
-                <option value="PUBLISHED">🌐 Terbit (Dapat diakses publik)</option>
+                <option value="DRAFT">Draf (Disimpan privat)</option>
+                <option value="PUBLISHED">Terbit (Dapat diakses publik)</option>
               </select>
             </div>
 

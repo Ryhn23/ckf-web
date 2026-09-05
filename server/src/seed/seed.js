@@ -289,7 +289,7 @@ const daysAgoDate = (n) => new Date(Date.now() - n * 86_400_000);
 /* ------------------------------------------------------------------ */
 
 async function seed() {
-  console.log('▶ Memulai seed…');
+  console.log('[SEED] Memulai seed data...');
 
   // Admin user
   const adminEmail = 'admin@ckf.or.id';
@@ -304,7 +304,7 @@ async function seed() {
       role: 'ADMIN',
     },
   });
-  console.log(`✔ Admin: ${admin.email} (password: admin123${existingAdmin ? ' — sudah ada' : ''})`);
+  console.log(`- Admin: ${admin.email} (password: admin123${existingAdmin ? ' — sudah ada' : ''})`);
 
   // Categories
   const categoryMap = {};
@@ -316,7 +316,7 @@ async function seed() {
     });
     categoryMap[cat.slug] = c;
   }
-  console.log(`✔ Kategori: ${CATEGORIES.length} kategori`);
+  console.log(`- Kategori: ${CATEGORIES.length} kategori`);
 
   // Posts + covers
   for (const p of POSTS) {
@@ -364,7 +364,7 @@ async function seed() {
       },
     });
   }
-  console.log(`✔ Post: ${POSTS.length} post (${POSTS.filter((p) => p.featured).length} featured)`);
+  console.log(`- Post: ${POSTS.length} post (${POSTS.filter((p) => p.featured).length} featured)`);
 
   // Testimonials
   for (const t of TESTIMONIALS) {
@@ -374,7 +374,7 @@ async function seed() {
       create: { id: `seed-${slugify(t.name)}`, ...t, sortOrder: TESTIMONIALS.indexOf(t) },
     });
   }
-  console.log(`✔ Testimonial: ${TESTIMONIALS.length} item`);
+  console.log(`- Testimonial: ${TESTIMONIALS.length} item`);
 
   // Settings
   for (const [key, value] of SETTINGS) {
@@ -384,9 +384,9 @@ async function seed() {
       create: { key, value },
     });
   }
-  console.log(`✔ Settings: ${SETTINGS.length} key`);
+  console.log(`- Settings: ${SETTINGS.length} key`);
 
-  console.log('✅ Seed selesai.');
+  console.log('[SEED] Selesai.');
 }
 
 /** Bungkus rangkaian <li> menjadi <ul>…</ul>. */
@@ -396,7 +396,7 @@ function wrapLists(html) {
 
 seed()
   .catch((err) => {
-    console.error('❌ Seed gagal:', err);
+    console.error('[SEED ERROR]', err);
     process.exitCode = 1;
   })
   .finally(() => prisma.$disconnect());

@@ -31,9 +31,7 @@ export default function Login() {
     <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-700 text-2xl text-white shadow-card">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-          </span>
+          <img src="/logo.png" alt="Logo" className="mx-auto h-24 w-24" />
           <h1 className="mt-4 font-heading text-2xl font-bold text-slate-900">Autentikasi Administrator</h1>
           <p className="mt-1 text-sm text-slate-500">Masuk ke Sistem Informasi Manajemen Yayasan Cinta Kasih Fatimah</p>
         </div>

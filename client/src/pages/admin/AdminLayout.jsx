@@ -88,14 +88,12 @@ export default function AdminLayout() {
         }`}
       >
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700 text-white shadow-sm">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-            </span>
-            <div>
-              <p className="font-heading text-sm font-bold text-slate-900">CKF Admin</p>
-              <p className="text-xs text-slate-400">Cinta Kasih Fatimah</p>
-            </div>
+          <div className="flex items-center">
+            <img
+              src="/logo-horizontal-hitam.png"
+              alt="Yayasan Cinta Kasih Fatimah"
+              className="h-9 w-auto object-contain"
+            />
           </div>
           <button
             type="button"
@@ -116,11 +114,12 @@ export default function AdminLayout() {
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
           <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-              <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700 text-white shadow-sm">
-                  <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-                </span>
-                <p className="font-heading text-sm font-bold text-slate-900">CKF Admin</p>
+              <div className="flex items-center">
+                <img
+                  src="/logo-horizontal-hitam.png"
+                  alt="Yayasan Cinta Kasih Fatimah"
+                  className="h-9 w-auto object-contain"
+                />
               </div>
               <button
                 type="button"

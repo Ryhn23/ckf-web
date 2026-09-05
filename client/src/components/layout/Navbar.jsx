@@ -5,20 +5,13 @@ import { NAV_ITEMS } from '../../utils/constants';
 import { useSettings } from '../../context/SettingsContext';
 
 function Logo() {
-  const { settings } = useSettings();
   return (
-    <Link to="/" className="flex items-center gap-2.5">
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700 text-lg font-bold text-white">
-        C
-      </span>
-      <span className="leading-tight">
-        <span className="block font-heading text-base font-bold text-slate-900">
-          {settings.foundation_name || 'Cinta Kasih Fatimah'}
-        </span>
-        <span className="block text-[11px] font-medium tracking-wide text-teal-700">
-          {settings.tagline || 'Berbagi Harapan, Membangun Masa Depan'}
-        </span>
-      </span>
+    <Link to="/" className="flex items-center">
+      <img
+        src="/logo-horizontal-primer.png"
+        alt="Yayasan Cinta Kasih Fatimah"
+        className="h-10 w-auto object-contain"
+      />
     </Link>
   );
 }

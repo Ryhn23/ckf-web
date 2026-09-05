@@ -22,12 +22,11 @@ export default function Footer() {
       <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         {/* Brand */}
         <div>
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg font-bold text-white">
-              C
-            </span>
-            <span className="font-heading text-base font-bold text-white">{settings.foundation_name || 'Cinta Kasih Fatimah'}</span>
-          </div>
+          <img
+            src="/logo-horizontal-putih.png"
+            alt="Yayasan Cinta Kasih Fatimah"
+            className="h-10 w-auto object-contain"
+          />
           <p className="mt-4 text-sm leading-relaxed text-teal-200">
             Yayasan Cinta Kasih Fatimah berkhidmat dalam penyelenggaraan program kemanusiaan, pemenuhan hak pendidikan, dan peningkatan derajat kesehatan masyarakat secara profesional dan akuntabel.
           </p>

@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(ADMIN)
+  avatar       String?
+  createdAt    DateTime @default(now())
+  posts        Post[]
+  media        Media[]
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String   @default("fa-solid fa-circle")
+  sortOrder   Int      @default(0)
+  posts       Post[]
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  status      PostStatus @default(DRAFT)
+  isFeatured  Boolean    @default(false)
+  publishedAt DateTime?
+  views       Int        @default(0)
+  author      User       @relation(fields: [authorId], references: [id])
+  authorId    String
+  category    Category   @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  tags        Json     @default("[]")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([status, publishedAt(sort: Desc)])
+  @@index([categoryId])
+}
+
+model Media {
+  id           String   @id @default(cuid())
+  url          String   @unique
+  originalName String
+  size         Int
+  mimeType     String
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
+  uploadedById String?
+  createdAt    DateTime @default(now())
+}
+
+enum DonationStatus {
+  PENDING
+  PROCESSED
+  REJECTED
+}
+
+model Donation {
+  id        String         @id @default(cuid())
+  reference String         @unique
+  name      String
+  email     String?
+  phone     String?
+  amount    Int
+  programId String?
+  message   String?
+  status    DonationStatus @default(PENDING)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([status, createdAt(sort: Desc)])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([isRead, createdAt(sort: Desc)])
+}
+
+model Testimonial {
+  id        String  @id @default(cuid())
+  name      String
+  role      String
+  quote     String
+  avatar    String?
+  sortOrder Int     @default(0)
+}
+
+model Setting {
+  key   String @id
+  value String
+}

@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-slate-50 font-sans text-slate-700 antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading text-slate-900;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-teal-600 hover:text-teal-700;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .input {
+    @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 transition focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-slate-700;
+  }
+  .card {
+    @apply rounded-2xl bg-white shadow-card;
+  }
+}
+
+/* Konten artikel (output editor quill) */
+.prose-post {
+  @apply text-base leading-relaxed text-slate-700;
+}
+.prose-post h1,
+.prose-post h2,
+.prose-post h3 {
+  @apply mb-4 mt-6 font-heading text-slate-900;
+}
+.prose-post h1 {
+  @apply text-2xl;
+}
+.prose-post h2 {
+  @apply text-xl;
+}
+.prose-post h3 {
+  @apply text-lg;
+}
+.prose-post p {
+  @apply mb-4;
+}
+.prose-post ul {
+  @apply mb-4 list-disc space-y-1 pl-6;
+}
+.prose-post ol {
+  @apply mb-4 list-decimal space-y-1 pl-6;
+}
+.prose-post a {
+  @apply text-teal-700 underline decoration-teal-300 underline-offset-2 hover:decoration-teal-600;
+}
+.prose-post blockquote {
+  @apply mb-4 border-l-4 border-teal-600 bg-teal-50/60 px-4 py-3 italic text-slate-600;
+}
+.prose-post img {
+  @apply my-4 w-full rounded-xl object-cover;
+}
+.prose-post pre {
+  @apply mb-4 overflow-x-auto rounded-xl bg-slate-900 p-4 text-sm text-slate-100;
+}
+.prose-post code {
+  @apply rounded bg-slate-100 px-1.5 py-0.5 text-sm text-teal-800;
+}
+.prose-post pre code {
+  @apply bg-transparent text-inherit;
+}
+.prose-post table {
+  @apply mb-4 w-full border-collapse text-sm;
+}
+.prose-post th,
+.prose-post td {
+  @apply border border-slate-200 px-3 py-2 text-left;
+}
+.prose-post th {
+  @apply bg-slate-100 font-semibold text-slate-800;
+}
+
+/* Marquee mitra */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Quill editor */
+.quill-editor .ql-toolbar {
+  @apply rounded-t-xl border border-slate-300 bg-slate-50;
+}
+.quill-editor .ql-container {
+  @apply min-h-[420px] rounded-b-xl border border-slate-300 text-sm;
+}
+.quill-editor .ql-editor {
+  min-height: 420px;
+}

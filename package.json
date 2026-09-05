@@ -1,0 +1,22 @@
+{
+  "name": "ckf-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Blog Cinta Kasih Fatimah — React + Express + Prisma + PostgreSQL",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "setup": "SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install --no-audit --no-fund",
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
+    "dev:server": "npm run dev -w server",
+    "dev:client": "npm run dev -w client",
+    "build": "npm run build -w client",
+    "seed": "npm run seed -w server",
+    "migrate": "npm run migrate -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

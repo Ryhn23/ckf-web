@@ -1,6 +1,6 @@
 /**
  * Seed idempoten: admin user, kategori, post dummy (dengan cover image),
- * testimonials, dan settings yayasan.
+ * testimonials, dan settings lembaga.
  *
  * Jalankan: npm run seed -w server
  */
@@ -58,15 +58,15 @@ const CATEGORIES = [
     name: 'Kegiatan Internal',
     slug: 'kegiatan-internal',
     icon: 'fa-solid fa-users',
-    description: 'Rapat kerja koordinasi, konsolidasi relawan kemanusiaan, serta pelatihan peningkatan kapasitas tata kelola amil yayasan.',
-    target: 'Staf pengurus, relawan penggerak lapangan, dan mitra kelembagaan yayasan',
+    description: 'Rapat kerja koordinasi, konsolidasi relawan kemanusiaan, serta pelatihan peningkatan kapasitas tata kelola amil lembaga.',
+    target: 'Staf pengurus, relawan penggerak lapangan, dan mitra kelembagaan',
     impact: '800+ Relawan Terlatih, Tata Kelola Akuntabel',
   },
   {
     name: 'Pengumuman',
     slug: 'pengumuman',
     icon: 'fa-solid fa-bullhorn',
-    description: 'Rilis pers resmi, laporan tahunan berkala, pengumuman seleksi beasiswa, dan transparansi pertanggungjawaban publik yayasan.',
+    description: 'Rilis pers resmi, laporan tahunan berkala, pengumuman seleksi beasiswa, dan transparansi pertanggungjawaban publik.',
     target: 'Masyarakat umum, donatur setia, mitra korporasi, dan pemangku kepentingan',
     impact: 'Transparansi Audit Publik Wajar Tanpa Pengecualian (WTP)',
   },
@@ -84,8 +84,8 @@ const POSTS = [
       'Cinta Kasih Fatimah resmi membuka pendaftaran 120 beasiswa penuh untuk anak usia sekolah dari keluarga prasejahtera di tiga kabupaten.',
     cover: ['#0f766e', '#134e4a'],
     content: [
-      'p:Cinta Kasih Fatimah pada hari ini secara resmi membuka pendaftaran program beasiswa pendidikan tahun ajaran 2026/2027. Tahun ini yayasan mengalokasikan 120 beasiswa penuh yang mencakup biaya sekolah, buku, seragam, dan kebutuhan belajar lainnya.',
-      'p:Beasiswa ini ditujukan bagi anak usia sekolah dari keluarga prasejahtera di tiga kabupaten yang menjadi wilayah kerja yayasan. Para penerima akan didampingi oleh mentor relawan hingga menyelesaikan jenjang pendidikannya.',
+      'p:Cinta Kasih Fatimah pada hari ini secara resmi membuka pendaftaran program beasiswa pendidikan tahun ajaran 2026/2027. Tahun ini lembaga mengalokasikan 120 beasiswa penuh yang mencakup biaya sekolah, buku, seragam, dan kebutuhan belajar lainnya.',
+      'p:Beasiswa ini ditujukan bagi anak usia sekolah dari keluarga prasejahtera di tiga kabupaten yang menjadi wilayah kerja lembaga. Para penerima akan didampingi oleh mentor relawan hingga menyelesaikan jenjang pendidikannya.',
       'h2:Cara Pendaftaran',
       'ul:Pendaftaran dilakukan melalui sekolah masing-masing atau kantor kecamatan terdekat.',
       'ul:Siapkan fotokopi KK, rapor dua semester terakhir, dan surat keterangan tidak mampu dari kelurahan.',
@@ -125,7 +125,7 @@ const POSTS = [
     cover: ['#4d7c0f', '#3f6212'],
     content: [
       'p:Program Perpustakaan Bergerang kembali membawa kabar baik. Sebanyak 40 buku cerita dan buku pengetahuan baru telah didistribusikan ke empat sekolah dasar di wilayah pedalaman.',
-      'p:Buku-buku ini merupakan hasil penggalangan dari para donatur yang menyisihkan buku bacaan mereka. Seluruh buku melewati kurasi tim pendidikan yayasan agar sesuai dengan usia dan kurikulum peserta didik.',
+      'p:Buku-buku ini merupakan hasil penggalangan dari para donatur yang menyisihkan buku bacaan mereka. Seluruh buku melewati kurasi tim pendidikan lembaga agar sesuai dengan usia dan kurikulum peserta didik.',
       'h2:Kegiatan Pendamping',
       'ul:Sesi membaca bersama bersama guru kelas setiap Jumat.',
       'ul:Pelatihan sederhana pengelolaan perpustakaan mini untuk guru.',
@@ -143,7 +143,7 @@ const POSTS = [
       'Ratusan relawan dan warga bahu membahu membersihkan pantai sekaligus menanam seribu bibit mangrove.',
     cover: ['#047857', '#065f46'],
     content: [
-      'p:Lebih dari 200 relawan bersama warga setempat berkumpul di pesisir untuk kegiatan pembersihan pantai dan penanaman mangrove. Kegiatan ini menjadi agenda bulanan yayasan sebagai bentuk kepedulian terhadap lingkungan pesisir.',
+      'p:Lebih dari 200 relawan bersama warga setempat berkumpul di pesisir untuk kegiatan pembersihan pantai dan penanaman mangrove. Kegiatan ini menjadi agenda bulanan sebagai bentuk kepedulian terhadap lingkungan pesisir.',
       'p:Sebanyak seribu bibit mangrove ditanam di sepanjang dua kilometer pantai. Selain berfungsi menahan abrasi, hutan mangrove juga menjadi habitat biota laut yang menopang mata pencaharian nelayan sekitar.',
       'h2:Dampak Jangka Panjang',
       'ul:Pengurangan abrasi dan perlindungan tambak warga dari intrusi air laut.',
@@ -182,7 +182,7 @@ const POSTS = [
       'Cinta Kasih Fatimah membuka pendaftaran relawan batch 12 untuk posisi pendamping pendidikan, medis, dan logistik.',
     cover: ['#7c3aed', '#5b21b6'],
     content: [
-      'p:Cinta Kasih Fatimah dengan senang hati mengumumkan pembukaan pendaftaran relawan batch 12. Kami mencari individu yang siap berkomitmen minimal enam bulan untuk mendampingi program yayasan di lapangan.',
+      'p:Cinta Kasih Fatimah dengan senang hati mengumumkan pembukaan pendaftaran relawan batch 12. Kami mencari individu yang siap berkomitmen minimal enam bulan untuk mendampingi program lembaga di lapangan.',
       'p:Tiga posisi yang dibuka adalah pendamping pendidikan, asisten medis, dan koordinator logistik. Seluruh relawan akan mengikuti orientasi dua hari sebelum bertugas di wilayah program.',
       'h2:Informasi Penting',
       'ul:Periode pendaftaran ditutup pada akhir bulan ini atau bila kuota terpenuhi.',
@@ -199,7 +199,7 @@ const POSTS = [
     views: 720,
     tags: ['dapur-umum', 'kemanusiaan'],
     excerpt:
-      'Dapur umum yayasan kini melayani 500 porsi nasi hangat setiap hari untuk pekerja migran dan warga sekitar.',
+      'Dapur umum CKF kini melayani 500 porsi nasi hangat setiap hari untuk pekerja migran dan warga sekitar.',
     cover: ['#be123c', '#9f1239'],
     content: [
       'p:Dapur umum Cinta Kasih Fatimah yang berlokasi di pusat kota kini melayani 500 porsi nasi hangat setiap hari. Porsi tersebut didistribusikan untuk pekerja migran, buruh harian, dan warga sekitar yang membutuhkan.',
@@ -221,7 +221,7 @@ const POSTS = [
       'Empat puluh guru desa mengikuti workshop pertolongan pertama dasar agar siap menghadapi kondisi darurat di sekolah.',
     cover: ['#0369a1', '#075985'],
     content: [
-      'p:Sebanyak 40 guru dari berbagai sekolah desa mengikuti workshop pertolongan pertama dasar yang difasilitasi yayasan bersama tim medis. Materi mencakup penanganan pingsan, luka berdarah, hingga tatalaksana awal demam tinggi pada anak.',
+      'p:Sebanyak 40 guru dari berbagai sekolah desa mengikuti workshop pertolongan pertama dasar yang difasilitasi lembaga bersama tim medis. Materi mencakup penanganan pingsan, luka berdarah, hingga tatalaksana awal demam tinggi pada anak.',
       'p:Para guru dipilih sebagai agen perubahan karena mereka adalah orang dewasa yang paling sering berada di dekat anak-anak saat kondisi darurat terjadi di lingkungan sekolah.',
       'h2:Langkah Selanjutnya',
       'ul:Pembentukan tim siaga darurat di setiap sekolah binaan.',
@@ -237,7 +237,7 @@ const POSTS = [
     views: 210,
     tags: ['internal', 'program'],
     excerpt:
-      'Seluruh divisi yayasan berkumpul merumuskan prioritas program kemanusiaan dan target dampak tahun ini.',
+      'Seluruh divisi lembaga berkumpul merumuskan prioritas program kemanusiaan dan target dampak tahun ini.',
     cover: ['#475569', '#334155'],
     content: [
       'p:Cinta Kasih Fatimah menggelar rapat kerja internal dua hari untuk menata kembali peta program kemanusiaan tahun ini. Seluruh kepala divisi, koordinator wilayah, dan perwakilan relawan hadir dalam forum tersebut.',
@@ -273,9 +273,9 @@ const TESTIMONIALS = [
 ];
 
 const SETTINGS = [
-  ['foundation_name', 'Yayasan Cinta Kasih Fatimah'],
+  ['foundation_name', 'Cinta Kasih Fatimah'],
   ['tagline', 'Berkhidmat untuk Pendidikan, Kesehatan, dan Kesejahteraan Masyarakat'],
-  ['about_text', 'Yayasan Cinta Kasih Fatimah berkhidmat dalam menyediakan akses pendidikan bermutu, penguatan pelayanan kesehatan masyarakat, serta program pemberdayaan sosial ekonomi yang berkelanjutan, transparan, dan akuntabel.'],
+  ['about_text', 'Lembaga ini berkhidmat dalam menyediakan akses pendidikan bermutu, penguatan pelayanan kesehatan masyarakat, serta program pemberdayaan sosial ekonomi yang berkelanjutan, transparan, dan akuntabel.'],
   ['email', 'info@ckf.or.id'],
   ['phone', '+62 812-3456-7890'],
   ['address', 'Jl. Merdeka No. 123, Jakarta'],
@@ -292,7 +292,7 @@ const SETTINGS = [
   ['stat_volunteers_label', 'Relawan Aktif'],
   ['stat_years_label', 'Tahun Berkhidmat'],
   ['donation_bank_name', 'Bank Syariah Indonesia (BSI)'],
-  ['donation_account_number', '1234567890 a.n. Yayasan Cinta Kasih Fatimah'],
+  ['donation_account_number', '1234567890 a.n. Cinta Kasih Fatimah'],
 
   // Visibilitas Menu Navigasi & Halaman Publik
   ['menu_donasi_enabled', 'true'],
@@ -314,8 +314,8 @@ const SETTINGS = [
 
   // Konten Hero Banner
   ['hero_title', 'Mewujudkan Kemandirian dan Kesejahteraan Masyarakat'],
-  ['hero_excerpt', 'Yayasan Cinta Kasih Fatimah mengelola program terpadu di bidang pendidikan, layanan kesehatan, dan pemberdayaan sosial ekonomi secara transparan dan berkelanjutan.'],
-  ['hero_btn_primary_text', 'Profil Yayasan'],
+  ['hero_excerpt', 'Lembaga ini mengelola program terpadu di bidang pendidikan, layanan kesehatan, dan pemberdayaan sosial ekonomi secara transparan dan berkelanjutan.'],
+  ['hero_btn_primary_text', 'Profil Lembaga'],
   ['hero_btn_primary_link', '/tentang'],
   ['hero_btn_secondary_text', 'Donasi Sekarang'],
   ['hero_btn_secondary_link', '/donasi'],
@@ -326,13 +326,13 @@ const SETTINGS = [
   ['home_about_card_title', 'Sejak 2017'],
   ['home_about_card_subtitle', 'Dedikasi untuk kemanusiaan'],
   ['home_about_checklist', 'Transparan dan akuntabel — laporan penyaluran dipublikasikan berkala\nProgram berbasis asesmen kebutuhan nyata di lapangan\nDidukung relawan berdedikasi dan terverifikasi di berbagai wilayah\nSinergi kemitraan strategis dengan pemerintah dan sektor swasta'],
-  ['home_about_btn_text', 'Profil Lengkap Yayasan'],
+  ['home_about_btn_text', 'Profil Lengkap Lembaga'],
   ['home_about_btn_link', '/tentang'],
 
   // Konten Pilar Program di Beranda
   ['home_programs_badge', 'Pilar Program'],
-  ['home_programs_title', 'Fokus Pelayanan Yayasan'],
-  ['home_programs_subtitle', 'Inisiatif strategis Yayasan Cinta Kasih Fatimah dalam mewujudkan transformasi sosial, pendidikan, dan kesehatan berkelanjutan.'],
+  ['home_programs_title', 'Fokus Pelayanan'],
+  ['home_programs_subtitle', 'Inisiatif strategis dalam mewujudkan transformasi sosial, pendidikan, dan kesehatan berkelanjutan.'],
   ['home_programs_btn_text', 'Seluruh Program Pelayanan'],
   ['home_programs_btn_link', '/program'],
 
@@ -367,9 +367,9 @@ const SETTINGS = [
   // Konten Halaman Tentang Kami
   ['about_header_subtitle', 'Mengenal komitmen, visi misi, serta struktur pengurus dalam menjalankan program kemanusiaan.'],
   ['about_history_badge', 'Latar Belakang'],
-  ['about_history_title', 'Sejarah dan Komitmen Yayasan'],
-  ['about_history_p1', 'Yayasan Cinta Kasih Fatimah didirikan sebagai wujud kepedulian terhadap kesenjangan akses pendidikan formal dan layanan kesehatan bagi masyarakat prasejahtera. Berangkat dari inisiatif advokasi beasiswa dan distribusi kebutuhan dasar, yayasan terus mengembangkan tata kelola program yang terstruktur dan terintegrasi.'],
-  ['about_history_p2', 'Hingga kini, berlandaskan amanah dari para donatur dan dedikasi segenap relawan lapangan, yayasan menjalankan program pelayanan strategis secara terencana, berkeadilan, dan dapat dipertanggungjawabkan melalui pelaporan berkala secara akuntabel.'],
+  ['about_history_title', 'Sejarah dan Komitmen Lembaga'],
+  ['about_history_p1', 'Lembaga ini didirikan sebagai wujud kepedulian terhadap kesenjangan akses pendidikan formal dan layanan kesehatan bagi masyarakat prasejahtera. Berangkat dari inisiatif advokasi beasiswa dan distribusi kebutuhan dasar, lembaga terus mengembangkan tata kelola program yang terstruktur dan terintegrasi.'],
+  ['about_history_p2', 'Hingga kini, berlandaskan amanah dari para donatur dan dedikasi segenap relawan lapangan, lembaga menjalankan program pelayanan strategis secara terencana, berkeadilan, dan dapat dipertanggungjawabkan melalui pelaporan berkala secara akuntabel.'],
   ['about_vision_title', 'Visi'],
   ['about_vision_desc', 'Mewujudkan kemandirian masyarakat yang berdaya, terdidik, dan sehat sejahtera.'],
   ['about_mission_title', 'Misi'],
@@ -379,7 +379,7 @@ const SETTINGS = [
   ['about_innovation_title', 'Inovasi'],
   ['about_innovation_desc', 'Mengoptimalkan sistem data dan teknologi untuk memperluas jangkauan penerima manfaat secara terukur.'],
   ['about_values_badge', 'Nilai Organisasi'],
-  ['about_values_title', 'Prinsip Pelayanan Yayasan'],
+  ['about_values_title', 'Prinsip Pelayanan Lembaga'],
   ['about_val1_title', 'Akuntabilitas'],
   ['about_val1_desc', 'Pengelolaan dan laporan penyaluran donasi dipublikasikan secara transparan dan berkala.'],
   ['about_val2_title', 'Kepedulian Sosial'],
@@ -390,9 +390,9 @@ const SETTINGS = [
   ['about_val4_desc', 'Perancangan program yang berorientasi pada kemandirian jangka panjang penerima manfaat.'],
   ['about_team_badge', 'Struktur Organisasi'],
   ['about_team_title', 'Susunan Dewan Pengurus'],
-  ['about_team_list', 'Hj. Kartika Sari | Ketua Yayasan\nBudi Santoso | Sekretaris\nDra. Ratna Dewi | Bendahara\nAndi Prasetyo | Koordinator Program Pendidikan\nNur Aini, S.Kep | Koordinator Program Kesehatan\nFajar Hidayat | Koordinator Relawan & Donasi'],
+  ['about_team_list', 'Hj. Kartika Sari | Ketua Lembaga\nBudi Santoso | Sekretaris\nDra. Ratna Dewi | Bendahara\nAndi Prasetyo | Koordinator Program Pendidikan\nNur Aini, S.Kep | Koordinator Program Kesehatan\nFajar Hidayat | Koordinator Relawan & Donasi'],
   ['about_cta_title', 'Kemitraan dan Partisipasi Program'],
-  ['about_cta_desc', 'Yayasan membuka kesempatan kolaborasi strategis bagi instansi, donatur, maupun relawan dalam memperluas dampak kemanusiaan.'],
+  ['about_cta_desc', 'Lembaga membuka kesempatan kolaborasi strategis bagi instansi, donatur, maupun relawan dalam memperluas dampak kemanusiaan.'],
   ['about_cta_btn_text', 'Hubungi Sekretariat'],
   ['about_cta_btn_link', '/kontak'],
 ];

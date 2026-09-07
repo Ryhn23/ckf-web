@@ -9,9 +9,9 @@ import EmptyState from '../../components/ui/EmptyState';
 
 const GROUPS = [
   {
-    title: 'Identitas & Profil Yayasan',
+    title: 'Identitas & Profil Lembaga',
     fields: [
-      { key: 'foundation_name', label: 'Nama Resmi Yayasan' },
+      { key: 'foundation_name', label: 'Nama Resmi Lembaga' },
       { key: 'tagline', label: 'Motto / Semboyan Lembaga' },
       { key: 'about_text', label: 'Deskripsi Profil Lembaga (Halaman Beranda)', textarea: true },
     ],

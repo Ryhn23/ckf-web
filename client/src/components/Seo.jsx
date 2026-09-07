@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 /**
  * Meta SEO per halaman (title, description, Open Graph).
  * Pemakaian: <Seo title="Tentang Kami" description="..." />
- * Tanpa props → memakai judul default yayasan.
+ * Tanpa props → memakai judul default lembaga.
  */
 export default function Seo({ title, description }) {
   const fullTitle = title ? `${title} — Cinta Kasih Fatimah` : 'Cinta Kasih Fatimah';

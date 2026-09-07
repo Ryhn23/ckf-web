@@ -40,7 +40,7 @@ export default function Dashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="font-heading text-2xl font-bold text-slate-900">Dasbor Eksekutif</h1>
-        <p className="mt-1 text-sm text-slate-500">Ringkasan metrik kinerja publikasi dan interaksi situs Yayasan Cinta Kasih Fatimah.</p>
+        <p className="mt-1 text-sm text-slate-500">Ringkasan metrik kinerja publikasi dan interaksi situs.</p>
       </div>
 
       {/* Kartu statistik publikasi */}

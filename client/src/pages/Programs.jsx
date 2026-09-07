@@ -16,11 +16,11 @@ export default function Programs() {
     <>
       <Seo
         title="Program & Kegiatan"
-        description="Direktori pilar program pelayanan Yayasan Cinta Kasih Fatimah dalam bidang pendidikan, kesehatan, beasiswa, dan kesejahteraan sosial."
+        description="Direktori pilar program pelayanan dalam bidang pendidikan, kesehatan, beasiswa, dan kesejahteraan sosial."
       />
       <PageHeader
         title="Program Pelayanan & Kegiatan"
-        subtitle="Pilar program kerja terstruktur Yayasan Cinta Kasih Fatimah yang dirancang untuk mewujudkan kebermanfaatan nyata, berdaya guna, dan berkelanjutan."
+        subtitle="Pilar program kerja terstruktur yang dirancang untuk mewujudkan kebermanfaatan nyata, berdaya guna, dan berkelanjutan."
         crumbs={[{ label: 'Program' }]}
       />
 
@@ -30,7 +30,7 @@ export default function Programs() {
           <div className="grid gap-6 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-8">
               <span className="inline-block rounded-full bg-teal-700/80 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-teal-200">
-                Pilar Keberlanjutan Yayasan
+                Pilar Keberlanjutan Program
               </span>
               <h2 className="mt-3 font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
                 Pendekatan Holistik untuk Kesejahteraan Umat
@@ -65,7 +65,7 @@ export default function Programs() {
           <EmptyState
             icon="fa-folder-open"
             title="Belum ada data program"
-            description="Data program pelayanan sedang dipersiapkan oleh pengurus yayasan."
+            description="Data program pelayanan sedang dipersiapkan oleh pengurus."
           />
         ) : (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -90,7 +90,7 @@ export default function Programs() {
                     {cat.name}
                   </h3>
                   <p className="mt-2.5 text-sm leading-relaxed text-slate-600">
-                    {cat.description || 'Program kerja aktif Yayasan Cinta Kasih Fatimah dalam mewujudkan pelayanan masyarakat.'}
+                    {cat.description || 'Program kerja aktif dalam mewujudkan pelayanan masyarakat.'}
                   </p>
 
                   {/* Metadata Sasaran & Capaian */}
@@ -164,7 +164,7 @@ export default function Programs() {
               Komitmen Transparansi dan Akuntabilitas
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">
-              Setiap realisasi kegiatan dan penyaluran dana diawasi secara ketat dan didokumentasikan secara berkala. Seluruh laporan kegiatan dipublikasikan melalui kanal warta dan laporan tahunan resmi yayasan.
+              Setiap realisasi kegiatan dan penyaluran dana diawasi secara ketat dan didokumentasikan secara berkala. Seluruh laporan kegiatan dipublikasikan melalui kanal warta dan laporan tahunan resmi.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link to="/donasi" className="btn-primary text-sm">

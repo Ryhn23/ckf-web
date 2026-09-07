@@ -9,7 +9,7 @@ function Logo() {
     <Link to="/" className="flex items-center">
       <img
         src="/logo-horizontal-primer.png"
-        alt="Yayasan Cinta Kasih Fatimah"
+        alt="Logo"
         className="h-10 w-auto object-contain"
       />
     </Link>

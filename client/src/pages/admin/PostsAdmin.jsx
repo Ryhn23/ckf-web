@@ -52,7 +52,7 @@ export default function PostsAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-heading text-2xl font-bold text-slate-900">Manajemen Artikel & Publikasi</h1>
-          <p className="mt-1 text-sm text-slate-500">Kelola dan publikasikan warta kegiatan, edukasi, dan dokumentasi program yayasan.</p>
+          <p className="mt-1 text-sm text-slate-500">Kelola dan publikasikan warta kegiatan, edukasi, dan dokumentasi program.</p>
         </div>
         <Link to="/admin/posts/new" className="btn-primary">
           <FontAwesomeIcon icon={['fa-solid', 'fa-plus']} />

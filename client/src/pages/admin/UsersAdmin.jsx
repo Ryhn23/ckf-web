@@ -89,7 +89,7 @@ export default function UsersAdmin() {
     <div className="space-y-6">
       <div>
         <h1 className="font-heading text-2xl font-bold text-slate-900">Manajemen Pengguna & Otoritas</h1>
-        <p className="mt-1 text-sm text-slate-500">Pengelolaan akun administrator dan staf pengelola konten sistem informasi yayasan.</p>
+        <p className="mt-1 text-sm text-slate-500">Pengelolaan akun administrator dan staf pengelola konten sistem informasi.</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-12">

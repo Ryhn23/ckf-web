@@ -11,10 +11,10 @@ export default function ProgramsGrid() {
   const categories = (data?.data || []).slice(0, 6);
 
   const badge = settings.home_programs_badge || 'Pilar Program';
-  const title = settings.home_programs_title || 'Fokus Pelayanan Yayasan';
+  const title = settings.home_programs_title || 'Fokus Pelayanan';
   const subtitle =
     settings.home_programs_subtitle ||
-    'Inisiatif strategis Yayasan Cinta Kasih Fatimah dalam mewujudkan transformasi sosial, pendidikan, dan kesehatan berkelanjutan.';
+    'Inisiatif strategis dalam mewujudkan transformasi sosial, pendidikan, dan kesehatan berkelanjutan.';
   const btnText = settings.home_programs_btn_text || 'Seluruh Program Pelayanan';
   const btnLink = settings.home_programs_btn_link || '/program';
 

@@ -5,7 +5,7 @@ import Seo from '../components/Seo';
 import { useSettings } from '../context/SettingsContext';
 
 const DEFAULT_TEAM = [
-  { name: 'Hj. Kartika Sari', role: 'Ketua Yayasan' },
+  { name: 'Hj. Kartika Sari', role: 'Ketua Lembaga' },
   { name: 'Budi Santoso', role: 'Sekretaris' },
   { name: 'Dra. Ratna Dewi', role: 'Bendahara' },
   { name: 'Andi Prasetyo', role: 'Koordinator Program Pendidikan' },
@@ -22,7 +22,7 @@ export default function About() {
   const showTeam = settings.about_show_team !== 'false';
   const showPartnership = settings.about_show_partnership !== 'false';
 
-  const foundationName = settings.foundation_name || 'Yayasan Cinta Kasih Fatimah';
+  const foundationName = settings.foundation_name || 'Lembaga Kami';
 
   // Parse team from settings
   const parsedTeam = settings.about_team_list
@@ -31,7 +31,7 @@ export default function About() {
         .map((line) => {
           const parts = line.split('|').map((s) => s.trim());
           if (!parts[0]) return null;
-          return { name: parts[0], role: parts[1] || 'Pengurus Yayasan' };
+          return { name: parts[0], role: parts[1] || 'Pengurus Lembaga' };
         })
         .filter(Boolean)
     : DEFAULT_TEAM;
@@ -125,16 +125,16 @@ export default function About() {
                   {settings.about_history_badge || 'Latar Belakang'}
                 </span>
                 <h2 className="text-3xl font-bold leading-snug">
-                  {settings.about_history_title || 'Sejarah dan Komitmen Yayasan'}
+                  {settings.about_history_title || 'Sejarah dan Komitmen Lembaga'}
                 </h2>
                 <div className="mt-6 space-y-4 leading-relaxed text-slate-600">
                   <p>
                     {settings.about_history_p1 ||
-                      `${foundationName} didirikan sebagai wujud kepedulian terhadap kesenjangan akses pendidikan formal dan layanan kesehatan bagi masyarakat prasejahtera. Berangkat dari inisiatif advokasi beasiswa dan distribusi kebutuhan dasar, yayasan terus mengembangkan tata kelola program yang terstruktur dan terintegrasi.`}
+                      `${foundationName} didirikan sebagai wujud kepedulian terhadap kesenjangan akses pendidikan formal dan layanan kesehatan bagi masyarakat prasejahtera. Berangkat dari inisiatif advokasi beasiswa dan distribusi kebutuhan dasar, lembaga terus mengembangkan tata kelola program yang terstruktur dan terintegrasi.`}
                   </p>
                   <p>
                     {settings.about_history_p2 ||
-                      'Hingga kini, berlandaskan amanah dari para donatur dan dedikasi segenap relawan lapangan, yayasan menjalankan program pelayanan strategis secara terencana, berkeadilan, dan dapat dipertanggungjawabkan melalui pelaporan berkala secara akuntabel.'}
+                      'Hingga kini, berlandaskan amanah dari para donatur dan dedikasi segenap relawan lapangan, lembaga menjalankan program pelayanan strategis secara terencana, berkeadilan, dan dapat dipertanggungjawabkan melalui pelaporan berkala secara akuntabel.'}
                   </p>
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function About() {
                 {settings.about_values_badge || 'Nilai Organisasi'}
               </span>
               <h2 className="text-3xl font-bold md:text-4xl">
-                {settings.about_values_title || 'Prinsip Pelayanan Yayasan'}
+                {settings.about_values_title || 'Prinsip Pelayanan Lembaga'}
               </h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -221,7 +221,7 @@ export default function About() {
                 </h3>
                 <p className="mx-auto mt-3 max-w-xl text-sm text-teal-100">
                   {settings.about_cta_desc ||
-                    'Yayasan membuka kesempatan kolaborasi strategis bagi instansi, donatur, maupun relawan dalam memperluas dampak kemanusiaan.'}
+                    'Lembaga membuka kesempatan kolaborasi strategis bagi instansi, donatur, maupun relawan dalam memperluas dampak kemanusiaan.'}
                 </p>
                 <Link
                   to={settings.about_cta_btn_link || '/kontak'}

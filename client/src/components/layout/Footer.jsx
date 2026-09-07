@@ -36,11 +36,11 @@ export default function Footer() {
         <div>
           <img
             src="/logo-horizontal-putih.png"
-            alt="Yayasan Cinta Kasih Fatimah"
+            alt="Logo"
             className="h-10 w-auto object-contain"
           />
           <p className="mt-4 text-sm leading-relaxed text-teal-200">
-            Yayasan Cinta Kasih Fatimah berkhidmat dalam penyelenggaraan program kemanusiaan, pemenuhan hak pendidikan, dan peningkatan derajat kesehatan masyarakat secara profesional dan akuntabel.
+            {settings.about_text || 'Kami berkhidmat dalam penyelenggaraan program kemanusiaan, pemenuhan hak pendidikan, dan peningkatan derajat kesehatan masyarakat secara profesional dan akuntabel.'}
           </p>
           <div className="mt-5 flex gap-3">
             {socials.map((s) => (

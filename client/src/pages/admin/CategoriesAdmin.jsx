@@ -87,7 +87,7 @@ export default function CategoriesAdmin() {
     <div className="space-y-6">
       <div>
         <h1 className="font-heading text-2xl font-bold text-slate-900">Manajemen Kategori Program</h1>
-        <p className="mt-1 text-sm text-slate-500">Konfigurasi pilar program kerja dan taksonomi pengelompokan artikel yayasan.</p>
+        <p className="mt-1 text-sm text-slate-500">Konfigurasi pilar program kerja dan taksonomi pengelompokan artikel.</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-12">

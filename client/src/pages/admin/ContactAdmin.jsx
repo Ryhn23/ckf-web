@@ -99,7 +99,7 @@ export default function ContactAdmin() {
                     <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">{msg.message}</p>
                     <div className="mt-4 flex flex-wrap justify-end gap-2">
                       <a
-                        href={`mailto:${msg.email}?subject=${encodeURIComponent(`Re: ${msg.subject || 'Pesan Melalui Situs Yayasan Cinta Kasih Fatimah'}`)}`}
+                        href={`mailto:${msg.email}?subject=${encodeURIComponent(`Re: ${msg.subject || 'Pesan Melalui Situs'}`)}`}
                         className="btn-primary !px-3 !py-1.5 text-xs flex items-center gap-1.5"
                       >
                         <FontAwesomeIcon icon={['fa-solid', 'fa-reply']} />

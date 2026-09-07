@@ -140,7 +140,7 @@ export default function HomeContentAdmin() {
             <ToggleSwitch
               id="menu_blog_enabled"
               label="Menu Artikel / Berita"
-              description="Menampilkan publikasi cerita & rilis yayasan"
+              description="Menampilkan publikasi cerita & rilis"
               checked={isEnabled('menu_blog_enabled')}
               onChange={() => handleToggle('menu_blog_enabled')}
             />
@@ -154,14 +154,14 @@ export default function HomeContentAdmin() {
             <ToggleSwitch
               id="menu_kontak_enabled"
               label="Menu Kontak"
-              description="Menampilkan formulir & sekretariat yayasan"
+              description="Menampilkan formulir & kontak sekretariat"
               checked={isEnabled('menu_kontak_enabled')}
               onChange={() => handleToggle('menu_kontak_enabled')}
             />
             <ToggleSwitch
               id="menu_tentang_enabled"
               label="Menu Tentang Kami"
-              description="Menampilkan profil dan sejarah yayasan"
+              description="Menampilkan profil dan sejarah lembaga"
               checked={isEnabled('menu_tentang_enabled')}
               onChange={() => handleToggle('menu_tentang_enabled')}
             />
@@ -336,7 +336,7 @@ export default function HomeContentAdmin() {
                       handleChange('hero_slide_1_subtitle', e.target.value);
                     }}
                     className="input text-sm"
-                    placeholder="Uraian singkat misi yayasan..."
+                    placeholder="Uraian singkat misi lembaga..."
                   />
                 </div>
                 <div>
@@ -346,7 +346,7 @@ export default function HomeContentAdmin() {
                     value={form.hero_btn_primary_text || ''}
                     onChange={(e) => handleChange('hero_btn_primary_text', e.target.value)}
                     className="input text-sm"
-                    placeholder="Profil Yayasan"
+                    placeholder="Profil Lembaga"
                   />
                 </div>
                 <div>
@@ -530,7 +530,7 @@ export default function HomeContentAdmin() {
             Seksi Indikator Capaian (Statistik Counter)
           </h2>
           <p className="mt-1 text-xs text-slate-400">
-            Sesuaikan label teks dan target angka indikator capaian yayasan.
+            Sesuaikan label teks dan target angka indikator capaian.
           </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-3 rounded-xl border border-slate-100 bg-slate-50/50 p-4">
@@ -711,7 +711,7 @@ export default function HomeContentAdmin() {
                 value={form.home_about_btn_text || ''}
                 onChange={(e) => handleChange('home_about_btn_text', e.target.value)}
                 className="input"
-                placeholder="Profil Lengkap Yayasan"
+                placeholder="Profil Lengkap Lembaga"
               />
             </div>
             <div>
@@ -728,7 +728,7 @@ export default function HomeContentAdmin() {
               <ImageUploadField
                 id="home_about_image"
                 label="Gambar Visual Profil di Beranda"
-                description="Unggah foto kegiatan, gedung sekretariat, atau dokumentasi yayasan untuk ditampilkan di samping teks profil beranda."
+                description="Unggah foto kegiatan, gedung sekretariat, atau dokumentasi untuk ditampilkan di samping teks profil beranda."
                 value={form.home_about_image || ''}
                 onChange={(val) => handleChange('home_about_image', val)}
                 aspectRatio="aspect-[4/3]"
@@ -760,7 +760,7 @@ export default function HomeContentAdmin() {
                 value={form.home_programs_title || ''}
                 onChange={(e) => handleChange('home_programs_title', e.target.value)}
                 className="input"
-                placeholder="Fokus Pelayanan Yayasan"
+                placeholder="Fokus Pelayanan"
               />
             </div>
             <div className="sm:col-span-2">

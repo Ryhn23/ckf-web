@@ -239,7 +239,7 @@ export default function AdminLayout() {
           <div className="flex items-center">
             <img
               src="/logo-horizontal-hitam.png"
-              alt="Yayasan Cinta Kasih Fatimah"
+              alt="Logo"
               className="h-9 w-auto object-contain"
             />
           </div>
@@ -265,7 +265,7 @@ export default function AdminLayout() {
               <div className="flex items-center">
                 <img
                   src="/logo-horizontal-hitam.png"
-                  alt="Yayasan Cinta Kasih Fatimah"
+                  alt="Logo"
                   className="h-9 w-auto object-contain"
                 />
               </div>
@@ -307,7 +307,7 @@ export default function AdminLayout() {
             </button>
 
             <div className="hidden text-sm font-semibold text-slate-700 sm:block">
-              Sistem Informasi Manajemen Yayasan Cinta Kasih Fatimah
+              Sistem Informasi Manajemen
             </div>
           </div>
 

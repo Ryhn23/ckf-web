@@ -196,11 +196,11 @@ export default function AboutContentAdmin() {
                 value={form.about_history_title || ''}
                 onChange={(e) => handleChange('about_history_title', e.target.value)}
                 className="input"
-                placeholder="Sejarah dan Komitmen Yayasan"
+                placeholder="Sejarah dan Komitmen Lembaga"
               />
             </div>
             <div className="sm:col-span-2">
-              <label htmlFor="about_history_p1" className="label">Paragraf 1 (Latar Belakang Berdirinya Yayasan)</label>
+              <label htmlFor="about_history_p1" className="label">Paragraf 1 (Latar Belakang Berdirinya Lembaga)</label>
               <textarea
                 id="about_history_p1"
                 rows={3}
@@ -349,7 +349,7 @@ export default function AboutContentAdmin() {
                 value={form.about_values_title || ''}
                 onChange={(e) => handleChange('about_values_title', e.target.value)}
                 className="input"
-                placeholder="Prinsip Pelayanan Yayasan"
+                placeholder="Prinsip Pelayanan Lembaga"
               />
             </div>
           </div>
@@ -489,7 +489,7 @@ export default function AboutContentAdmin() {
                 value={form.about_team_list || ''}
                 onChange={(e) => handleChange('about_team_list', e.target.value)}
                 className="input font-mono text-xs"
-                placeholder="Hj. Kartika Sari | Ketua Yayasan&#10;Budi Santoso | Sekretaris&#10;Dra. Ratna Dewi | Bendahara..."
+                placeholder="Hj. Kartika Sari | Ketua Lembaga&#10;Budi Santoso | Sekretaris&#10;Dra. Ratna Dewi | Bendahara..."
               />
             </div>
           </div>

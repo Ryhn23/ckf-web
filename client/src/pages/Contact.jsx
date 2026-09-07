@@ -33,10 +33,10 @@ export default function Contact() {
 
   return (
     <>
-      <Seo title="Kontak" description="Hubungi Sekretariat Yayasan Cinta Kasih Fatimah untuk informasi program, donasi, kemitraan, atau relawan." />
+      <Seo title="Kontak" description="Hubungi Sekretariat untuk informasi program, donasi, kemitraan, atau relawan." />
       <PageHeader
-        title="Sekretariat Yayasan"
-        subtitle="Sampaikan pertanyaan, konfirmasi, atau penjajakan kerja sama program kepada tim perwakilan yayasan."
+        title="Sekretariat"
+        subtitle="Sampaikan pertanyaan, konfirmasi, atau penjajakan kerja sama program kepada tim perwakilan kami."
         crumbs={[{ label: 'Kontak' }]}
       />
 
@@ -78,7 +78,7 @@ export default function Contact() {
               </span>
               <h2 className="mt-5 font-heading text-2xl font-bold text-slate-900">Pesan Telah Diterima</h2>
               <p className="mt-3 max-w-sm text-sm text-slate-600">
-                Terima kasih atas komunikasi Anda. Sekretariat yayasan akan menindaklanjuti pesan Anda pada hari dan jam kerja.
+                Terima kasih atas komunikasi Anda. Sekretariat kami akan menindaklanjuti pesan Anda pada hari dan jam kerja.
               </p>
               <button type="button" onClick={() => setSuccess(false)} className="btn-outline mt-6">
                 Kirim Pesan Lainnya

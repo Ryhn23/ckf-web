@@ -24,10 +24,10 @@ export default function HeroCarousel() {
     excerpt:
       settings.hero_slide_1_subtitle ||
       settings.hero_excerpt ||
-      'Yayasan Cinta Kasih Fatimah mengelola program terpadu di bidang pendidikan, layanan kesehatan, dan pemberdayaan sosial ekonomi secara transparan dan berkelanjutan.',
+      'Lembaga ini mengelola program terpadu di bidang pendidikan, layanan kesehatan, dan pemberdayaan sosial ekonomi secara transparan dan berkelanjutan.',
     coverImage: settings.hero_slide_1_image || '',
-    badge: settings.hero_slide_1_badge || 'Pilar Utama Yayasan',
-    btnPrimaryText: settings.hero_btn_primary_text || 'Profil Yayasan',
+    badge: settings.hero_slide_1_badge || 'Pilar Utama Lembaga',
+    btnPrimaryText: settings.hero_btn_primary_text || 'Profil Lembaga',
     btnPrimaryLink: settings.hero_btn_primary_link || '/tentang',
     btnSecondaryText: settings.hero_btn_secondary_text || 'Donasi Sekarang',
     btnSecondaryLink: settings.hero_btn_secondary_link || '/donasi',
@@ -116,7 +116,7 @@ export default function HeroCarousel() {
                       </Link>
                     ) : (
                       <Link to={slide.btnPrimaryLink || settings.hero_btn_primary_link || '/tentang'} className="btn-accent">
-                        {slide.btnPrimaryText || settings.hero_btn_primary_text || 'Profil Yayasan'}
+                        {slide.btnPrimaryText || settings.hero_btn_primary_text || 'Profil Lembaga'}
                         <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
                       </Link>
                     )}

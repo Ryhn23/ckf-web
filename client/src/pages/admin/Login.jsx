@@ -33,7 +33,7 @@ export default function Login() {
         <div className="mb-8 text-center">
           <img src="/logo.png" alt="Logo" className="mx-auto h-24 w-24" />
           <h1 className="mt-4 font-heading text-2xl font-bold text-slate-900">Autentikasi Administrator</h1>
-          <p className="mt-1 text-sm text-slate-500">Masuk ke Sistem Informasi Manajemen Yayasan Cinta Kasih Fatimah</p>
+          <p className="mt-1 text-sm text-slate-500">Masuk ke Panel Administrasi Sistem Informasi</p>
         </div>
 
         <form onSubmit={handleSubmit} className="card p-8">

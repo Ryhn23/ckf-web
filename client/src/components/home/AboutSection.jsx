@@ -22,7 +22,7 @@ export default function AboutSection() {
   const cardSubtitle = settings.home_about_card_subtitle || 'Dedikasi untuk kemanusiaan';
   const badge = settings.home_about_badge || 'Profil Lembaga';
   const title = settings.home_about_title || 'Dedikasi Berkelanjutan untuk Kemaslahatan Masyarakat';
-  const btnText = settings.home_about_btn_text || 'Profil Lengkap Yayasan';
+  const btnText = settings.home_about_btn_text || 'Profil Lengkap Lembaga';
   const btnLink = settings.home_about_btn_link || '/tentang';
 
   return (
@@ -34,7 +34,7 @@ export default function AboutSection() {
             {settings.home_about_image ? (
               <img
                 src={settings.home_about_image}
-                alt="Profil Yayasan"
+                alt="Profil Lembaga"
                 className="h-full w-full object-cover"
               />
             ) : (
@@ -63,7 +63,7 @@ export default function AboutSection() {
           </h2>
           <p className="mt-5 leading-relaxed text-slate-600">
             {settings.about_text ||
-              'Yayasan Cinta Kasih Fatimah berkhidmat memfasilitasi akses pendidikan bermutu, pelayanan kesehatan promotif-preventif, serta pemberdayaan sosial ekonomi keluarga prasejahtera melalui program yang berkelanjutan dan terukur.'}
+              'Kami berkhidmat memfasilitasi akses pendidikan bermutu, pelayanan kesehatan promotif-preventif, serta pemberdayaan sosial ekonomi keluarga prasejahtera melalui program yang berkelanjutan dan terukur.'}
           </p>
           <ul className="mt-6 space-y-3">
             {checklist.map((item) => (

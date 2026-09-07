@@ -68,7 +68,7 @@ export default function Donate() {
               Penerimaan Donasi Daring Dinonaktifkan
             </h2>
             <p className="mt-3 text-sm text-slate-600">
-              Saat ini kanal donasi daring sedang tidak menerima transaksi baru. Untuk informasi penyaluran bantuan atau kemitraan, silakan hubungi kontak sekretariat yayasan.
+              Saat ini kanal donasi daring sedang tidak menerima transaksi baru. Untuk informasi penyaluran bantuan atau kemitraan, silakan hubungi kontak sekretariat.
             </p>
             <div className="mt-6 flex justify-center gap-3">
               <Link to="/" className="btn-outline">Kembali ke Beranda</Link>
@@ -190,7 +190,7 @@ export default function Donate() {
             {submitting ? 'Memproses…' : 'Konfirmasi Donasi'}
           </button>
           <p className="mt-3 text-center text-xs text-slate-400">
-            Data donasi Anda diverifikasi oleh tim perbendaharaan yayasan untuk pencatatan dan penerbitan bukti sah.
+            Data donasi Anda diverifikasi oleh tim perbendaharaan untuk pencatatan dan penerbitan bukti sah.
           </p>
         </form>
 
@@ -216,13 +216,13 @@ export default function Donate() {
           </div>
 
           <div className="card bg-gradient-to-br from-teal-700 to-teal-900 p-6 text-white">
-            <h3 className="font-heading text-lg font-bold">Rekening Resmi Yayasan</h3>
+            <h3 className="font-heading text-lg font-bold">Rekening Resmi</h3>
             <p className="mt-3 text-sm text-teal-100">{settings.donation_bank_name || 'Bank Amanah'}</p>
             <p className="mt-2 font-mono text-xl font-bold tracking-wider text-amber-300">
               {settings.donation_account_number || '1234-5678-9010'}
             </p>
             <p className="mt-4 text-xs leading-relaxed text-teal-200">
-              Setelah melakukan transaksi transfer, mohon melengkapi formulir konfirmasi agar donasi Anda dapat segera diverifikasi dan dicatat dalam laporan keuangan yayasan.
+              Setelah melakukan transaksi transfer, mohon melengkapi formulir konfirmasi agar donasi Anda dapat segera diverifikasi dan dicatat dalam laporan keuangan.
             </p>
           </div>
         </aside>

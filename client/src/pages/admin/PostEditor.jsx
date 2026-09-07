@@ -206,7 +206,7 @@ export default function PostEditor() {
             </div>
             <p className="text-xs sm:text-sm text-slate-500">
               {isNew
-                ? 'Penyusunan rilis berita resmi, liputan kegiatan, atau materi edukasi yayasan.'
+                ? 'Penyusunan rilis berita resmi, liputan kegiatan, atau materi edukasi.'
                 : `Nomor Identifikasi: ${id}`}
             </p>
           </div>
@@ -380,7 +380,7 @@ export default function PostEditor() {
                 className="input text-sm"
               />
               <p className="mt-1.5 text-xs text-slate-400">
-                Atur tanggal rilis artikel. Anda dapat mengatur tanggal lampau untuk dokumentasi arsip kegiatan yayasan.
+                Atur tanggal rilis artikel. Anda dapat mengatur tanggal lampau untuk dokumentasi arsip kegiatan.
               </p>
             </div>
 

@@ -16,7 +16,7 @@ const DEFAULT_TESTIMONIALS = [
   },
   {
     quote:
-      'Posyandu keliling yang diadakan yayasan sangat membantu ibu-ibu di kampung kami. Anak-anak rutin ditimbang dan imunisasinya tertib.',
+      'Posyandu keliling yang diadakan lembaga ini sangat membantu ibu-ibu di kampung kami. Anak-anak rutin ditimbang dan imunisasinya tertib.',
     name: 'Bu Siti Rohmah',
     role: 'Ibu Penerima Program Kesehatan',
   },

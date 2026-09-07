@@ -109,7 +109,7 @@ export default function TestimonialsAdmin() {
       <div>
         <h1 className="font-heading text-2xl font-bold text-slate-900">Manajemen Testimoni</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Kelola testimoni penerima manfaat, donatur, dan mitra yayasan yang ditampilkan pada halaman beranda.
+          Kelola testimoni penerima manfaat, donatur, dan mitra yang ditampilkan pada halaman beranda.
         </p>
       </div>
 

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, useCallback } from 'rea
 import { getSettings } from '../api/settings';
 
 /**
- * Konteks pengaturan situs (nama yayasan, kontak, sosial media, statistik, dll).
+ * Konteks pengaturan situs (nama lembaga, kontak, sosial media, statistik, dll).
  * Di-fetch saat aplikasi dimuat; menyediakan method refetch agar perubahan
  * dari admin panel langsung tercermin seketika di frontend tanpa refresh penuh.
  */

@@ -5,6 +5,7 @@ import { getMessages, markMessageRead, toggleMessageRead, deleteMessage } from '
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge from '../../components/ui/StatusBadge';
 import { formatDate } from '../../utils/formatDate';
 
 const PAGE_SIZE = 15;
@@ -54,82 +55,116 @@ export default function ContactAdmin() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      {/* Page Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-slate-900">Korespondensi & Pesan Masuk</h1>
-          <p className="mt-1 text-sm text-slate-500">Daftar aspirasi, permohonan kemitraan, dan komunikasi publik melalui formulir kontak.</p>
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
+            Korespondensi & Pesan Masuk
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Daftar aspirasi, permohonan kemitraan, dan komunikasi publik melalui formulir kontak.
+          </p>
         </div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-slate-600">
-          <input type="checkbox" checked={unreadOnly} onChange={(e) => { setUnreadOnly(e.target.checked); setPage(1); }} className="h-4 w-4 accent-teal-700" />
-          Tampilkan hanya pesan belum dibaca
+        <label className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-xs cursor-pointer hover:bg-slate-50">
+          <input
+            type="checkbox"
+            checked={unreadOnly}
+            onChange={(e) => { setUnreadOnly(e.target.checked); setPage(1); }}
+            className="h-4 w-4 rounded text-teal-700 accent-teal-700"
+          />
+          <span>Hanya Pesan Belum Dibaca</span>
         </label>
       </div>
 
       {messages.length === 0 ? (
-        <EmptyState icon="fa-inbox" title="Tidak Ada Pesan" description="Pesan korespondensi yang masuk dari publik akan ditampilkan di sini." />
+        <EmptyState
+          icon="fa-inbox"
+          title="Tidak Ada Pesan"
+          description="Pesan korespondensi yang masuk dari publik akan ditampilkan di sini."
+        />
       ) : (
         <>
-          <div className="card divide-y divide-slate-100">
+          <div className="admin-card overflow-hidden divide-y divide-slate-100">
             {messages.map((msg) => (
-              <div key={msg.id}>
-                {/* Baris header */}
+              <div key={msg.id} className="transition">
+                {/* Baris item pesan */}
                 <button
                   type="button"
                   onClick={() => toggleRead(msg)}
-                  className="flex w-full items-center gap-4 px-5 py-4 text-left transition hover:bg-slate-50/60"
+                  className={`flex w-full items-center gap-4 px-5 py-4 text-left transition ${
+                    msg.isRead ? 'hover:bg-slate-50/70' : 'bg-teal-50/25 hover:bg-teal-50/50'
+                  }`}
                 >
-                  <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${msg.isRead ? 'bg-slate-200' : 'bg-teal-500'}`} />
+                  <StatusBadge
+                    status={msg.isRead ? 'READ' : 'UNREAD'}
+                    className="!py-0.5 !text-[10px]"
+                  />
                   <div className="min-w-0 flex-1">
-                    <p className={`truncate text-sm ${msg.isRead ? 'font-medium text-slate-600' : 'font-bold text-slate-900'}`}>
-                      {msg.subject || '(Tanpa subjek)'}
+                    <p className={`truncate text-sm ${msg.isRead ? 'font-medium text-slate-700' : 'font-bold text-slate-900'}`}>
+                      {msg.subject || '(Tanpa subjek pesan)'}
                     </p>
-                    <p className="truncate text-xs text-slate-400">
-                      {msg.name} · {msg.email}
+                    <p className="truncate text-xs text-slate-400 mt-0.5">
+                      <span className="font-semibold text-slate-600">{msg.name}</span> · {msg.email}
                     </p>
                   </div>
                   <span className="hidden whitespace-nowrap text-xs text-slate-400 sm:block">
                     {formatDate(msg.createdAt, 'd MMM yyyy, HH:mm')}
                   </span>
-                  <FontAwesomeIcon icon={['fa-solid', msg.isRead ? 'fa-envelope-open' : 'fa-envelope']} className="text-slate-300" />
+                  <FontAwesomeIcon
+                    icon={['fa-solid', expandedId === msg.id ? 'fa-chevron-up' : 'fa-chevron-down']}
+                    className="text-xs text-slate-400"
+                  />
                 </button>
 
-                {/* Isi pesan */}
+                {/* Isi detail pesan */}
                 {expandedId === msg.id && (
-                  <div className="border-t border-slate-100 bg-slate-50/50 px-5 py-4">
-                    <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">{msg.message}</p>
-                    <div className="mt-4 flex flex-wrap justify-end gap-2">
-                      <a
-                        href={`mailto:${msg.email}?subject=${encodeURIComponent(`Re: ${msg.subject || 'Pesan Melalui Situs'}`)}`}
-                        className="btn-primary !px-3 !py-1.5 text-xs flex items-center gap-1.5"
-                      >
-                        <FontAwesomeIcon icon={['fa-solid', 'fa-reply']} />
-                        Balas via Email
-                      </a>
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          try {
-                            await toggleMessageRead(msg.id);
-                            refetch();
-                          } catch {}
-                        }}
-                        className="btn-outline !px-3 !py-1.5 text-xs"
-                      >
-                        {msg.isRead ? 'Tandai Belum Dibaca' : 'Tandai Dibaca'}
-                      </button>
-                      <button
-                        type="button"
-                        disabled={deletingId === msg.id}
-                        onClick={() => handleDelete(msg)}
-                        className="btn-danger !px-3 !py-1.5 text-xs"
-                      >
-                        {deletingId === msg.id ? '…' : (
-                          <>
-                            <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
-                            Hapus
-                          </>
-                        )}
-                      </button>
+                  <div className="border-t border-slate-100 bg-slate-50/70 p-5 sm:p-6 space-y-4">
+                    <div className="rounded-xl border border-slate-200/80 bg-white p-4 text-sm leading-relaxed text-slate-800 shadow-xs whitespace-pre-line">
+                      {msg.message}
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                      <div className="text-xs text-slate-500">
+                        Pengirim: <strong className="text-slate-800">{msg.name}</strong> ({msg.email})
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        <a
+                          href={`mailto:${msg.email}?subject=${encodeURIComponent(`Re: ${msg.subject || 'Tanggapan Cinta Kasih Fatimah'}`)}`}
+                          className="admin-btn-primary !px-3.5 !py-1.5 text-xs font-semibold"
+                        >
+                          <FontAwesomeIcon icon={['fa-solid', 'fa-reply']} />
+                          <span>Balas via Email</span>
+                        </a>
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              await toggleMessageRead(msg.id);
+                              refetch();
+                            } catch {}
+                          }}
+                          className="admin-btn-secondary !px-3 !py-1.5 text-xs font-medium"
+                        >
+                          {msg.isRead ? 'Tandai Belum Dibaca' : 'Tandai Dibaca'}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={deletingId === msg.id}
+                          onClick={() => handleDelete(msg)}
+                          className="admin-btn-danger !px-3 !py-1.5 text-xs font-medium"
+                          title="Hapus Pesan"
+                        >
+                          {deletingId === msg.id ? (
+                            '…'
+                          ) : (
+                            <>
+                              <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
+                              <span>Hapus</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -138,14 +173,27 @@ export default function ContactAdmin() {
           </div>
 
           {meta.totalPages > 1 && (
-            <div className="flex items-center justify-between text-sm text-slate-500">
-              <span>Halaman {meta.page} dari {meta.totalPages} · {meta.total} pesan</span>
+            <div className="flex items-center justify-between border-t border-slate-200/80 pt-4 text-xs text-slate-500">
+              <span>
+                Halaman <strong className="text-slate-800">{meta.page}</strong> dari{' '}
+                <strong className="text-slate-800">{meta.totalPages}</strong> (Total {meta.total} pesan)
+              </span>
               <div className="flex gap-2">
-                <button type="button" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="btn-outline !px-3 !py-1.5 text-xs">
-                  Sebelumnya
+                <button
+                  type="button"
+                  disabled={page <= 1}
+                  onClick={() => setPage((p) => p - 1)}
+                  className="admin-btn-secondary !px-3 !py-1 text-xs font-medium"
+                >
+                  ← Sebelumnya
                 </button>
-                <button type="button" disabled={page >= meta.totalPages} onClick={() => setPage((p) => p + 1)} className="btn-outline !px-3 !py-1.5 text-xs">
-                  Berikutnya
+                <button
+                  type="button"
+                  disabled={page >= meta.totalPages}
+                  onClick={() => setPage((p) => p + 1)}
+                  className="admin-btn-secondary !px-3 !py-1 text-xs font-medium"
+                >
+                  Berikutnya →
                 </button>
               </div>
             </div>
@@ -155,3 +203,4 @@ export default function ContactAdmin() {
     </div>
   );
 }
+

@@ -112,7 +112,7 @@ export default function HomeContentAdmin() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* 1. KENDALI VISIBILITAS MENU PUBLIK */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <div className="border-b border-slate-100 pb-3">
             <h2 className="font-heading text-base font-bold text-slate-900">
               Visibilitas Menu Navigasi Publik
@@ -176,7 +176,7 @@ export default function HomeContentAdmin() {
         </div>
 
         {/* 2. KENDALI VISIBILITAS SEKSI BERANDA */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <div className="border-b border-slate-100 pb-3">
             <h2 className="font-heading text-base font-bold text-slate-900">
               Visibilitas Seksi Halaman Utama (Beranda)
@@ -239,7 +239,7 @@ export default function HomeContentAdmin() {
         </div>
 
         {/* 3. HERO BANNER UTAMA */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <div className="border-b border-slate-100 pb-3">
             <h2 className="font-heading text-base font-bold text-slate-900">
               Seksi Hero Banner &amp; Carousel Beranda
@@ -532,7 +532,7 @@ export default function HomeContentAdmin() {
         </div>
 
         {/* 4. INDIKATOR CAPAIAN (STATISTIK) */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi Indikator Capaian (Statistik Counter)
           </h2>
@@ -643,7 +643,7 @@ export default function HomeContentAdmin() {
         </div>
 
         {/* 5. PROFIL LEMBAGA / TENTANG KAMI */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi Profil Lembaga (Tentang Kami di Beranda)
           </h2>
@@ -745,7 +745,7 @@ export default function HomeContentAdmin() {
         </div>
 
         {/* 6. FOKUS PILAR PROGRAM */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi Fokus Pilar Program
           </h2>
@@ -805,7 +805,7 @@ export default function HomeContentAdmin() {
 
         {/* 7. ARTIKEL TERBARU & TESTIMONI */}
         <div className="grid gap-6 xl:grid-cols-2">
-          <div className="card p-6 sm:p-8">
+          <div className="admin-card p-6 sm:p-8">
             <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
               Seksi Artikel & Berita Terbaru
             </h2>
@@ -843,12 +843,12 @@ export default function HomeContentAdmin() {
             </div>
           </div>
 
-          <div className="card p-6 sm:p-8">
+          <div className="admin-card p-6 sm:p-8">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h2 className="font-heading text-base font-bold text-slate-900">
                 Seksi Testimoni
               </h2>
-              <Link to="/admin/testimonials" className="btn-outline !px-3 !py-1 text-xs">
+              <Link to="/admin/testimonials" className="admin-btn-secondary !px-3 !py-1 text-xs">
                 <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} />
                 Kelola Data Testimoni
               </Link>
@@ -885,7 +885,7 @@ export default function HomeContentAdmin() {
         </div>
 
         {/* 8. MITRA & DONATUR (MARQUEE) */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi Mitra & Donatur Pendukung (Marquee)
           </h2>
@@ -917,7 +917,7 @@ export default function HomeContentAdmin() {
         </div>
 
         {/* 9. AJAKAN DONASI (CTA BANNER) */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi Ajakan Donasi (Call to Action Banner)
           </h2>
@@ -997,7 +997,7 @@ export default function HomeContentAdmin() {
         </div>
 
         {/* STICKY BOTTOM SAVE ACTION BAR */}
-        <div className="card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200/80 bg-white/95 backdrop-blur">
+        <div className="admin-card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200/80 bg-white/95 backdrop-blur">
           <p className="text-xs text-slate-500 hidden sm:block">
             Perubahan teks dan visibilitas akan langsung diterapkan pada situs publik.
           </p>
@@ -1011,7 +1011,7 @@ export default function HomeContentAdmin() {
             <button
               type="submit"
               disabled={saving}
-              className="btn-primary !px-6 !py-2.5 shadow-md w-full sm:w-auto"
+              className="admin-btn-primary !px-6 !py-2.5 text-xs font-bold shadow-sm w-full sm:w-auto"
             >
               {saving ? 'Menyimpan…' : 'Simpan Konten Beranda'}
             </button>

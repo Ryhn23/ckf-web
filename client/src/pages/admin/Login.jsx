@@ -28,47 +28,70 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <img src="/logo.png" alt="Logo" className="mx-auto h-24 w-24" />
-          <h1 className="mt-4 font-heading text-2xl font-bold text-slate-900">Autentikasi Administrator</h1>
-          <p className="mt-1 text-sm text-slate-500">Masuk ke Panel Administrasi Sistem Informasi</p>
+        <div className="mb-8 text-center flex flex-col items-center">
+          <img src="/logo.png" alt="Logo" className="h-20 w-auto object-contain mb-3" />
+          <div className="flex flex-col justify-center leading-none text-slate-900">
+            <span className="font-heading text-xs font-extrabold uppercase tracking-wider text-slate-900">
+              CINTA KASIH
+            </span>
+            <span className="font-heading text-lg font-black uppercase tracking-wide mt-0.5 text-black">
+              FATIMAH
+            </span>
+            <span className="font-sans text-[9px] font-bold uppercase tracking-[0.25em] mt-0.5 text-slate-900">
+              FOUNDATION
+            </span>
+          </div>
+          <h1 className="mt-6 font-heading text-xl font-bold tracking-tight text-slate-900">
+            Portal Administrasi Sistem
+          </h1>
+          <p className="mt-1 text-xs text-slate-500">
+            Masuk dengan kredensial terdaftar untuk mengelola sistem informasi
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="card p-8">
-          <label htmlFor="email" className="label">Email</label>
-          <input
-            id="email"
-            type="email"
-            autoComplete="email"
-            required
-            className="input"
-            placeholder="admin@ckf.or.id"
-            value={form.email}
-            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-          />
+        <form onSubmit={handleSubmit} className="admin-card p-7 sm:p-8 shadow-xl border border-slate-200/80 space-y-4">
+          <div>
+            <label htmlFor="email" className="label text-xs font-semibold">Alamat Email</label>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              required
+              className="input text-xs"
+              placeholder="admin@ckf.or.id"
+              value={form.email}
+              onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+            />
+          </div>
 
-          <label htmlFor="password" className="label mt-4">Kata Sandi</label>
-          <input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            required
-            className="input"
-            placeholder="••••••••"
-            value={form.password}
-            onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-          />
+          <div>
+            <label htmlFor="password" className="label text-xs font-semibold">Kata Sandi</label>
+            <input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              className="input text-xs"
+              placeholder="••••••••"
+              value={form.password}
+              onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+            />
+          </div>
 
           {error && (
-            <p className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+            <p className="flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-xs font-medium text-rose-700">
               <FontAwesomeIcon icon={['fa-solid', 'fa-circle-exclamation']} />
               {error}
             </p>
           )}
 
-          <button type="submit" disabled={submitting} className="btn-primary mt-6 w-full justify-center">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="admin-btn-primary !py-2.5 mt-2 w-full justify-center text-xs font-bold shadow-md"
+          >
             {submitting ? 'Memverifikasi Kredensial…' : 'Masuk ke Sistem'}
           </button>
         </form>

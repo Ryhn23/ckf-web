@@ -110,7 +110,7 @@ export default function AboutContentAdmin() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* 1. KENDALI VISIBILITAS SEKSI */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <div className="border-b border-slate-100 pb-3">
             <h2 className="font-heading text-base font-bold text-slate-900">
               Visibilitas Seksi Halaman Tentang Kami
@@ -155,7 +155,7 @@ export default function AboutContentAdmin() {
         </div>
 
         {/* 2. HEADER & PENGANTAR HALAMAN */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Header & Pengantar Halaman
           </h2>
@@ -174,7 +174,7 @@ export default function AboutContentAdmin() {
         </div>
 
         {/* 3. SEJARAH & LATAR BELAKANG */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi Latar Belakang & Sejarah
           </h2>
@@ -223,7 +223,7 @@ export default function AboutContentAdmin() {
         </div>
 
         {/* 4. VISI, MISI, INTEGRITAS, INOVASI (4 PILAR) */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi 4 Pilar Komitmen (Visi, Misi, Integritas, Inovasi)
           </h2>
@@ -327,7 +327,7 @@ export default function AboutContentAdmin() {
         </div>
 
         {/* 5. NILAI-NILAI ORGANISASI */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi Nilai-Nilai Organisasi (Prinsip Pelayanan)
           </h2>
@@ -454,7 +454,7 @@ export default function AboutContentAdmin() {
         </div>
 
         {/* 6. SUSUNAN DEWAN PENGURUS */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi Struktur Organisasi & Pengurus
           </h2>
@@ -496,7 +496,7 @@ export default function AboutContentAdmin() {
         </div>
 
         {/* 7. BANNER KEMITRAAN */}
-        <div className="card p-6 sm:p-8">
+        <div className="admin-card p-6 sm:p-8">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             Seksi Banner Kemitraan & Partisipasi Program
           </h2>
@@ -545,7 +545,7 @@ export default function AboutContentAdmin() {
         </div>
 
         {/* STICKY SAVE BAR */}
-        <div className="card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200/80 bg-white/95 backdrop-blur">
+        <div className="admin-card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200/80 bg-white/95 backdrop-blur">
           <p className="text-xs text-slate-500 hidden sm:block">
             Perubahan konten Tentang Kami akan langsung diterapkan pada halaman publik.
           </p>
@@ -559,7 +559,7 @@ export default function AboutContentAdmin() {
             <button
               type="submit"
               disabled={saving}
-              className="btn-primary !px-6 !py-2.5 shadow-md w-full sm:w-auto"
+              className="admin-btn-primary !px-6 !py-2.5 text-xs font-bold shadow-sm w-full sm:w-auto"
             >
               {saving ? 'Menyimpan…' : 'Simpan Konten'}
             </button>

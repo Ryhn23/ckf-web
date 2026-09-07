@@ -9,6 +9,7 @@ import { getCategories } from '../../api/categories';
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge from '../../components/ui/StatusBadge';
 
 function slugify(text) {
   return String(text || '')
@@ -156,7 +157,7 @@ export default function PostEditor() {
       <EmptyState
         icon="fa-file-circle-exclamation"
         title="Artikel tidak ditemukan"
-        action={<Link to="/admin/posts" className="btn-primary">Kembali ke daftar</Link>}
+        action={<Link to="/admin/posts" className="admin-btn-primary">Kembali ke daftar</Link>}
       />
     );
 
@@ -192,19 +193,13 @@ export default function PostEditor() {
             <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-left']} />
           </Link>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <h1 className="font-heading text-xl sm:text-2xl font-bold text-slate-900">
                 {isNew ? 'Penyusunan Artikel Baru' : 'Penyuntingan Artikel'}
               </h1>
-              <span
-                className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                  form.status === 'PUBLISHED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                }`}
-              >
-                {form.status === 'PUBLISHED' ? 'Telah Diterbitkan' : 'Draf Dokumen'}
-              </span>
+              <StatusBadge status={form.status} />
             </div>
-            <p className="text-xs sm:text-sm text-slate-500">
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
               {isNew
                 ? 'Penyusunan rilis berita resmi, liputan kegiatan, atau materi edukasi.'
                 : `Nomor Identifikasi: ${id}`}
@@ -212,15 +207,15 @@ export default function PostEditor() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Link to="/admin/posts" className="btn-outline !py-2 !px-4 text-xs sm:text-sm">
+        <div className="flex items-center gap-2.5">
+          <Link to="/admin/posts" className="admin-btn-secondary !py-2 !px-4 text-xs sm:text-sm">
             Batalkan
           </Link>
           <button
             type="button"
             disabled={submitting || !categoriesReady}
             onClick={() => handleSave('DRAFT')}
-            className="btn-outline !border-slate-300 !bg-slate-50 !py-2 !px-4 text-xs sm:text-sm hover:!bg-slate-100"
+            className="admin-btn-secondary !py-2 !px-4 text-xs sm:text-sm"
           >
             Simpan sebagai Draf
           </button>
@@ -228,7 +223,7 @@ export default function PostEditor() {
             type="button"
             disabled={submitting || !categoriesReady}
             onClick={() => handleSave('PUBLISHED')}
-            className="btn-primary !py-2 !px-5 text-xs sm:text-sm shadow-sm"
+            className="admin-btn-primary !py-2 !px-5 text-xs sm:text-sm shadow-sm"
           >
             {submitting ? 'Menyimpan…' : isNew ? 'Publikasikan Sekarang' : 'Simpan & Perbarui'}
           </button>
@@ -236,8 +231,8 @@ export default function PostEditor() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700 shadow-sm">
-          <FontAwesomeIcon icon={['fa-solid', 'fa-circle-exclamation']} className="text-lg text-red-500" />
+        <div className="flex items-center gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm font-medium text-rose-700 shadow-sm">
+          <FontAwesomeIcon icon={['fa-solid', 'fa-circle-exclamation']} className="text-lg text-rose-500" />
           <span>{error}</span>
         </div>
       )}
@@ -246,7 +241,7 @@ export default function PostEditor() {
       <form onSubmit={(e) => handleSave(form.status, e)} className="grid gap-8 lg:grid-cols-12">
         {/* Kolom Utama: Kanvas Menulis Luas */}
         <div className="space-y-6 lg:col-span-7 xl:col-span-8 2xl:col-span-9">
-          <div className="card space-y-6 p-6 sm:p-8">
+          <div className="admin-card space-y-6 p-6 sm:p-8">
             {/* Judul Artikel */}
             <div>
               <label htmlFor="title" className="label text-base font-bold text-slate-800">
@@ -348,7 +343,7 @@ export default function PostEditor() {
         {/* Kolom Samping: Pengaturan & Metadata (Sticky Rail) */}
         <div className="space-y-6 lg:col-span-5 xl:col-span-4 2xl:col-span-3 lg:sticky lg:top-20 lg:self-start">
           {/* Panel Publikasi */}
-          <div className="card p-6">
+          <div className="admin-card p-6">
             <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
               Status &amp; Visibilitas Publikasi
             </h2>
@@ -405,14 +400,14 @@ export default function PostEditor() {
               id="submit-post-btn"
               type="submit"
               disabled={submitting || !categoriesReady}
-              className="btn-primary mt-6 w-full justify-center !py-3 shadow-md"
+              className="admin-btn-primary mt-6 w-full justify-center !py-3 shadow-sm"
             >
               {submitting ? 'Menyimpan…' : isNew ? 'Simpan Naskah Artikel' : 'Simpan Pembaruan Data'}
             </button>
           </div>
 
           {/* Panel Kategori & Tag */}
-          <div className="card p-6">
+          <div className="admin-card p-6">
             <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
               Kategori &amp; Tag
             </h2>
@@ -453,7 +448,7 @@ export default function PostEditor() {
           </div>
 
           {/* Panel Gambar Cover */}
-          <div className="card p-6">
+          <div className="admin-card p-6">
             <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
               Gambar Sampul (Cover)
             </h2>

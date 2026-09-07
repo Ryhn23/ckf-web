@@ -106,99 +106,114 @@ export default function TestimonialsAdmin() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">Manajemen Testimoni</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Kelola testimoni penerima manfaat, donatur, dan mitra yang ditampilkan pada halaman beranda.
-        </p>
+      {/* Page Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
+        <div>
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
+            Manajemen Testimoni & Kisah Nyata
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Kelola testimoni penerima manfaat, donatur, dan mitra filantropi yang ditampilkan pada situs publik.
+          </p>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Formulir Sticky */}
         <form
           onSubmit={handleSubmit}
-          className="card h-fit p-6 lg:col-span-4 lg:sticky lg:top-20 lg:self-start"
+          className="admin-card h-fit p-6 lg:col-span-4 lg:sticky lg:top-20 lg:self-start space-y-4"
         >
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
             {editingId ? 'Perbarui Testimoni' : 'Tambah Testimoni Baru'}
           </h2>
 
-          <label htmlFor="t_name" className="label mt-4">
-            Nama Lengkap
-          </label>
-          <input
-            id="t_name"
-            required
-            value={form.name}
-            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            className="input"
-            placeholder="Contoh: Rina Marlina"
-          />
+          <div>
+            <label htmlFor="t_name" className="label text-xs">
+              Nama Lengkap
+            </label>
+            <input
+              id="t_name"
+              required
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              className="input text-xs"
+              placeholder="Contoh: Rina Marlina"
+            />
+          </div>
 
-          <label htmlFor="t_role" className="label mt-4">
-            Peran / Status Lembaga
-          </label>
-          <input
-            id="t_role"
-            required
-            value={form.role}
-            onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
-            className="input"
-            placeholder="Contoh: Penerima Beasiswa Pendidikan"
-          />
+          <div>
+            <label htmlFor="t_role" className="label text-xs">
+              Peran / Status Lembaga
+            </label>
+            <input
+              id="t_role"
+              required
+              value={form.role}
+              onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
+              className="input text-xs"
+              placeholder="Contoh: Penerima Beasiswa Pendidikan"
+            />
+          </div>
 
-          <label htmlFor="t_quote" className="label mt-4">
-            Kutipan Pernyataan / Testimoni
-          </label>
-          <textarea
-            id="t_quote"
-            required
-            rows={4}
-            value={form.quote}
-            onChange={(e) => setForm((f) => ({ ...f, quote: e.target.value }))}
-            className="input"
-            placeholder="Tuliskan pengalaman atau pesan kesan..."
-          />
+          <div>
+            <label htmlFor="t_quote" className="label text-xs">
+              Kutipan Pernyataan / Testimoni
+            </label>
+            <textarea
+              id="t_quote"
+              required
+              rows={4}
+              value={form.quote}
+              onChange={(e) => setForm((f) => ({ ...f, quote: e.target.value }))}
+              className="input text-xs"
+              placeholder="Tuliskan pengalaman atau pesan kesan..."
+            />
+          </div>
 
-          <label htmlFor="t_avatar" className="label mt-4">
-            URL Foto / Avatar (Opsional)
-          </label>
-          <input
-            id="t_avatar"
-            value={form.avatar}
-            onChange={(e) => setForm((f) => ({ ...f, avatar: e.target.value }))}
-            className="input"
-            placeholder="https://... atau /uploads/..."
-          />
+          <div>
+            <label htmlFor="t_avatar" className="label text-xs">
+              URL Foto / Avatar (Opsional)
+            </label>
+            <input
+              id="t_avatar"
+              value={form.avatar}
+              onChange={(e) => setForm((f) => ({ ...f, avatar: e.target.value }))}
+              className="input text-xs"
+              placeholder="https://... atau /uploads/..."
+            />
+          </div>
 
-          <label htmlFor="t_order" className="label mt-4">
-            Urutan Tampil
-          </label>
-          <input
-            id="t_order"
-            type="number"
-            value={form.sortOrder}
-            onChange={(e) => setForm((f) => ({ ...f, sortOrder: e.target.value }))}
-            className="input"
-          />
+          <div>
+            <label htmlFor="t_order" className="label text-xs">
+              Urutan Tampil
+            </label>
+            <input
+              id="t_order"
+              type="number"
+              value={form.sortOrder}
+              onChange={(e) => setForm((f) => ({ ...f, sortOrder: e.target.value }))}
+              className="input text-xs"
+            />
+          </div>
 
           {error && (
-            <p className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+            <p className="flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-200 px-3 py-2 text-xs font-medium text-rose-700">
               <FontAwesomeIcon icon={['fa-solid', 'fa-circle-exclamation']} />
               {error}
             </p>
           )}
 
-          <div className="mt-5 flex gap-2">
+          <div className="pt-2 flex gap-2">
             <button
               type="submit"
               disabled={saving}
-              className="btn-primary flex-1 justify-center text-sm"
+              className="admin-btn-primary flex-1 justify-center text-xs font-semibold"
             >
               {saving ? 'Menyimpan…' : editingId ? 'Simpan Perubahan' : 'Tambah Testimoni'}
             </button>
             {editingId && (
-              <button type="button" onClick={resetForm} className="btn-outline text-sm">
+              <button type="button" onClick={resetForm} className="admin-btn-secondary text-xs">
                 Batal
               </button>
             )}
@@ -214,75 +229,76 @@ export default function TestimonialsAdmin() {
               description="Tambahkan testimoni pertama melalui formulir di samping."
             />
           ) : (
-            <div className="card overflow-x-auto">
-              <table className="w-full min-w-[580px] text-left text-sm">
-                <thead className="border-b border-slate-100 text-xs uppercase tracking-wide text-slate-400">
-                  <tr>
-                    <th className="px-5 py-3 font-semibold">Pemberi Testimoni</th>
-                    <th className="px-5 py-3 font-semibold">Kutipan</th>
-                    <th className="px-5 py-3 font-semibold">Urutan</th>
-                    <th className="px-5 py-3 text-right font-semibold">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {testimonials.map((item) => (
-                    <tr key={item.id} className="transition hover:bg-slate-50/60">
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-3">
-                          {item.avatar ? (
-                            <img
-                              src={item.avatar}
-                              alt={item.name}
-                              className="h-10 w-10 rounded-full object-cover ring-2 ring-slate-100"
-                            />
-                          ) : (
-                            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white shadow-sm">
-                              {item.name.charAt(0).toUpperCase()}
-                            </span>
-                          )}
-                          <div>
-                            <p className="font-semibold text-slate-900">{item.name}</p>
-                            <p className="text-xs text-slate-500">{item.role}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-5 py-4">
-                        <p className="line-clamp-2 max-w-sm text-xs leading-relaxed text-slate-600">
-                          “{item.quote}”
-                        </p>
-                      </td>
-                      <td className="px-5 py-4 text-slate-500">{item.sortOrder}</td>
-                      <td className="px-5 py-4">
-                        <div className="flex justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() => startEdit(item)}
-                            className="btn-outline !px-3 !py-1.5 text-xs"
-                          >
-                            <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} />
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            disabled={deletingId === item.id}
-                            onClick={() => handleDelete(item)}
-                            className="btn-danger !px-3 !py-1.5 text-xs"
-                          >
-                            {deletingId === item.id ? (
-                              '…'
-                            ) : (
-                              <>
-                                <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
-                                Hapus
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </td>
+            <div className="admin-card overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[580px] text-left text-sm">
+                  <thead>
+                    <tr>
+                      <th className="admin-th">Pemberi Testimoni</th>
+                      <th className="admin-th">Kutipan</th>
+                      <th className="admin-th">Urutan</th>
+                      <th className="admin-th text-right">Aksi</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {testimonials.map((item) => (
+                      <tr key={item.id} className="transition hover:bg-slate-50/70">
+                        <td className="admin-td">
+                          <div className="flex items-center gap-3">
+                            {item.avatar ? (
+                              <img
+                                src={item.avatar}
+                                alt={item.name}
+                                className="h-10 w-10 rounded-full object-cover ring-2 ring-slate-100"
+                              />
+                            ) : (
+                              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white shadow-xs">
+                                {item.name.charAt(0).toUpperCase()}
+                              </span>
+                            )}
+                            <div>
+                              <p className="font-bold text-slate-900">{item.name}</p>
+                              <p className="text-xs text-slate-500">{item.role}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="admin-td">
+                          <p className="line-clamp-2 max-w-sm text-xs leading-relaxed text-slate-600 italic">
+                            “{item.quote}”
+                          </p>
+                        </td>
+                        <td className="admin-td text-slate-500 font-medium">{item.sortOrder}</td>
+                        <td className="admin-td">
+                          <div className="flex justify-end gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => startEdit(item)}
+                              className="admin-btn-secondary !px-2.5 !py-1 text-xs font-medium"
+                              title="Edit Testimoni"
+                            >
+                              <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              disabled={deletingId === item.id}
+                              onClick={() => handleDelete(item)}
+                              className="admin-btn-danger !px-2.5 !py-1 text-xs font-medium"
+                              title="Hapus Testimoni"
+                            >
+                              {deletingId === item.id ? (
+                                '…'
+                              ) : (
+                                <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
+                              )}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>

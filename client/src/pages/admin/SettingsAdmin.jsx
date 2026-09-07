@@ -84,13 +84,20 @@ export default function SettingsAdmin() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">Konfigurasi Pengaturan Sistem</h1>
-        <p className="mt-1 text-sm text-slate-500">Kelola informasi kelembagaan, kontak sekretariat, dan parameter yang ditampilkan pada situs publik.</p>
+      {/* Page Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
+        <div>
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
+            Konfigurasi Pengaturan Sistem
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Kelola informasi kelembagaan, kontak sekretariat resmi, dan parameter data situs publik.
+          </p>
+        </div>
       </div>
 
       {errorText && (
-        <p className="flex items-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <p className="flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-xs font-medium text-rose-700">
           <FontAwesomeIcon icon={['fa-solid', 'fa-circle-exclamation']} />
           {errorText}
         </p>
@@ -101,29 +108,29 @@ export default function SettingsAdmin() {
           {GROUPS.map((group, idx) => (
             <div
               key={group.title}
-              className={`card p-6 sm:p-8 ${idx === 0 ? 'xl:col-span-2' : ''}`}
+              className={`admin-card p-6 sm:p-7 ${idx === 0 ? 'xl:col-span-2' : ''}`}
             >
-              <h2 className="font-heading text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">
+              <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
                 {group.title}
               </h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 {group.fields.map((f) => (
                   <div key={f.key} className={f.textarea ? 'sm:col-span-2' : ''}>
-                    <label htmlFor={f.key} className="label">{f.label}</label>
+                    <label htmlFor={f.key} className="label text-xs">{f.label}</label>
                     {f.textarea ? (
                       <textarea
                         id={f.key}
                         rows={4}
                         value={form[f.key] || ''}
                         onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                        className="input"
+                        className="input text-xs"
                       />
                     ) : (
                       <input
                         id={f.key}
                         value={form[f.key] || ''}
                         onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                        className="input"
+                        className="input text-xs"
                       />
                     )}
                   </div>
@@ -133,19 +140,19 @@ export default function SettingsAdmin() {
           ))}
         </div>
 
-        <div className="card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200/80 bg-white/95 backdrop-blur">
+        <div className="admin-card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200 bg-white/95 backdrop-blur-md">
           <p className="text-xs text-slate-500 hidden sm:block">
-            Pastikan memeriksa kembali perubahan data sebelum menyimpan.
+            Pastikan memeriksa kembali perubahan data parameter sebelum menyimpan.
           </p>
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             {saved && (
-              <span className="flex items-center gap-2 text-sm font-semibold text-emerald-600">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} />
-                Pengaturan tersimpan
+              <span className="flex items-center gap-2 text-xs font-bold text-emerald-700">
+                <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-sm text-emerald-600" />
+                Pengaturan berhasil disimpan
               </span>
             )}
-            <button type="submit" disabled={saving} className="btn-primary !px-6 !py-2.5 shadow-md w-full sm:w-auto">
-              {saving ? 'Menyimpan…' : 'Simpan Pengaturan'}
+            <button type="submit" disabled={saving} className="admin-btn-primary !px-6 !py-2.5 text-xs font-bold shadow-md w-full sm:w-auto">
+              {saving ? 'Menyimpan…' : 'Simpan Seluruh Pengaturan'}
             </button>
           </div>
         </div>

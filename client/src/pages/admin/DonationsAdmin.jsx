@@ -5,15 +5,10 @@ import { getDonations, updateDonationStatus, deleteDonation } from '../../api/do
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge from '../../components/ui/StatusBadge';
 import { formatDate } from '../../utils/formatDate';
 
 const PAGE_SIZE = 15;
-
-const STATUS_META = {
-  PENDING: { label: 'Menunggu Verifikasi', badge: 'bg-amber-100 text-amber-800' },
-  PROCESSED: { label: 'Terverifikasi & Disalurkan', badge: 'bg-emerald-100 text-emerald-800' },
-  REJECTED: { label: 'Tidak Valid / Dibatalkan', badge: 'bg-red-100 text-red-700' },
-};
 
 export default function DonationsAdmin() {
   const [page, setPage] = useState(1);
@@ -58,71 +53,88 @@ export default function DonationsAdmin() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">Administrasi Donasi</h1>
-        <p className="mt-1 text-sm text-slate-500">Verifikasi, validasi, dan pembukuan donasi yang dihimpun melalui kanal publik.</p>
+      {/* Header Halaman */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
+        <div>
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
+            Administrasi Donasi & Infaq
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Verifikasi penerimaan dana, pembukuan donasi publik, dan konfirmasi peruntukan program.
+          </p>
+        </div>
       </div>
 
-      {/* Ringkasan Finansial */}
+      {/* Ringkasan Finansial Seragam */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="card p-5">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} />
+        <div className="admin-card p-5">
+          <div className="flex items-center justify-between">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} className="text-base" />
             </span>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Dana Terverifikasi</p>
-              <p className="font-heading text-xl font-bold text-slate-900 mt-0.5">
-                Rp {Number(summary.processedAmount || 0).toLocaleString('id-ID')}
-              </p>
-            </div>
+            <StatusBadge status="PROCESSED" label="Terverifikasi" />
           </div>
-          <p className="mt-2 text-xs text-slate-500">{summary.processedCount || 0} donasi disalurkan</p>
+          <div className="mt-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Dana Terverifikasi</p>
+            <p className="font-heading text-2xl font-black text-slate-900 mt-1">
+              Rp {Number(summary.processedAmount || 0).toLocaleString('id-ID')}
+            </p>
+            <p className="mt-1 text-xs font-medium text-slate-500">{summary.processedCount || 0} donasi telah disalurkan</p>
+          </div>
         </div>
 
         <div
           onClick={() => { setStatus('PENDING'); setPage(1); }}
-          className="card cursor-pointer p-5 transition hover:border-amber-400 hover:shadow-sm"
+          className="admin-card-interactive cursor-pointer p-5"
         >
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} />
+          <div className="flex items-center justify-between">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-700 border border-amber-100">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-base" />
             </span>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Menunggu Konfirmasi</p>
-              <p className="font-heading text-xl font-bold text-amber-700 mt-0.5">
-                {summary.pendingCount || 0} Transaksi
-              </p>
-            </div>
+            <StatusBadge status="PENDING" label="Menunggu" />
           </div>
-          <p className="mt-2 text-xs text-teal-700 font-semibold">Klik untuk memfilter</p>
+          <div className="mt-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Menunggu Konfirmasi</p>
+            <p className="font-heading text-2xl font-black text-amber-700 mt-1">
+              {summary.pendingCount || 0} Transaksi
+            </p>
+            <p className="mt-1 text-xs font-semibold text-teal-700">Klik untuk memfilter daftar →</p>
+          </div>
         </div>
 
-        <div className="card p-5">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
+        <div className="admin-card p-5">
+          <div className="flex items-center justify-between">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-700 border border-teal-100">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} className="text-base" />
             </span>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Transaksi</p>
-              <p className="font-heading text-xl font-bold text-slate-900 mt-0.5">
-                {(summary.processedCount || 0) + (summary.pendingCount || 0) + (summary.rejectedCount || 0)} Catatan
-              </p>
-            </div>
+            <span className="text-[11px] font-bold text-slate-400 uppercase">Semua</span>
           </div>
-          <p className="mt-2 text-xs text-slate-500">{summary.rejectedCount || 0} dibatalkan / tidak valid</p>
+          <div className="mt-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Akumulasi Transaksi</p>
+            <p className="font-heading text-2xl font-black text-slate-900 mt-1">
+              {(summary.processedCount || 0) + (summary.pendingCount || 0) + (summary.rejectedCount || 0)} Transaksi
+            </p>
+            <p className="mt-1 text-xs text-slate-500">{summary.rejectedCount || 0} dibatalkan / tidak valid</p>
+          </div>
         </div>
       </div>
 
-      {/* Filter status */}
-      <div className="flex flex-wrap gap-2">
-        {[['', 'Seluruh Status'], ['PENDING', 'Menunggu Verifikasi'], ['PROCESSED', 'Terverifikasi'], ['REJECTED', 'Dibatalkan']].map(([value, label]) => (
+      {/* Filter Segmented Controls */}
+      <div className="flex flex-wrap gap-2 border-b border-slate-200/80 pb-4">
+        {[
+          ['', 'Seluruh Status'],
+          ['PENDING', 'Menunggu Verifikasi'],
+          ['PROCESSED', 'Terverifikasi'],
+          ['REJECTED', 'Dibatalkan'],
+        ].map(([value, label]) => (
           <button
             key={value}
             type="button"
             onClick={() => { setStatus(value); setPage(1); }}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-              status === value ? 'bg-teal-700 text-white' : 'bg-white text-slate-500 ring-1 ring-slate-200 hover:text-teal-700'
+            className={`rounded-xl px-3.5 py-1.5 text-xs font-semibold transition ${
+              status === value
+                ? 'bg-teal-700 text-white shadow-xs'
+                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-teal-700'
             }`}
           >
             {label}
@@ -131,132 +143,155 @@ export default function DonationsAdmin() {
       </div>
 
       {donations.length === 0 ? (
-        <EmptyState icon="fa-hand-holding-heart" title="Tidak Ada Catatan Donasi" description="Data konfirmasi donasi dari publik akan tercatat pada daftar ini." />
+        <EmptyState
+          icon="fa-hand-holding-heart"
+          title="Tidak Ada Catatan Donasi"
+          description="Data konfirmasi donasi dari publik akan tercatat pada daftar ini."
+        />
       ) : (
         <>
-          <div className="card overflow-x-auto">
-            <table className="w-full min-w-[720px] text-left text-sm">
-              <thead className="border-b border-slate-100 text-xs uppercase tracking-wide text-slate-400">
-                <tr>
-                  <th className="px-5 py-3 font-semibold">Referensi</th>
-                  <th className="px-5 py-3 font-semibold">Nama Donatur</th>
-                  <th className="px-5 py-3 font-semibold">Nominal</th>
-                  <th className="px-5 py-3 font-semibold">Tanggal</th>
-                  <th className="px-5 py-3 font-semibold">Status</th>
-                  <th className="px-5 py-3 text-right font-semibold">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {donations.map((d) => (
-                  <Fragment key={d.id}>
-                    <tr className="transition hover:bg-slate-50/60">
-                      <td className="px-5 py-3">
-                        <button
-                          type="button"
-                          onClick={() => setExpandedId(expandedId === d.id ? null : d.id)}
-                          className="flex items-center gap-2 font-mono text-xs text-teal-700 hover:underline"
-                        >
-                          <FontAwesomeIcon
-                            icon={['fa-solid', expandedId === d.id ? 'fa-chevron-down' : 'fa-chevron-right']}
-                            className="text-[10px]"
-                          />
-                          <span>{d.reference}</span>
-                        </button>
-                      </td>
-                      <td className="px-5 py-3">
-                        <p className="font-semibold text-slate-800">{d.name}</p>
-                        {d.email && <p className="text-xs text-slate-400">{d.email}</p>}
-                      </td>
-                      <td className="px-5 py-3 font-semibold text-slate-800">
-                        Rp {Number(d.amount).toLocaleString('id-ID')}
-                      </td>
-                      <td className="px-5 py-3 whitespace-nowrap text-slate-500">{formatDate(d.createdAt, 'd MMM yyyy')}</td>
-                      <td className="px-5 py-3">
-                        <div className="flex items-center gap-2">
-                          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_META[d.status]?.badge}`}>
-                            {STATUS_META[d.status]?.label}
-                          </span>
-                          <select
-                            value={d.status}
-                            onChange={(e) => changeStatus(d, e.target.value)}
-                            className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600 focus:border-teal-500 focus:outline-none"
-                          >
-                            <option value="PENDING">Menunggu</option>
-                            <option value="PROCESSED">Diproses</option>
-                            <option value="REJECTED">Ditolak</option>
-                          </select>
-                        </div>
-                      </td>
-                      <td className="px-5 py-3">
-                        <div className="flex justify-end gap-2">
+          <div className="admin-card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[750px] text-left text-sm">
+                <thead>
+                  <tr>
+                    <th className="admin-th">Kode Referensi</th>
+                    <th className="admin-th">Nama Donatur</th>
+                    <th className="admin-th">Nominal Donasi</th>
+                    <th className="admin-th">Tanggal</th>
+                    <th className="admin-th">Status & Ubah</th>
+                    <th className="admin-th text-right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {donations.map((d) => (
+                    <Fragment key={d.id}>
+                      <tr className="transition hover:bg-slate-50/70">
+                        <td className="admin-td">
                           <button
                             type="button"
                             onClick={() => setExpandedId(expandedId === d.id ? null : d.id)}
-                            className="btn-outline !px-2.5 !py-1.5 text-xs"
-                            title="Lihat rincian donatur"
+                            className="flex items-center gap-2 font-mono text-xs font-bold text-teal-800 hover:underline"
                           >
-                            Rincian
+                            <FontAwesomeIcon
+                              icon={['fa-solid', expandedId === d.id ? 'fa-chevron-down' : 'fa-chevron-right']}
+                              className="text-[10px] text-slate-400"
+                            />
+                            <span>{d.reference}</span>
                           </button>
-                          <button
-                            type="button"
-                            disabled={deletingId === d.id}
-                            onClick={() => handleDelete(d)}
-                            className="btn-danger !px-2.5 !py-1.5 text-xs"
-                          >
-                            {deletingId === d.id ? '…' : (
-                              <>
+                        </td>
+                        <td className="admin-td">
+                          <p className="font-semibold text-slate-900">{d.name}</p>
+                          {d.email && <p className="text-xs text-slate-400">{d.email}</p>}
+                        </td>
+                        <td className="admin-td font-heading font-bold text-slate-900">
+                          Rp {Number(d.amount).toLocaleString('id-ID')}
+                        </td>
+                        <td className="admin-td whitespace-nowrap text-xs text-slate-500">
+                          {formatDate(d.createdAt, 'd MMM yyyy')}
+                        </td>
+                        <td className="admin-td">
+                          <div className="flex items-center gap-2">
+                            <StatusBadge status={d.status} />
+                            <select
+                              value={d.status}
+                              onChange={(e) => changeStatus(d, e.target.value)}
+                              className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-700 focus:border-teal-500 focus:outline-none"
+                            >
+                              <option value="PENDING">Menunggu</option>
+                              <option value="PROCESSED">Terverifikasi</option>
+                              <option value="REJECTED">Ditolak</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td className="admin-td">
+                          <div className="flex justify-end gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => setExpandedId(expandedId === d.id ? null : d.id)}
+                              className="admin-btn-secondary !px-2.5 !py-1 text-xs font-medium"
+                              title="Lihat rincian donatur"
+                            >
+                              Rincian
+                            </button>
+                            <button
+                              type="button"
+                              disabled={deletingId === d.id}
+                              onClick={() => handleDelete(d)}
+                              className="admin-btn-danger !px-2.5 !py-1 text-xs font-medium"
+                              title="Hapus Catatan Donasi"
+                            >
+                              {deletingId === d.id ? (
+                                '…'
+                              ) : (
                                 <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    {expandedId === d.id && (
-                      <tr className="bg-teal-50/30">
-                        <td colSpan={6} className="px-6 py-4">
-                          <div className="grid gap-4 sm:grid-cols-3 text-xs">
-                            <div>
-                              <p className="font-semibold text-slate-400 uppercase tracking-wider">Kontak / WhatsApp</p>
-                              <p className="mt-1 text-sm font-medium text-slate-800">{d.phone || '—'}</p>
-                              {d.phone && (
-                                <a
-                                  href={`https://wa.me/${d.phone.replace(/[^0-9]/g, '')}`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="mt-1 inline-flex items-center gap-1 font-semibold text-emerald-700 hover:underline"
-                                >
-                                  Hubungi via WhatsApp
-                                </a>
                               )}
-                            </div>
-                            <div>
-                              <p className="font-semibold text-slate-400 uppercase tracking-wider">Peruntukan Program</p>
-                              <p className="mt-1 text-sm font-medium text-slate-800">{d.programId || 'Penyaluran Umum'}</p>
-                            </div>
-                            <div>
-                              <p className="font-semibold text-slate-400 uppercase tracking-wider">Pesan / Doa Donatur</p>
-                              <p className="mt-1 text-sm italic text-slate-700">{d.message ? `"${d.message}"` : 'Tidak ada catatan khusus.'}</p>
-                            </div>
+                            </button>
                           </div>
                         </td>
                       </tr>
-                    )}
-                  </Fragment>
-                ))}
-              </tbody>
-            </table>
+                      {expandedId === d.id && (
+                        <tr className="bg-slate-50/80">
+                          <td colSpan={6} className="px-6 py-4">
+                            <div className="grid gap-4 sm:grid-cols-3 text-xs bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                              <div>
+                                <p className="font-bold text-slate-400 uppercase tracking-wider">Kontak / WhatsApp</p>
+                                <p className="mt-1 text-sm font-semibold text-slate-800">{d.phone || '—'}</p>
+                                {d.phone && (
+                                  <a
+                                    href={`https://wa.me/${d.phone.replace(/[^0-9]/g, '')}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="mt-1.5 inline-flex items-center gap-1.5 font-semibold text-emerald-700 hover:underline"
+                                  >
+                                    <FontAwesomeIcon icon={['fa-brands', 'fa-whatsapp']} />
+                                    Hubungi Donatur via WA
+                                  </a>
+                                )}
+                              </div>
+                              <div>
+                                <p className="font-bold text-slate-400 uppercase tracking-wider">Peruntukan Program</p>
+                                <p className="mt-1 text-sm font-semibold text-teal-800">{d.programId || 'Penyaluran Umum'}</p>
+                              </div>
+                              <div>
+                                <p className="font-bold text-slate-400 uppercase tracking-wider">Pesan / Doa Donatur</p>
+                                <p className="mt-1 text-xs italic text-slate-700 leading-relaxed">
+                                  {d.message ? `"${d.message}"` : 'Tidak ada catatan doa khusus.'}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {meta.totalPages > 1 && (
-            <div className="flex items-center justify-between text-sm text-slate-500">
-              <span>Halaman {meta.page} dari {meta.totalPages} · {meta.total} donasi</span>
+            <div className="flex items-center justify-between border-t border-slate-200/80 pt-4 text-xs text-slate-500">
+              <span>
+                Halaman <strong className="text-slate-800">{meta.page}</strong> dari{' '}
+                <strong className="text-slate-800">{meta.totalPages}</strong> (Total {meta.total} donasi)
+              </span>
               <div className="flex gap-2">
-                <button type="button" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="btn-outline !px-3 !py-1.5 text-xs">
-                  Sebelumnya
+                <button
+                  type="button"
+                  disabled={page <= 1}
+                  onClick={() => setPage((p) => p - 1)}
+                  className="admin-btn-secondary !px-3 !py-1 text-xs font-medium"
+                >
+                  ← Sebelumnya
                 </button>
-                <button type="button" disabled={page >= meta.totalPages} onClick={() => setPage((p) => p + 1)} className="btn-outline !px-3 !py-1.5 text-xs">
-                  Berikutnya
+                <button
+                  type="button"
+                  disabled={page >= meta.totalPages}
+                  onClick={() => setPage((p) => p + 1)}
+                  className="admin-btn-secondary !px-3 !py-1 text-xs font-medium"
+                >
+                  Berikutnya →
                 </button>
               </div>
             </div>
@@ -266,3 +301,4 @@ export default function DonationsAdmin() {
     </div>
   );
 }
+

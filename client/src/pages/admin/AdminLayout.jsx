@@ -189,9 +189,44 @@ function SidebarContent({ onNavigate }) {
   );
 }
 
+function getBreadcrumbs(pathname) {
+  if (pathname === '/admin' || pathname === '/admin/') {
+    return [{ label: 'Dasbor Utama', current: true }];
+  }
+  if (pathname.startsWith('/admin/posts/new')) {
+    return [
+      { label: 'Publikasi & Program', current: false },
+      { label: 'Artikel Berita', to: '/admin/posts' },
+      { label: 'Tulis Artikel Baru', current: true },
+    ];
+  }
+  if (pathname.includes('/admin/posts/') && pathname.endsWith('/edit')) {
+    return [
+      { label: 'Publikasi & Program', current: false },
+      { label: 'Artikel Berita', to: '/admin/posts' },
+      { label: 'Edit Artikel', current: true },
+    ];
+  }
+  for (const group of MENU_STRUCTURE) {
+    if (group.type === 'group') {
+      const found = group.items.find(
+        (item) => item.to === pathname || pathname.startsWith(item.to + '/')
+      );
+      if (found) {
+        return [
+          { label: group.label, current: false },
+          { label: found.label, current: true },
+        ];
+      }
+    }
+  }
+  return [{ label: 'Sistem Informasi Manajemen', current: true }];
+}
+
 export default function AdminLayout() {
   const { user, loading, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     try {
@@ -201,6 +236,8 @@ export default function AdminLayout() {
       return true;
     }
   });
+
+  const breadcrumbs = getBreadcrumbs(location.pathname);
 
   const toggleSidebar = () => {
     setSidebarOpen((prev) => {
@@ -225,14 +262,14 @@ export default function AdminLayout() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-slate-50/70">
       <Helmet>
         <meta name="robots" content="noindex" />
       </Helmet>
 
       {/* Sidebar desktop */}
       <aside
-        className={`fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 ease-in-out lg:flex ${
+        className={`fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200/80 bg-white shadow-sm transition-transform duration-300 ease-in-out lg:flex ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -271,8 +308,8 @@ export default function AdminLayout() {
       {/* Sidebar mobile */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
+          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
               <Link to="/admin" className="flex items-center gap-2.5 select-none" onClick={() => setMobileOpen(false)}>
                 <img
@@ -308,7 +345,7 @@ export default function AdminLayout() {
 
       {/* Konten */}
       <div className={`transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:pl-64' : 'lg:pl-0'}`}>
-        <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur sm:px-6">
+        <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-slate-200/80 bg-white/90 px-4 py-3 backdrop-blur-md sm:px-6">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -329,28 +366,63 @@ export default function AdminLayout() {
               <FontAwesomeIcon icon={['fa-solid', sidebarOpen ? 'fa-bars-staggered' : 'fa-bars']} />
             </button>
 
-            <div className="hidden text-sm font-semibold text-slate-700 sm:block">
-              Sistem Informasi Manajemen
-            </div>
+            {/* Breadcrumb navigasi dinamis */}
+            <nav aria-label="Breadcrumb" className="hidden sm:flex items-center gap-2 text-xs">
+              <Link to="/admin" className="font-medium text-slate-500 hover:text-teal-700 transition">
+                Portal
+              </Link>
+              {breadcrumbs.map((crumb, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <span className="text-slate-300">/</span>
+                  {crumb.current ? (
+                    <span className="font-semibold text-slate-900">{crumb.label}</span>
+                  ) : crumb.to ? (
+                    <Link to={crumb.to} className="font-medium text-slate-500 hover:text-teal-700 transition">
+                      {crumb.label}
+                    </Link>
+                  ) : (
+                    <span className="font-medium text-slate-500">{crumb.label}</span>
+                  )}
+                </div>
+              ))}
+            </nav>
           </div>
 
           <div className="flex items-center gap-3">
-            <Link to="/" target="_blank" className="btn-outline !px-3 !py-2 text-xs">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} />
+            <Link
+              to="/"
+              target="_blank"
+              rel="noreferrer"
+              className="admin-btn-secondary !px-3 !py-1.5 text-xs font-semibold"
+            >
+              <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} className="text-slate-400" />
               <span className="hidden sm:inline">Pratinjau Situs</span>
             </Link>
-            <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-800">
-                {user?.name?.[0]?.toUpperCase() || 'A'}
-              </span>
+
+            <div className="flex items-center gap-2.5 pl-1 pr-1 border-l border-slate-200">
+              <div className="relative">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 border border-teal-200 text-sm font-bold text-teal-800 shadow-xs">
+                  {user?.name?.[0]?.toUpperCase() || 'A'}
+                </span>
+                <span
+                  className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white"
+                  title="Sesi Aktif"
+                />
+              </div>
               <div className="hidden md:block">
-                <p className="text-sm font-semibold leading-tight text-slate-800">{user?.name}</p>
-                <p className="text-xs text-slate-400">{user?.email}</p>
+                <p className="text-xs font-bold leading-tight text-slate-800">{user?.name}</p>
+                <p className="text-[11px] text-slate-400 font-medium">{user?.role || 'Admin'}</p>
               </div>
             </div>
-            <button type="button" onClick={handleLogout} className="btn-danger !px-3 !py-2 text-xs">
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="admin-btn-danger !px-3 !py-1.5 text-xs font-semibold"
+              title="Keluar dari sesi admin"
+            >
               <FontAwesomeIcon icon={['fa-solid', 'fa-right-from-bracket']} />
-              <span className="hidden sm:inline">Keluar Sesi</span>
+              <span className="hidden sm:inline">Keluar</span>
             </button>
           </div>
         </header>

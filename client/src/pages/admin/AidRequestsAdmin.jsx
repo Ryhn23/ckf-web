@@ -9,32 +9,10 @@ import {
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
+import StatusBadge from '../../components/ui/StatusBadge';
 import { formatDate } from '../../utils/formatDate';
 
 const PAGE_SIZE = 15;
-
-const STATUS_CONFIG = {
-  PENDING: {
-    label: 'Menunggu Verifikasi',
-    badge: 'bg-amber-100 text-amber-800 border-amber-200',
-    dot: 'bg-amber-500',
-  },
-  REVIEWED: {
-    label: 'Sedang Ditinjau',
-    badge: 'bg-blue-100 text-blue-800 border-blue-200',
-    dot: 'bg-blue-500',
-  },
-  APPROVED: {
-    label: 'Disetujui',
-    badge: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    dot: 'bg-emerald-500',
-  },
-  REJECTED: {
-    label: 'Ditolak',
-    badge: 'bg-red-100 text-red-800 border-red-200',
-    dot: 'bg-red-500',
-  },
-};
 
 function cleanPhoneForWa(phone) {
   if (!phone) return '';
@@ -147,54 +125,79 @@ export default function AidRequestsAdmin() {
   return (
     <div className="space-y-6">
       {/* Header Halaman */}
-      <div>
-        <h1 className="font-heading text-2xl font-bold text-slate-900">
-          Permintaan Bantuan
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Kelola data permohonan bantuan dana dan logistik dari majelis, yayasan, dan lembaga masyarakat.
-        </p>
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
+        <div>
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
+            Permintaan Bantuan Majelis & Lembaga
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Kelola, verifikasi administrasi, dan koordinasi permohonan bantuan dana serta barang sarana.
+          </p>
+        </div>
       </div>
 
-      {/* Counter Ringkasan / Metrik */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
-        <div className="card p-4">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Pengajuan</p>
-          <p className="mt-1 font-heading text-2xl font-bold text-slate-900">{summary.totalAll || 0}</p>
-          <div className="mt-1 flex items-center gap-2 text-[11px] text-slate-400">
-            <span>{summary.danaCount || 0} Dana</span>
-            <span>·</span>
-            <span>{summary.barangCount || 0} Barang</span>
+      {/* Counter Ringkasan / Metrik Seragam */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="admin-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-700 border border-teal-100">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-inbox']} className="text-xs" />
+            </span>
+            <span className="text-[11px] font-bold text-slate-400 uppercase">Total</span>
           </div>
+          <p className="mt-3 font-heading text-2xl font-black text-slate-900">{summary.totalAll || 0}</p>
+          <p className="mt-0.5 text-xs text-slate-400">
+            {summary.danaCount || 0} Dana · {summary.barangCount || 0} Barang
+          </p>
         </div>
 
-        <div className="card border-l-4 border-l-amber-500 p-4">
-          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Menunggu Verifikasi</p>
-          <p className="mt-1 font-heading text-2xl font-bold text-amber-800">{summary.pendingCount || 0}</p>
-          <p className="mt-1 text-[11px] text-slate-400">Perlu ditindaklanjuti</p>
+        <div className="admin-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-700 border border-amber-100">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-xs" />
+            </span>
+            <StatusBadge status="PENDING" label="Menunggu" />
+          </div>
+          <p className="mt-3 font-heading text-2xl font-black text-slate-900">{summary.pendingCount || 0}</p>
+          <p className="mt-0.5 text-xs text-slate-400">Perlu ditindaklanjuti</p>
         </div>
 
-        <div className="card border-l-4 border-l-blue-500 p-4">
-          <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Sedang Ditinjau</p>
-          <p className="mt-1 font-heading text-2xl font-bold text-blue-800">{summary.reviewedCount || 0}</p>
-          <p className="mt-1 text-[11px] text-slate-400">Dalam proses wawancara</p>
+        <div className="admin-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 text-sky-700 border border-sky-100">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-user-check']} className="text-xs" />
+            </span>
+            <StatusBadge status="REVIEWED" label="Ditinjau" />
+          </div>
+          <p className="mt-3 font-heading text-2xl font-black text-slate-900">{summary.reviewedCount || 0}</p>
+          <p className="mt-0.5 text-xs text-slate-400">Dalam verifikasi berkas</p>
         </div>
 
-        <div className="card border-l-4 border-l-emerald-500 p-4">
-          <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Disetujui</p>
-          <p className="mt-1 font-heading text-2xl font-bold text-emerald-800">{summary.approvedCount || 0}</p>
-          <p className="mt-1 text-[11px] text-slate-400">Siap penyaluran</p>
+        <div className="admin-card p-4">
+          <div className="flex items-center justify-between">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-xs" />
+            </span>
+            <StatusBadge status="APPROVED" label="Disetujui" />
+          </div>
+          <p className="mt-3 font-heading text-2xl font-black text-slate-900">{summary.approvedCount || 0}</p>
+          <p className="mt-0.5 text-xs text-slate-400">Siap penyaluran bantuan</p>
         </div>
 
-        <div className="card border-l-4 border-l-red-400 p-4 col-span-2 sm:col-span-1">
-          <p className="text-xs font-semibold text-red-600 uppercase tracking-wide">Ditolak</p>
-          <p className="mt-1 font-heading text-2xl font-bold text-red-700">{summary.rejectedCount || 0}</p>
-          <p className="mt-1 text-[11px] text-slate-400">Tidak memenuhi kriteria</p>
+        <div className="admin-card p-4 col-span-2 sm:col-span-1">
+          <div className="flex items-center justify-between">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-50 text-rose-700 border border-rose-100">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-ban']} className="text-xs" />
+            </span>
+            <StatusBadge status="REJECTED" label="Ditolak" />
+          </div>
+          <p className="mt-3 font-heading text-2xl font-black text-slate-900">{summary.rejectedCount || 0}</p>
+          <p className="mt-0.5 text-xs text-slate-400">Tidak memenuhi syarat</p>
         </div>
       </div>
 
-      {/* Bar Filter & Pencarian */}
-      <div className="card p-4">
+      {/* Bar Filter & Toolbar */}
+      <div className="admin-card p-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <form onSubmit={handleSearchSubmit} className="flex flex-1 items-center gap-2 max-w-md">
             <div className="relative flex-1">
@@ -207,10 +210,10 @@ export default function AidRequestsAdmin() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari tiket, lembaga, pimpinan, PJ..."
-                className="input pl-9 text-xs"
+                className="input !py-2 pl-9 text-xs"
               />
             </div>
-            <button type="submit" className="btn-primary py-2 px-3 text-xs shrink-0">
+            <button type="submit" className="admin-btn-primary !px-3 !py-2 text-xs shrink-0">
               Cari
             </button>
             {activeQuery && (
@@ -221,7 +224,7 @@ export default function AidRequestsAdmin() {
                   setActiveQuery('');
                   setPage(1);
                 }}
-                className="text-xs text-slate-500 hover:text-slate-700 underline"
+                className="text-xs text-slate-500 hover:text-slate-800 underline font-medium"
               >
                 Reset
               </button>
@@ -235,7 +238,7 @@ export default function AidRequestsAdmin() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="input py-2 text-xs w-auto min-w-[150px]"
+              className="input !py-2 text-xs w-auto min-w-[150px]"
             >
               <option value="">Semua Status</option>
               <option value="PENDING">Menunggu Verifikasi</option>
@@ -250,7 +253,7 @@ export default function AidRequestsAdmin() {
                 setTypeFilter(e.target.value);
                 setPage(1);
               }}
-              className="input py-2 text-xs w-auto min-w-[140px]"
+              className="input !py-2 text-xs w-auto min-w-[140px]"
             >
               <option value="">Semua Jenis</option>
               <option value="DANA">Bantuan Dana</option>
@@ -272,47 +275,46 @@ export default function AidRequestsAdmin() {
           }
         />
       ) : (
-        <div className="card overflow-hidden">
+        <div className="admin-card overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-600">
-              <thead className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase text-slate-600">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead>
                 <tr>
-                  <th className="px-4 py-3.5">Tiket & Tanggal</th>
-                  <th className="px-4 py-3.5">Majelis / Lembaga</th>
-                  <th className="px-4 py-3.5">Bantuan & Kebutuhan</th>
-                  <th className="px-4 py-3.5">Pimpinan & PJ</th>
-                  <th className="px-4 py-3.5">Status</th>
-                  <th className="px-4 py-3.5 text-right">Aksi</th>
+                  <th className="admin-th">Tiket & Tanggal</th>
+                  <th className="admin-th">Majelis / Lembaga</th>
+                  <th className="admin-th">Bantuan & Kebutuhan</th>
+                  <th className="admin-th">Pimpinan & PJ</th>
+                  <th className="admin-th">Status</th>
+                  <th className="admin-th text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {requests.map((item) => {
-                  const st = STATUS_CONFIG[item.status] || STATUS_CONFIG.PENDING;
                   const waLeader = cleanPhoneForWa(item.leaderPhone);
                   const waPic = cleanPhoneForWa(item.picPhone);
 
                   return (
                     <tr key={item.id} className="hover:bg-slate-50/70 transition">
                       {/* Tiket & Tanggal */}
-                      <td className="px-4 py-3.5">
-                        <p className="font-mono font-bold text-teal-800">{item.ticketNumber}</p>
-                        <p className="text-[11px] text-slate-400">
+                      <td className="admin-td">
+                        <p className="font-mono font-bold text-teal-800 text-xs">{item.ticketNumber}</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">
                           {formatDate(item.createdAt, 'd MMM yyyy, HH:mm')}
                         </p>
                       </td>
 
                       {/* Majelis / Lembaga */}
-                      <td className="px-4 py-3.5 max-w-[200px]">
+                      <td className="admin-td max-w-[220px]">
                         <p className="font-bold text-slate-900 truncate" title={item.institutionName}>
                           {item.institutionName}
                         </p>
-                        <p className="text-[11px] text-slate-500 line-clamp-1" title={item.reason}>
+                        <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5" title={item.reason}>
                           {item.reason}
                         </p>
                       </td>
 
                       {/* Bantuan & Kebutuhan */}
-                      <td className="px-4 py-3.5">
+                      <td className="admin-td">
                         <span
                           className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold ${
                             item.type === 'DANA'
@@ -331,7 +333,7 @@ export default function AidRequestsAdmin() {
                       </td>
 
                       {/* Pimpinan & PJ */}
-                      <td className="px-4 py-3.5">
+                      <td className="admin-td">
                         <div className="space-y-1">
                           <div className="flex items-center gap-1.5">
                             <span className="text-[10px] font-semibold text-slate-400">Pimpinan:</span>
@@ -376,22 +378,17 @@ export default function AidRequestsAdmin() {
                       </td>
 
                       {/* Status */}
-                      <td className="px-4 py-3.5">
-                        <span
-                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${st.badge}`}
-                        >
-                          <span className={`h-1.5 w-1.5 rounded-full ${st.dot}`} />
-                          {st.label}
-                        </span>
+                      <td className="admin-td">
+                        <StatusBadge status={item.status} />
                       </td>
 
                       {/* Aksi */}
-                      <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                        <div className="inline-flex items-center gap-1">
+                      <td className="admin-td text-right whitespace-nowrap">
+                        <div className="inline-flex items-center gap-1.5">
                           <button
                             type="button"
                             onClick={() => handleOpenDetail(item)}
-                            className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition"
+                            className="admin-btn-secondary !px-2.5 !py-1 text-xs font-medium"
                           >
                             Rincian
                           </button>
@@ -399,7 +396,7 @@ export default function AidRequestsAdmin() {
                             type="button"
                             onClick={() => handleDelete(item)}
                             disabled={deletingId === item.id}
-                            className="rounded-lg border border-red-200 bg-white px-2 py-1.5 text-xs text-red-600 hover:bg-red-50 transition"
+                            className="admin-btn-danger !px-2.5 !py-1 text-xs font-medium"
                             title="Hapus Permohonan"
                           >
                             <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
@@ -415,26 +412,27 @@ export default function AidRequestsAdmin() {
 
           {/* Pagination */}
           {meta.totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3 text-xs text-slate-500">
+            <div className="flex items-center justify-between border-t border-slate-200/80 px-5 py-3.5 text-xs text-slate-500">
               <p>
-                Menampilkan halaman <strong>{meta.page}</strong> dari <strong>{meta.totalPages}</strong> (Total {meta.total} data)
+                Menampilkan halaman <strong className="text-slate-800">{meta.page}</strong> dari{' '}
+                <strong className="text-slate-800">{meta.totalPages}</strong> (Total {meta.total} data)
               </p>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
-                  className="rounded-lg border border-slate-200 px-2.5 py-1 disabled:opacity-40 hover:bg-slate-50"
+                  className="admin-btn-secondary !px-3 !py-1 text-xs font-medium"
                 >
-                  Sebelumnya
+                  ← Sebelumnya
                 </button>
                 <button
                   type="button"
                   disabled={page >= meta.totalPages}
                   onClick={() => setPage((p) => p + 1)}
-                  className="rounded-lg border border-slate-200 px-2.5 py-1 disabled:opacity-40 hover:bg-slate-50"
+                  className="admin-btn-secondary !px-3 !py-1 text-xs font-medium"
                 >
-                  Selanjutnya
+                  Selanjutnya →
                 </button>
               </div>
             </div>
@@ -444,40 +442,34 @@ export default function AidRequestsAdmin() {
 
       {/* MODAL DETAIL & EDIT STATUS */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="card w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-7 space-y-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <div className="admin-card w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-7 space-y-6 shadow-2xl">
             {/* Header Modal */}
-            <div className="flex items-start justify-between border-b border-slate-200 pb-4">
+            <div className="flex items-start justify-between border-b border-slate-200/80 pb-4">
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <span className="font-mono text-lg font-bold text-teal-800">
                     {selectedItem.ticketNumber}
                   </span>
-                  <span
-                    className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold ${
-                      STATUS_CONFIG[selectedItem.status]?.badge
-                    }`}
-                  >
-                    {STATUS_CONFIG[selectedItem.status]?.label}
-                  </span>
+                  <StatusBadge status={selectedItem.status} />
                 </div>
-                <p className="mt-0.5 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-slate-500">
                   Diajukan pada {formatDate(selectedItem.createdAt, "d MMMM yyyy, 'pukul' HH:mm")} WIB
                 </p>
               </div>
               <button
                 type="button"
                 onClick={handleCloseDetail}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition"
               >
                 <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} className="text-base" />
               </button>
             </div>
 
             {/* Rincian Permohonan */}
-            <div className="grid gap-4 text-xs sm:grid-cols-2 bg-slate-50/70 p-4 rounded-xl border border-slate-200/80">
+            <div className="grid gap-4 text-xs sm:grid-cols-2 bg-slate-50/80 p-4 rounded-xl border border-slate-200/80">
               <div>
-                <span className="font-semibold text-slate-500">Nama Majelis / Yayasan:</span>
+                <span className="font-semibold text-slate-500">Nama Majelis / Lembaga:</span>
                 <p className="mt-0.5 text-sm font-bold text-slate-900">{selectedItem.institutionName}</p>
               </div>
               <div>
@@ -531,7 +523,7 @@ export default function AidRequestsAdmin() {
             </div>
 
             {/* Form Ubah Status & Catatan Verifikasi */}
-            <form onSubmit={handleStatusSubmit} className="border-t border-slate-200 pt-4 space-y-4">
+            <form onSubmit={handleStatusSubmit} className="border-t border-slate-200/80 pt-4 space-y-4">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                 Verifikasi & Keputusan Status:
               </h4>
@@ -573,7 +565,7 @@ export default function AidRequestsAdmin() {
                 <button
                   type="button"
                   onClick={() => handleDelete(selectedItem)}
-                  className="text-xs text-red-600 hover:text-red-800 font-semibold"
+                  className="text-xs text-rose-600 hover:text-rose-800 font-semibold transition"
                 >
                   Hapus Permohonan Ini
                 </button>
@@ -582,14 +574,14 @@ export default function AidRequestsAdmin() {
                   <button
                     type="button"
                     onClick={handleCloseDetail}
-                    className="btn-outline py-2 px-3 text-xs"
+                    className="admin-btn-secondary !px-4 !py-2 text-xs"
                   >
                     Tutup
                   </button>
                   <button
                     type="submit"
                     disabled={updating}
-                    className="btn-primary py-2 px-4 text-xs font-bold"
+                    className="admin-btn-primary !px-4 !py-2 text-xs font-bold"
                   >
                     {updating ? 'Menyimpan...' : 'Simpan Perubahan'}
                   </button>

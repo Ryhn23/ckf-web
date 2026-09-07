@@ -455,81 +455,71 @@ async function seed() {
   });
   console.log(`- Admin: ${admin.email} (password: admin123${existingAdmin ? ' — sudah ada' : ''})`);
 
-  // Categories
+  // Categories: jangan timpa data kategori jika sudah ada
   const categoryMap = {};
   for (const [i, cat] of CATEGORIES.entries()) {
     const c = await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: { name: cat.name, icon: cat.icon, description: cat.description, target: cat.target, impact: cat.impact, sortOrder: i },
+      update: {}, // Jangan timpa jika admin sudah mengedit kategori
       create: { ...cat, sortOrder: i },
     });
     categoryMap[cat.slug] = c;
   }
   console.log(`- Kategori: ${CATEGORIES.length} kategori`);
 
-  // Posts + covers
+  // Posts: jangan timpa postingan jika sudah ada
   for (const p of POSTS) {
-    const coverImage = await ensureCover(slugify(p.title), p.title, p.cover);
-    const publishedAt = daysAgoDate(p.daysAgo);
-    const html = p.content
-      .map((line) => {
-        const [kind, ...rest] = line.split(':');
-        const text = rest.join(':');
-        if (kind === 'h2') return `<h2>${text}</h2>`;
-        if (kind === 'ul') return `<li>${text}</li>`;
-        return `<p>${text}</p>`;
-      })
-      .join('\n');
-    const wrapped = wrapLists(html);
+    const slug = slugify(p.title);
+    const existingPost = await prisma.post.findUnique({ where: { slug } });
+    if (!existingPost) {
+      const coverImage = await ensureCover(slug, p.title, p.cover);
+      const publishedAt = daysAgoDate(p.daysAgo);
+      const html = p.content
+        .map((line) => {
+          const [kind, ...rest] = line.split(':');
+          const text = rest.join(':');
+          if (kind === 'h2') return `<h2>${text}</h2>`;
+          if (kind === 'ul') return `<li>${text}</li>`;
+          return `<p>${text}</p>`;
+        })
+        .join('\n');
+      const wrapped = wrapLists(html);
 
-    await prisma.post.upsert({
-      where: { slug: slugify(p.title) },
-      update: {
-        title: p.title,
-        excerpt: p.excerpt,
-        content: wrapped,
-        coverImage,
-        status: 'PUBLISHED',
-        isFeatured: p.featured,
-        publishedAt,
-        views: p.views,
-        tags: p.tags,
-        categoryId: categoryMap[p.category].id,
-        authorId: admin.id,
-      },
-      create: {
-        title: p.title,
-        slug: slugify(p.title),
-        excerpt: p.excerpt,
-        content: wrapped,
-        coverImage,
-        status: 'PUBLISHED',
-        isFeatured: p.featured,
-        publishedAt,
-        views: p.views,
-        tags: p.tags,
-        categoryId: categoryMap[p.category].id,
-        authorId: admin.id,
-      },
-    });
+      await prisma.post.create({
+        data: {
+          title: p.title,
+          slug,
+          excerpt: p.excerpt,
+          content: wrapped,
+          coverImage,
+          status: 'PUBLISHED',
+          isFeatured: p.featured,
+          publishedAt,
+          views: p.views,
+          tags: p.tags,
+          categoryId: categoryMap[p.category].id,
+          authorId: admin.id,
+        },
+      });
+    }
   }
   console.log(`- Post: ${POSTS.length} post (${POSTS.filter((p) => p.featured).length} featured)`);
 
-  // Testimonials
+  // Testimonials: jangan timpa testimoni jika sudah ada
   for (const t of TESTIMONIALS) {
     await prisma.testimonial.upsert({
       where: { id: `seed-${slugify(t.name)}` },
-      update: { name: t.name, role: t.role, quote: t.quote },
+      update: {}, // Jangan timpa jika sudah ada atau diedit admin
       create: { id: `seed-${slugify(t.name)}`, ...t, sortOrder: TESTIMONIALS.indexOf(t) },
     });
   }
   console.log(`- Testimonial: ${TESTIMONIALS.length} item`);
 
-  // Settings
+  // Settings: HANYA masukkan setting baru yang belum ada di database (jangan timpa yang sudah diedit user!)
   for (const [key, value] of SETTINGS) {
     await prisma.setting.upsert({
       where: { key },
-      update: { value },
+      update: {}, // JANGAN PERNAH timpa setting yang sudah ada di database
       create: { key, value },
     });
   }

@@ -37,6 +37,7 @@ export default function Navbar() {
     if (path === '/program' && settings.menu_program_enabled === 'false') return false;
     if (path === '/blog' && settings.menu_blog_enabled === 'false') return false;
     if (path === '/galeri' && settings.menu_galeri_enabled === 'false') return false;
+    if (path === '/bantuan' && settings.menu_bantuan_enabled === 'false') return false;
     if (path === '/kontak' && settings.menu_kontak_enabled === 'false') return false;
     if (path === '/tentang' && settings.menu_tentang_enabled === 'false') return false;
     return true;

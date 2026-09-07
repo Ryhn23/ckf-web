@@ -16,6 +16,7 @@ import BlogDetail from './pages/BlogDetail';
 import Gallery from './pages/Gallery';
 import Donate from './pages/Donate';
 import Contact from './pages/Contact';
+import AidRequest from './pages/AidRequest';
 import NotFound from './pages/NotFound';
 
 // Admin (Lazy loaded untuk code-splitting)
@@ -27,6 +28,7 @@ const PostEditor = lazy(() => import('./pages/admin/PostEditor'));
 const CategoriesAdmin = lazy(() => import('./pages/admin/CategoriesAdmin'));
 const MediaAdmin = lazy(() => import('./pages/admin/MediaAdmin'));
 const DonationsAdmin = lazy(() => import('./pages/admin/DonationsAdmin'));
+const AidRequestsAdmin = lazy(() => import('./pages/admin/AidRequestsAdmin'));
 const ContactAdmin = lazy(() => import('./pages/admin/ContactAdmin'));
 const UsersAdmin = lazy(() => import('./pages/admin/UsersAdmin'));
 const SettingsAdmin = lazy(() => import('./pages/admin/SettingsAdmin'));
@@ -74,6 +76,7 @@ export default function App() {
                 <Route path="/blog/:slug" element={<BlogDetail />} />
                 <Route path="/galeri" element={<Gallery />} />
                 <Route path="/donasi" element={<Donate />} />
+                <Route path="/bantuan" element={<AidRequest />} />
                 <Route path="/kontak" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
@@ -107,6 +110,7 @@ export default function App() {
                 <Route path="testimonials" element={<TestimonialsAdmin />} />
                 <Route path="media" element={<MediaAdmin />} />
                 <Route path="donations" element={<DonationsAdmin />} />
+                <Route path="aid-requests" element={<AidRequestsAdmin />} />
                 <Route path="contact" element={<ContactAdmin />} />
                 <Route path="users" element={<UsersAdmin />} />
                 <Route path="settings" element={<SettingsAdmin />} />

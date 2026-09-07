@@ -301,6 +301,7 @@ const SETTINGS = [
   ['menu_galeri_enabled', 'true'],
   ['menu_kontak_enabled', 'true'],
   ['menu_tentang_enabled', 'true'],
+  ['menu_bantuan_enabled', 'true'],
 
   // Visibilitas Seksi Halaman Beranda
   ['home_show_hero', 'true'],

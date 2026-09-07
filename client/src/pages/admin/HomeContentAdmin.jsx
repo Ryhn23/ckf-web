@@ -165,6 +165,13 @@ export default function HomeContentAdmin() {
               checked={isEnabled('menu_tentang_enabled')}
               onChange={() => handleToggle('menu_tentang_enabled')}
             />
+            <ToggleSwitch
+              id="menu_bantuan_enabled"
+              label="Menu Permohonan Bantuan"
+              description="Menampilkan formulir permohonan bantuan"
+              checked={isEnabled('menu_bantuan_enabled')}
+              onChange={() => handleToggle('menu_bantuan_enabled')}
+            />
           </div>
         </div>
 

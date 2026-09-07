@@ -42,6 +42,7 @@ const MENU_STRUCTURE = [
     icon: 'fa-hand-holding-heart',
     items: [
       { to: '/admin/donations', label: 'Donasi Masuk', icon: 'fa-sack-dollar' },
+      { to: '/admin/aid-requests', label: 'Permintaan Bantuan', icon: 'fa-hand-holding-hand' },
       { to: '/admin/contact', label: 'Pesan Kontak', icon: 'fa-envelope' },
     ],
   },

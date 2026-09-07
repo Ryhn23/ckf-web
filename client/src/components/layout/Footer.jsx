@@ -35,11 +35,24 @@ export default function Footer() {
       <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         {/* Brand */}
         <div>
-          <img
-            src="/logo-horizontal-putih.png"
-            alt="Logo"
-            className="h-10 w-auto object-contain"
-          />
+          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+            <img
+              src="/logo.png"
+              alt="Logo Cinta Kasih Fatimah"
+              className="h-11 sm:h-12 w-auto object-contain brightness-0 invert"
+            />
+            <div className="flex flex-col justify-center leading-none select-none text-white">
+              <span className="font-heading text-[11px] sm:text-[12px] font-extrabold uppercase tracking-wider text-white">
+                CINTA KASIH
+              </span>
+              <span className="font-heading text-[15px] sm:text-[17px] font-black uppercase tracking-wide mt-0.5 text-white">
+                FATIMAH
+              </span>
+              <span className="font-sans text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] mt-0.5 text-white">
+                FOUNDATION
+              </span>
+            </div>
+          </Link>
           <p className="mt-4 text-sm leading-relaxed text-teal-200">
             {settings.about_text || 'Kami berkhidmat dalam penyelenggaraan program kemanusiaan, pemenuhan hak pendidikan, dan peningkatan derajat kesehatan masyarakat secara profesional dan akuntabel.'}
           </p>

@@ -6,12 +6,23 @@ import { useSettings } from '../../context/SettingsContext';
 
 function Logo() {
   return (
-    <Link to="/" className="flex items-center">
+    <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group py-1">
       <img
-        src="/logo-horizontal-primer.png"
-        alt="Logo"
-        className="h-10 w-auto object-contain"
+        src="/logo.png"
+        alt="Logo Cinta Kasih Fatimah"
+        className="h-11 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
       />
+      <div className="flex flex-col justify-center leading-none select-none text-slate-900">
+        <span className="font-heading text-[11px] sm:text-[12px] font-extrabold uppercase tracking-wider text-slate-900">
+          CINTA KASIH
+        </span>
+        <span className="font-heading text-[15px] sm:text-[17px] font-black uppercase tracking-wide mt-0.5 text-black">
+          FATIMAH
+        </span>
+        <span className="font-sans text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-900">
+          FOUNDATION
+        </span>
+      </div>
     </Link>
   );
 }
@@ -77,7 +88,7 @@ export default function Navbar() {
 
       {/* Main bar */}
       <nav className="border-b border-slate-200/80 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
-        <div className="container-page flex h-16 items-center justify-between gap-4">
+        <div className="container-page flex h-20 items-center justify-between gap-4">
           <Logo />
 
           {/* Desktop */}

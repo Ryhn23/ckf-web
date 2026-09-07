@@ -237,13 +237,24 @@ export default function AdminLayout() {
         }`}
       >
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-          <div className="flex items-center">
+          <Link to="/admin" className="flex items-center gap-2.5 group select-none">
             <img
-              src="/logo-horizontal-hitam.png"
-              alt="Logo"
-              className="h-9 w-auto object-contain"
+              src="/logo.png"
+              alt="Logo Cinta Kasih Fatimah"
+              className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
             />
-          </div>
+            <div className="flex flex-col justify-center leading-none text-slate-900">
+              <span className="font-heading text-[10px] font-extrabold uppercase tracking-wider text-slate-900">
+                CINTA KASIH
+              </span>
+              <span className="font-heading text-[14px] font-black uppercase tracking-wide mt-0.5 text-black">
+                FATIMAH
+              </span>
+              <span className="font-sans text-[7.5px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-900">
+                FOUNDATION
+              </span>
+            </div>
+          </Link>
           <button
             type="button"
             onClick={toggleSidebar}
@@ -263,13 +274,24 @@ export default function AdminLayout() {
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
           <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-              <div className="flex items-center">
+              <Link to="/admin" className="flex items-center gap-2.5 select-none" onClick={() => setMobileOpen(false)}>
                 <img
-                  src="/logo-horizontal-hitam.png"
-                  alt="Logo"
-                  className="h-9 w-auto object-contain"
+                  src="/logo.png"
+                  alt="Logo Cinta Kasih Fatimah"
+                  className="h-10 w-auto object-contain"
                 />
-              </div>
+                <div className="flex flex-col justify-center leading-none text-slate-900">
+                  <span className="font-heading text-[10px] font-extrabold uppercase tracking-wider text-slate-900">
+                    CINTA KASIH
+                  </span>
+                  <span className="font-heading text-[14px] font-black uppercase tracking-wide mt-0.5 text-black">
+                    FATIMAH
+                  </span>
+                  <span className="font-sans text-[7.5px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-900">
+                    FOUNDATION
+                  </span>
+                </div>
+              </Link>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}

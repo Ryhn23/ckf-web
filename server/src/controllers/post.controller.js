@@ -19,6 +19,7 @@ function parseFields(body) {
     }
   }
   if (typeof out.isFeatured === 'string') out.isFeatured = out.isFeatured === 'true';
+  if (typeof out.removeCover === 'string') out.removeCover = out.removeCover === 'true';
   return out;
 }
 

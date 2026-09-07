@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
 import { getSettings, saveSettings } from '../../api/settings';
+import { useSettings } from '../../context/SettingsContext';
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
@@ -52,6 +53,7 @@ const GROUPS = [
 
 export default function SettingsAdmin() {
   const { data, loading, error } = useFetch(() => getSettings(), []);
+  const { refetch: refetchGlobalSettings } = useSettings();
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -67,6 +69,7 @@ export default function SettingsAdmin() {
     setSaving(true);
     try {
       await saveSettings(form);
+      if (refetchGlobalSettings) await refetchGlobalSettings();
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {

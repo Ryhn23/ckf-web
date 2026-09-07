@@ -43,7 +43,7 @@ export default function Dashboard() {
         <p className="mt-1 text-sm text-slate-500">Ringkasan metrik kinerja publikasi dan interaksi situs Yayasan Cinta Kasih Fatimah.</p>
       </div>
 
-      {/* Kartu statistik */}
+      {/* Kartu statistik publikasi */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {CARDS.map((c) => (
           <div key={c.key} className="card flex items-center gap-4 p-5">
@@ -58,6 +58,71 @@ export default function Dashboard() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Kartu ringkasan layanan & operasional */}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <Link
+          to="/admin/donations"
+          className="card group flex items-center justify-between p-5 transition hover:border-teal-400 hover:shadow-md"
+        >
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-lg text-emerald-700">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} />
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Donasi Terverifikasi</p>
+              <p className="font-heading text-xl font-bold text-slate-900 mt-0.5">
+                Rp {Number(stats.totalDonationAmount || 0).toLocaleString('id-ID')}
+              </p>
+              <p className="text-xs text-slate-500 mt-0.5">{stats.totalDonations || 0} donasi telah disalurkan</p>
+            </div>
+          </div>
+          {Number(stats.pendingDonations || 0) > 0 && (
+            <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-800">
+              {stats.pendingDonations} Menunggu
+            </span>
+          )}
+        </Link>
+
+        <Link
+          to="/admin/contact"
+          className="card group flex items-center justify-between p-5 transition hover:border-teal-400 hover:shadow-md"
+        >
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-50 text-lg text-sky-700">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} />
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Pesan Masuk Publik</p>
+              <p className="font-heading text-xl font-bold text-slate-900 mt-0.5">
+                {stats.unreadMessages || 0} Pesan Baru
+              </p>
+              <p className="text-xs text-slate-500 mt-0.5">Aspirasi & korespondensi kemitraan</p>
+            </div>
+          </div>
+          <span className="text-xs font-semibold text-teal-700 group-hover:underline">
+            Buka Kotak Masuk
+          </span>
+        </Link>
+
+        <div className="card sm:col-span-2 xl:col-span-1 flex items-center justify-between p-5">
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-lg text-purple-700">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-images']} />
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Pustaka Aset & Bukti</p>
+              <p className="font-heading text-xl font-bold text-slate-900 mt-0.5">
+                {stats.totalMedia || 0} Berkas Media
+              </p>
+              <p className="text-xs text-slate-500 mt-0.5">{stats.totalTestimonials || 0} testimoni penerima manfaat</p>
+            </div>
+          </div>
+          <Link to="/admin/media" className="text-xs font-semibold text-teal-700 hover:underline">
+            Kelola
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-5">

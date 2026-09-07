@@ -35,7 +35,7 @@ export const list = asyncHandler(async (req, res) => {
   const limit = Math.min(Math.max(parseInt(req.query.limit) || 20, 1), 50);
   const where = req.query.status ? { status: req.query.status } : {};
 
-  const [total, data] = await Promise.all([
+  const [total, data, summary] = await Promise.all([
     prisma.donation.count({ where }),
     prisma.donation.findMany({
       where,
@@ -43,9 +43,20 @@ export const list = asyncHandler(async (req, res) => {
       skip: (page - 1) * limit,
       take: limit,
     }),
+    Promise.all([
+      prisma.donation.aggregate({ where: { status: 'PROCESSED' }, _sum: { amount: true } }).then((r) => r._sum.amount || 0),
+      prisma.donation.count({ where: { status: 'PENDING' } }),
+      prisma.donation.count({ where: { status: 'PROCESSED' } }),
+      prisma.donation.count({ where: { status: 'REJECTED' } }),
+    ]).then(([processedAmount, pendingCount, processedCount, rejectedCount]) => ({
+      processedAmount,
+      pendingCount,
+      processedCount,
+      rejectedCount,
+    })),
   ]);
 
-  res.json({ data, meta: { page, limit, total, totalPages: Math.ceil(total / limit) } });
+  res.json({ data, meta: { page, limit, total, totalPages: Math.ceil(total / limit) }, summary });
 });
 
 /** PATCH /api/donations/:id/status (admin) */

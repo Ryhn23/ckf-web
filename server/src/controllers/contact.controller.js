@@ -48,6 +48,19 @@ export const markRead = asyncHandler(async (req, res) => {
   res.json({ data: contact });
 });
 
+/** PATCH /api/contact-messages/:id/toggle-read (admin) */
+export const toggleRead = asyncHandler(async (req, res) => {
+  const current = await prisma.contactMessage.findUnique({ where: { id: req.params.id } });
+  if (!current) throw ApiError.notFound('Pesan tidak ditemukan');
+
+  const contact = await prisma.contactMessage.update({
+    where: { id: req.params.id },
+    data: { isRead: !current.isRead },
+  });
+
+  res.json({ data: contact });
+});
+
 /** DELETE /api/contact-messages/:id (admin) */
 export const remove = asyncHandler(async (req, res) => {
   await prisma.contactMessage.delete({ where: { id: req.params.id } });

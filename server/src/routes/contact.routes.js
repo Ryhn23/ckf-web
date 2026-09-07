@@ -30,6 +30,7 @@ router.post('/', createSchema, contactController.create);
 /** Admin */
 router.get('/', authMiddleware, requireAdmin, listSchema, contactController.list);
 router.patch('/:id/read', authMiddleware, requireAdmin, contactController.markRead);
+router.patch('/:id/toggle-read', authMiddleware, requireAdmin, contactController.toggleRead);
 router.delete('/:id', authMiddleware, requireAdmin, contactController.remove);
 
 export default router;

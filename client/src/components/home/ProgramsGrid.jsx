@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { parseFaIcon } from '../../utils/iconUtils';
 import useFetch from '../../hooks/useFetch';
 import { getCategories } from '../../api/categories';
 import { useSettings } from '../../context/SettingsContext';
@@ -44,7 +45,7 @@ export default function ProgramsGrid() {
               >
                 <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal-600 to-amber-500 opacity-0 transition group-hover:opacity-100" />
                 <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-50 text-xl text-teal-700 transition group-hover:bg-teal-700 group-hover:text-white">
-                  <FontAwesomeIcon icon={cat.icon ? [cat.icon.split(' ')[0], cat.icon.split(' ')[1]] : ['fa-solid', 'fa-circle']} />
+                  <FontAwesomeIcon icon={parseFaIcon(cat.icon)} />
                 </span>
                 <h3 className="mt-5 font-heading text-lg font-bold text-slate-900">{cat.name}</h3>
                 {cat.description && (

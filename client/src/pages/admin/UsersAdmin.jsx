@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useAuth from '../../hooks/useAuth';
 import useFetch from '../../hooks/useFetch';
 import { getUsers, createUser, updateUser, deleteUser } from '../../api/users';
 import { errMsg } from '../../api/client';
@@ -10,8 +11,10 @@ import { formatDate } from '../../utils/formatDate';
 const EMPTY_FORM = { name: '', email: '', password: '' };
 
 export default function UsersAdmin() {
+  const { user: currentUser } = useAuth();
   const [form, setForm] = useState(EMPTY_FORM);
   const [editingId, setEditingId] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
@@ -114,16 +117,26 @@ export default function UsersAdmin() {
           <label htmlFor="password" className="label mt-4">
             Kata Sandi {editingId ? '(kosongkan jika tidak diubah)' : ''}
           </label>
-          <input
-            id="password"
-            type="password"
-            required={!editingId}
-            minLength={6}
-            value={form.password}
-            onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-            className="input"
-            placeholder="Minimal 6 karakter"
-          />
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              required={!editingId}
+              minLength={6}
+              value={form.password}
+              onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+              className="input pr-10"
+              placeholder="Minimal 6 karakter"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+              title={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+            >
+              <FontAwesomeIcon icon={['fa-solid', showPassword ? 'fa-eye-slash' : 'fa-eye']} className="text-xs" />
+            </button>
+          </div>
 
           {error && (
             <p className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
@@ -162,7 +175,16 @@ export default function UsersAdmin() {
                 <tbody className="divide-y divide-slate-100">
                   {users.map((user) => (
                     <tr key={user.id} className="transition hover:bg-slate-50/60">
-                      <td className="px-5 py-3 font-semibold text-slate-800">{user.name}</td>
+                      <td className="px-5 py-3 font-semibold text-slate-800">
+                        <div className="flex items-center gap-2">
+                          <span>{user.name}</span>
+                          {currentUser?.id === user.id && (
+                            <span className="rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-bold text-teal-800">
+                              Anda
+                            </span>
+                          )}
+                        </div>
+                      </td>
                       <td className="px-5 py-3 text-slate-500">{user.email}</td>
                       <td className="px-5 py-3 whitespace-nowrap text-slate-500">{formatDate(user.createdAt, 'd MMM yyyy')}</td>
                       <td className="px-5 py-3">
@@ -173,9 +195,10 @@ export default function UsersAdmin() {
                           </button>
                           <button
                             type="button"
-                            disabled={deletingId === user.id}
+                            disabled={deletingId === user.id || currentUser?.id === user.id}
                             onClick={() => handleDelete(user)}
-                            className="btn-danger !px-3 !py-1.5 text-xs"
+                            className="btn-danger !px-3 !py-1.5 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
+                            title={currentUser?.id === user.id ? 'Akun Anda yang sedang aktif tidak dapat dihapus' : 'Hapus pengguna'}
                           >
                             {deletingId === user.id ? '…' : (
                               <>

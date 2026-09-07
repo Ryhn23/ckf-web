@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../api/categories';
 import { errMsg } from '../../api/client';
+import { parseFaIcon, CATEGORY_ICON_PRESETS } from '../../utils/iconUtils';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 
@@ -104,6 +105,27 @@ export default function CategoriesAdmin() {
             </div>
           </div>
 
+          <div className="mt-2">
+            <p className="text-xs text-slate-400 mb-1.5">Pilihan Ikon Cepat:</p>
+            <div className="flex flex-wrap gap-1.5">
+              {CATEGORY_ICON_PRESETS.map((preset) => (
+                <button
+                  key={preset.icon}
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, icon: preset.icon }))}
+                  className={`rounded-lg border px-2 py-1 text-[11px] font-medium transition ${
+                    form.icon === preset.icon
+                      ? 'border-teal-600 bg-teal-50 text-teal-800'
+                      : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                  }`}
+                >
+                  <FontAwesomeIcon icon={parseFaIcon(preset.icon)} className="mr-1" />
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {error && (
             <p className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
               <FontAwesomeIcon icon={['fa-solid', 'fa-circle-exclamation']} />
@@ -148,7 +170,7 @@ export default function CategoriesAdmin() {
                       </td>
                       <td className="px-5 py-3">
                         <span className="flex items-center gap-2 text-slate-500">
-                          <FontAwesomeIcon icon={cat.icon ? cat.icon.split(' ') : ['fa-solid', 'fa-circle']} />
+                          <FontAwesomeIcon icon={parseFaIcon(cat.icon)} />
                           <code className="text-xs text-slate-400">{cat.icon}</code>
                         </span>
                       </td>

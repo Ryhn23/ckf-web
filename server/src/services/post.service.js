@@ -144,11 +144,11 @@ export async function getPostById(id) {
 }
 
 /** Buat post baru. */
-export async function createPost({ title, excerpt, content, categoryId, isFeatured, status, tags }, coverUrl, authorId) {
+export async function createPost({ title, slug: customSlug, excerpt, content, categoryId, isFeatured, status, tags }, coverUrl, authorId) {
   const category = await prisma.category.findUnique({ where: { id: categoryId } });
   if (!category) throw ApiError.badRequest('Kategori tidak valid');
 
-  const slug = await uniqueSlug(title);
+  const slug = await uniqueSlug(customSlug || title);
   const publishedAt = status === 'PUBLISHED' ? new Date() : null;
 
   return prisma.post.create({
@@ -169,7 +169,7 @@ export async function createPost({ title, excerpt, content, categoryId, isFeatur
 }
 
 /** Update post. */
-export async function updatePost(id, { title, excerpt, content, categoryId, isFeatured, status, tags }, coverUrl) {
+export async function updatePost(id, { title, slug: customSlug, excerpt, content, categoryId, isFeatured, status, tags, removeCover }, coverUrl) {
   const existing = await prisma.post.findUnique({ where: { id } });
   if (!existing) throw ApiError.notFound('Post tidak ditemukan');
 
@@ -178,13 +178,26 @@ export async function updatePost(id, { title, excerpt, content, categoryId, isFe
     if (!category) throw ApiError.badRequest('Kategori tidak valid');
   }
 
-  const slug = title && title !== existing.title ? await uniqueSlug(title, id) : existing.slug;
+  let slug = existing.slug;
+  if (customSlug && customSlug !== existing.slug) {
+    slug = await uniqueSlug(customSlug, id);
+  } else if (title && title !== existing.title && !customSlug) {
+    slug = await uniqueSlug(title, id);
+  }
   const statusChanged = status && status !== existing.status;
+
+  let newCoverImage = undefined;
+  if (coverUrl) {
+    newCoverImage = coverUrl;
+  } else if (removeCover) {
+    newCoverImage = null;
+  }
 
   return prisma.post.update({
     where: { id },
     data: {
       ...(title !== undefined && { title }),
+      ...(slug !== existing.slug && { slug }),
       ...(excerpt !== undefined && { excerpt }),
       ...(content !== undefined && { content: sanitizeContent(content) }),
       ...(categoryId && { categoryId }),
@@ -192,7 +205,7 @@ export async function updatePost(id, { title, excerpt, content, categoryId, isFe
       ...(status && { status }),
       ...(statusChanged && status === 'PUBLISHED' && existing.status !== 'PUBLISHED' && { publishedAt: new Date() }),
       ...(tags !== undefined && { tags: Array.isArray(tags) ? tags : [] }),
-      ...(coverUrl && { coverImage: coverUrl }),
+      ...(newCoverImage !== undefined && { coverImage: newCoverImage }),
     },
   });
 }

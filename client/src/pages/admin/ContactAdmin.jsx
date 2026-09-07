@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
-import { getMessages, markMessageRead, deleteMessage } from '../../api/contact';
+import { getMessages, markMessageRead, toggleMessageRead, deleteMessage } from '../../api/contact';
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
@@ -97,12 +97,26 @@ export default function ContactAdmin() {
                 {expandedId === msg.id && (
                   <div className="border-t border-slate-100 bg-slate-50/50 px-5 py-4">
                     <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">{msg.message}</p>
-                    <div className="mt-4 flex justify-end gap-2">
-                      {!msg.isRead && (
-                        <button type="button" onClick={() => { markMessageRead(msg.id).then(refetch).catch(() => {}); }} className="btn-outline !px-3 !py-1.5 text-xs">
-                          Tandai dibaca
-                        </button>
-                      )}
+                    <div className="mt-4 flex flex-wrap justify-end gap-2">
+                      <a
+                        href={`mailto:${msg.email}?subject=${encodeURIComponent(`Re: ${msg.subject || 'Pesan Melalui Situs Yayasan Cinta Kasih Fatimah'}`)}`}
+                        className="btn-primary !px-3 !py-1.5 text-xs flex items-center gap-1.5"
+                      >
+                        <FontAwesomeIcon icon={['fa-solid', 'fa-reply']} />
+                        Balas via Email
+                      </a>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            await toggleMessageRead(msg.id);
+                            refetch();
+                          } catch {}
+                        }}
+                        className="btn-outline !px-3 !py-1.5 text-xs"
+                      >
+                        {msg.isRead ? 'Tandai Belum Dibaca' : 'Tandai Dibaca'}
+                      </button>
                       <button
                         type="button"
                         disabled={deletingId === msg.id}

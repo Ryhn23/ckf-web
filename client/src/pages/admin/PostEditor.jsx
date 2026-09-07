@@ -39,6 +39,7 @@ export default function PostEditor() {
   const [slugTouched, setSlugTouched] = useState(false);
   const [coverFile, setCoverFile] = useState(null);
   const [existingCover, setExistingCover] = useState('');
+  const [removedCover, setRemovedCover] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -65,6 +66,7 @@ export default function PostEditor() {
       content: p.content || '',
     });
     setExistingCover(p.coverImage || '');
+    setRemovedCover(false);
     setSlugTouched(true);
   }, [postData]);
 
@@ -83,23 +85,41 @@ export default function PostEditor() {
     }));
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSave(statusOverride, e) {
+    if (e && e.preventDefault) e.preventDefault();
     setError('');
-    if (!form.title.trim() || !form.categoryId || !form.content) {
-      setError('Judul, kategori, dan konten wajib diisi.');
+    const targetStatus = statusOverride || form.status;
+
+    if (!form.title.trim()) {
+      setError('Judul artikel publikasi wajib diisi.');
+      window.scrollTo(0, 0);
+      return;
+    }
+    if (!form.categoryId) {
+      setError('Silakan pilih salah satu kategori program untuk artikel ini.');
+      window.scrollTo(0, 0);
+      return;
+    }
+    if (!form.content || !form.content.replace(/<[^>]*>/g, '').trim()) {
+      setError('Konten naskah artikel tidak boleh kosong.');
+      window.scrollTo(0, 0);
       return;
     }
 
     const fd = new FormData();
     fd.append('title', form.title.trim());
-    fd.append('excerpt', form.excerpt);
+    if (form.slug) fd.append('slug', form.slug.trim());
+    fd.append('excerpt', form.excerpt || '');
     fd.append('content', form.content);
     fd.append('categoryId', form.categoryId);
-    fd.append('status', form.status);
+    fd.append('status', targetStatus);
     fd.append('isFeatured', String(form.isFeatured));
-    fd.append('tags', form.tags);
-    if (coverFile) fd.append('cover', coverFile);
+    fd.append('tags', form.tags || '');
+    if (coverFile) {
+      fd.append('cover', coverFile);
+    } else if (removedCover) {
+      fd.append('removeCover', 'true');
+    }
 
     setSubmitting(true);
     try {
@@ -186,13 +206,7 @@ export default function PostEditor() {
           <button
             type="button"
             disabled={submitting || !categoriesReady}
-            onClick={() => {
-              set('status', 'DRAFT');
-              setTimeout(() => {
-                const submitBtn = document.getElementById('submit-post-btn');
-                submitBtn?.click();
-              }, 50);
-            }}
+            onClick={() => handleSave('DRAFT')}
             className="btn-outline !border-slate-300 !bg-slate-50 !py-2 !px-4 text-xs sm:text-sm hover:!bg-slate-100"
           >
             Simpan sebagai Draf
@@ -200,13 +214,7 @@ export default function PostEditor() {
           <button
             type="button"
             disabled={submitting || !categoriesReady}
-            onClick={() => {
-              set('status', 'PUBLISHED');
-              setTimeout(() => {
-                const submitBtn = document.getElementById('submit-post-btn');
-                submitBtn?.click();
-              }, 50);
-            }}
+            onClick={() => handleSave('PUBLISHED')}
             className="btn-primary !py-2 !px-5 text-xs sm:text-sm shadow-sm"
           >
             {submitting ? 'Menyimpan…' : isNew ? 'Publikasikan Sekarang' : 'Simpan & Perbarui'}
@@ -222,7 +230,7 @@ export default function PostEditor() {
       )}
 
       {/* Editor Form Layout */}
-      <form onSubmit={handleSubmit} className="grid gap-8 lg:grid-cols-12">
+      <form onSubmit={(e) => handleSave(form.status, e)} className="grid gap-8 lg:grid-cols-12">
         {/* Kolom Utama: Kanvas Menulis Luas */}
         <div className="space-y-6 lg:col-span-7 xl:col-span-8 2xl:col-span-9">
           <div className="card space-y-6 p-6 sm:p-8">
@@ -435,6 +443,7 @@ export default function PostEditor() {
                     onClick={() => {
                       setCoverFile(null);
                       setExistingCover('');
+                      setRemovedCover(true);
                     }}
                     className="text-xs font-semibold text-red-600 hover:underline"
                   >
@@ -467,7 +476,11 @@ export default function PostEditor() {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => setCoverFile(e.target.files?.[0] || null)}
+              onChange={(e) => {
+                const f = e.target.files?.[0] || null;
+                setCoverFile(f);
+                if (f) setRemovedCover(false);
+              }}
             />
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { parseFaIcon } from '../utils/iconUtils';
 import useFetch from '../hooks/useFetch';
 import { getCategories } from '../api/categories';
 import { getPosts } from '../api/posts';
@@ -33,7 +34,7 @@ export default function Programs() {
             <div key={cat.id}>
               <div className="mb-8 flex items-start gap-4">
                 <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-teal-700 text-xl text-white">
-                  <FontAwesomeIcon icon={cat.icon ? [cat.icon.split(' ')[0], cat.icon.split(' ')[1]] : ['fa-solid', 'fa-circle']} />
+                  <FontAwesomeIcon icon={parseFaIcon(cat.icon)} />
                 </span>
                 <div>
                   <h2 className="font-heading text-2xl font-bold text-slate-900">{cat.name}</h2>

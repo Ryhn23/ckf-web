@@ -11,5 +11,9 @@ export const getMessages = (params) => client.get('/contact-messages', { params 
 export const markMessageRead = (id) =>
   client.patch(`/contact-messages/${id}/read`).then((r) => r.data);
 
+/** PATCH /api/contact-messages/:id/toggle-read (admin) → { data: ContactMessage } */
+export const toggleMessageRead = (id) =>
+  client.patch(`/contact-messages/${id}/toggle-read`).then((r) => r.data);
+
 /** DELETE /api/contact-messages/:id (admin) → { message } */
 export const deleteMessage = (id) => client.delete(`/contact-messages/${id}`).then((r) => r.data);

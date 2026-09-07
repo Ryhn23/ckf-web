@@ -21,7 +21,16 @@ export default function MediaAdmin() {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
   const [deletingId, setDeletingId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
   const fileRef = useRef(null);
+
+  function copyUrl(item) {
+    const fullUrl = item.url.startsWith('http') ? item.url : `${window.location.origin}${item.url}`;
+    navigator.clipboard?.writeText(fullUrl).then(() => {
+      setCopiedId(item.id);
+      setTimeout(() => setCopiedId(null), 2000);
+    }).catch(() => {});
+  }
 
   const { data, loading, error: fetchError, refetch } = useFetch(
     () => getMedia({ page, limit: PAGE_SIZE }),
@@ -130,21 +139,30 @@ export default function MediaAdmin() {
                   <p className="mt-1 text-xs text-slate-400">
                     {formatSize(item.size)} · {formatDate(item.createdAt, 'd MMM yyyy')}
                   </p>
-                  <div className="mt-3 flex gap-2">
-                    <a href={item.url} target="_blank" rel="noreferrer" className="btn-outline flex-1 justify-center !px-2 !py-1.5 text-xs">
+                  <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => copyUrl(item)}
+                      className={`btn-outline flex-1 justify-center !px-2 !py-1.5 text-xs transition ${
+                        copiedId === item.id ? '!border-emerald-500 !bg-emerald-50 !text-emerald-700 font-semibold' : ''
+                      }`}
+                      title="Salin tautan gambar"
+                    >
+                      <FontAwesomeIcon icon={['fa-solid', copiedId === item.id ? 'fa-check' : 'fa-copy']} />
+                      {copiedId === item.id ? 'Tersalin!' : 'Salin URL'}
+                    </button>
+                    <a href={item.url} target="_blank" rel="noreferrer" className="btn-outline !px-2.5 !py-1.5 text-xs" title="Buka berkas di tab baru">
                       Buka
                     </a>
                     <button
                       type="button"
                       disabled={deletingId === item.id}
                       onClick={() => handleDelete(item)}
-                      className="btn-danger !px-3 !py-1.5 text-xs"
+                      className="btn-danger !px-2.5 !py-1.5 text-xs"
+                      title="Hapus media"
                     >
                       {deletingId === item.id ? '…' : (
-                        <>
-                          <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
-                          Hapus
-                        </>
+                        <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
                       )}
                     </button>
                   </div>

@@ -15,6 +15,8 @@ export async function dashboard() {
     unreadMessages,
     totalMedia,
     totalTestimonials,
+    totalAidRequests,
+    pendingAidRequests,
   ] = await Promise.all([
     prisma.post.count(),
     prisma.post.count({ where: { status: 'PUBLISHED' } }),
@@ -40,6 +42,8 @@ export async function dashboard() {
     prisma.contactMessage.count({ where: { isRead: false } }),
     prisma.media.count(),
     prisma.testimonial.count(),
+    prisma.aidRequest.count(),
+    prisma.aidRequest.count({ where: { status: 'PENDING' } }),
   ]);
 
   // Views per kategori (untuk bar chart)
@@ -62,6 +66,8 @@ export async function dashboard() {
     unreadMessages,
     totalMedia,
     totalTestimonials,
+    totalAidRequests,
+    pendingAidRequests,
     viewsByCategory: byCategory
       .map((r) => ({ category: catName[r.categoryId] || 'Unknown', views: r._sum.views || 0 }))
       .sort((a, b) => b.views - a.views),

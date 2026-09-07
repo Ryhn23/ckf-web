@@ -61,7 +61,7 @@ export default function Dashboard() {
       </div>
 
       {/* Kartu ringkasan layanan & operasional */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Link
           to="/admin/donations"
           className="card group flex items-center justify-between p-5 transition hover:border-teal-400 hover:shadow-md"
@@ -81,6 +81,33 @@ export default function Dashboard() {
           {Number(stats.pendingDonations || 0) > 0 && (
             <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-800">
               {stats.pendingDonations} Menunggu
+            </span>
+          )}
+        </Link>
+
+        <Link
+          to="/admin/aid-requests"
+          className="card group flex items-center justify-between p-5 transition hover:border-teal-400 hover:shadow-md"
+        >
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-lg text-teal-700">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} />
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Permintaan Bantuan</p>
+              <p className="font-heading text-xl font-bold text-slate-900 mt-0.5">
+                {stats.totalAidRequests || 0} Pengajuan
+              </p>
+              <p className="text-xs text-slate-500 mt-0.5">Bantuan dana & logistik majelis</p>
+            </div>
+          </div>
+          {Number(stats.pendingAidRequests || 0) > 0 ? (
+            <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-800">
+              {stats.pendingAidRequests} Verifikasi
+            </span>
+          ) : (
+            <span className="text-xs font-semibold text-teal-700 group-hover:underline">
+              Kelola
             </span>
           )}
         </Link>
@@ -106,7 +133,7 @@ export default function Dashboard() {
           </span>
         </Link>
 
-        <div className="card sm:col-span-2 xl:col-span-1 flex items-center justify-between p-5">
+        <div className="card flex items-center justify-between p-5">
           <div className="flex items-center gap-4">
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-lg text-purple-700">
               <FontAwesomeIcon icon={['fa-solid', 'fa-images']} />

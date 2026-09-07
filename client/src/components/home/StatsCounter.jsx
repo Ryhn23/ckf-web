@@ -22,12 +22,31 @@ export default function StatsCounter() {
     return Number.isFinite(n) && v !== '' ? n : fallback;
   };
 
-  // Nilai dari admin panel (Pengaturan → Statistik), fallback ke angka bawaan.
   const STATS = [
-    { icon: ['fa-solid', 'fa-briefcase'], target: num(settings.stat_programs, 120), format: (v) => `${v}+`, label: 'Program Dikerjakan' },
-    { icon: ['fa-solid', 'fa-people-group'], target: num(settings.stat_beneficiaries, 5000), format: (v) => v.toLocaleString('id-ID'), label: 'Penerima Manfaat' },
-    { icon: ['fa-solid', 'fa-users'], target: num(settings.stat_volunteers, 350), format: (v) => `${v}+`, label: 'Relawan Aktif' },
-    { icon: ['fa-solid', 'fa-calendar-check'], target: num(settings.stat_years, 8), format: (v) => `${v}`, label: 'Tahun Berkhidmat' },
+    {
+      icon: ['fa-solid', 'fa-briefcase'],
+      target: num(settings.stat_programs, 350),
+      format: (v) => `${v}+`,
+      label: settings.stat_programs_label || 'Program Dikerjakan',
+    },
+    {
+      icon: ['fa-solid', 'fa-people-group'],
+      target: num(settings.stat_beneficiaries, 12000),
+      format: (v) => v.toLocaleString('id-ID'),
+      label: settings.stat_beneficiaries_label || 'Penerima Manfaat',
+    },
+    {
+      icon: ['fa-solid', 'fa-users'],
+      target: num(settings.stat_volunteers, 800),
+      format: (v) => `${v}+`,
+      label: settings.stat_volunteers_label || 'Relawan Aktif',
+    },
+    {
+      icon: ['fa-solid', 'fa-calendar-check'],
+      target: num(settings.stat_years, 15),
+      format: (v) => `${v}`,
+      label: settings.stat_years_label || 'Tahun Berkhidmat',
+    },
   ];
 
   return (

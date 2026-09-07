@@ -2,22 +2,30 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
 import { getCategories } from '../../api/categories';
+import { useSettings } from '../../context/SettingsContext';
 
 export default function ProgramsGrid() {
+  const { settings } = useSettings();
   const { data, loading } = useFetch(() => getCategories(), []);
   const categories = (data?.data || []).slice(0, 6);
+
+  const badge = settings.home_programs_badge || 'Pilar Program';
+  const title = settings.home_programs_title || 'Fokus Pelayanan Yayasan';
+  const subtitle =
+    settings.home_programs_subtitle ||
+    'Inisiatif strategis Yayasan Cinta Kasih Fatimah dalam mewujudkan transformasi sosial, pendidikan, dan kesehatan berkelanjutan.';
+  const btnText = settings.home_programs_btn_text || 'Seluruh Program Pelayanan';
+  const btnLink = settings.home_programs_btn_link || '/program';
 
   return (
     <section className="bg-slate-50">
       <div className="container-page py-16 lg:py-24">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <span className="mb-3 inline-block rounded-full bg-teal-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
-            Pilar Program
+            {badge}
           </span>
-          <h2 className="text-3xl font-bold md:text-4xl">Fokus Pelayanan Yayasan</h2>
-          <p className="mt-4 text-slate-500">
-            Inisiatif strategis Yayasan Cinta Kasih Fatimah dalam mewujudkan transformasi sosial, pendidikan, dan kesehatan berkelanjutan.
-          </p>
+          <h2 className="text-3xl font-bold md:text-4xl">{title}</h2>
+          <p className="mt-4 text-slate-500">{subtitle}</p>
         </div>
 
         {loading ? (
@@ -52,8 +60,8 @@ export default function ProgramsGrid() {
         )}
 
         <div className="mt-10 text-center">
-          <Link to="/program" className="btn-outline">
-            Seluruh Program Pelayanan
+          <Link to={btnLink} className="btn-outline">
+            {btnText}
             <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
           </Link>
         </div>

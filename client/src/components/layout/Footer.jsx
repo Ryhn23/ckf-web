@@ -17,6 +17,18 @@ export default function Footer() {
     { icon: ['fa-brands', 'fa-x-twitter'], href: settings.social_x || 'https://x.com', label: 'X (Twitter)' },
   ];
 
+  const isNavVisible = (path) => {
+    if (path === '/donasi' && settings.menu_donasi_enabled === 'false') return false;
+    if (path === '/program' && settings.menu_program_enabled === 'false') return false;
+    if (path === '/blog' && settings.menu_blog_enabled === 'false') return false;
+    if (path === '/galeri' && settings.menu_galeri_enabled === 'false') return false;
+    if (path === '/kontak' && settings.menu_kontak_enabled === 'false') return false;
+    if (path === '/tentang' && settings.menu_tentang_enabled === 'false') return false;
+    return true;
+  };
+
+  const navItems = NAV_ITEMS.filter((item) => isNavVisible(item.path));
+
   return (
     <footer className="bg-teal-900 text-teal-100">
       <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
@@ -50,7 +62,7 @@ export default function Footer() {
         <div>
           <h4 className="mb-4 text-sm font-bold uppercase tracking-wider text-white">Navigasi</h4>
           <ul className="space-y-2.5 text-sm">
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <li key={item.path}>
                 <Link to={item.path} className="text-teal-200 transition hover:text-amber-400">
                   {item.label}

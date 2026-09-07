@@ -7,19 +7,24 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import useFetch from '../../hooks/useFetch';
 import { getFeaturedPosts } from '../../api/posts';
-
-const FALLBACK_SLIDES = [
-  {
-    title: 'Mewujudkan Kemandirian dan Kesejahteraan Masyarakat',
-    excerpt:
-      'Yayasan Cinta Kasih Fatimah mengelola program terpadu di bidang pendidikan, layanan kesehatan, dan pemberdayaan sosial ekonomi secara transparan dan berkelanjutan.',
-  },
-];
+import { useSettings } from '../../context/SettingsContext';
 
 export default function HeroCarousel() {
+  const { settings } = useSettings();
   const { data } = useFetch(() => getFeaturedPosts(), []);
   const posts = data?.data || [];
-  const slides = posts.length > 0 ? posts : FALLBACK_SLIDES;
+
+  const fallbackSlides = [
+    {
+      title: settings.hero_title || 'Mewujudkan Kemandirian dan Kesejahteraan Masyarakat',
+      excerpt:
+        settings.hero_excerpt ||
+        'Yayasan Cinta Kasih Fatimah mengelola program terpadu di bidang pendidikan, layanan kesehatan, dan pemberdayaan sosial ekonomi secara transparan dan berkelanjutan.',
+    },
+  ];
+
+  const slides = posts.length > 0 ? posts : fallbackSlides;
+  const showDonationBtn = settings.menu_donasi_enabled !== 'false';
 
   return (
     <section className="relative overflow-hidden bg-teal-900">
@@ -47,7 +52,13 @@ export default function HeroCarousel() {
                 <div className="max-w-2xl">
                   {slide.category && (
                     <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-amber-300 ring-1 ring-white/20 backdrop-blur">
-                      <FontAwesomeIcon icon={slide.category.icon ? [slide.category.icon.split(' ')[0], slide.category.icon.split(' ')[1]] : ['fa-solid', 'fa-circle']} />
+                      <FontAwesomeIcon
+                        icon={
+                          slide.category.icon
+                            ? [slide.category.icon.split(' ')[0], slide.category.icon.split(' ')[1]]
+                            : ['fa-solid', 'fa-circle']
+                        }
+                      />
                       {slide.category.name}
                     </span>
                   )}
@@ -64,18 +75,20 @@ export default function HeroCarousel() {
                         <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
                       </Link>
                     ) : (
-                      <Link to="/tentang" className="btn-accent">
-                        Profil Yayasan
+                      <Link to={settings.hero_btn_primary_link || '/tentang'} className="btn-accent">
+                        {settings.hero_btn_primary_text || 'Profil Yayasan'}
                         <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
                       </Link>
                     )}
-                    <Link
-                      to="/donasi"
-                      className="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
-                    >
-                      <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-                      Donasi Sekarang
-                    </Link>
+                    {showDonationBtn && (
+                      <Link
+                        to={settings.hero_btn_secondary_link || '/donasi'}
+                        className="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+                      >
+                        <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
+                        {settings.hero_btn_secondary_text || 'Donasi Sekarang'}
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

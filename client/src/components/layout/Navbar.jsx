@@ -32,6 +32,19 @@ export default function Navbar() {
     setOpen(false);
   }, [location.pathname]);
 
+  const isNavVisible = (path) => {
+    if (path === '/donasi' && settings.menu_donasi_enabled === 'false') return false;
+    if (path === '/program' && settings.menu_program_enabled === 'false') return false;
+    if (path === '/blog' && settings.menu_blog_enabled === 'false') return false;
+    if (path === '/galeri' && settings.menu_galeri_enabled === 'false') return false;
+    if (path === '/kontak' && settings.menu_kontak_enabled === 'false') return false;
+    if (path === '/tentang' && settings.menu_tentang_enabled === 'false') return false;
+    return true;
+  };
+
+  const navItems = NAV_ITEMS.filter((item) => isNavVisible(item.path));
+  const showDonationCta = settings.menu_donasi_enabled !== 'false';
+
   const linkClass = ({ isActive }) =>
     `rounded-full px-3.5 py-2 text-sm font-semibold transition ${isActive ? 'bg-teal-50 text-teal-800' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
     }`;
@@ -68,19 +81,21 @@ export default function Navbar() {
 
           {/* Desktop */}
           <div className="hidden items-center gap-1 lg:flex">
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <NavLink key={item.path} to={item.path} end={item.path === '/'} className={linkClass}>
                 {item.label}
               </NavLink>
             ))}
           </div>
 
-          <div className="hidden lg:block">
-            <Link to="/donasi" className="btn-accent">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-              Donasi Sekarang
-            </Link>
-          </div>
+          {showDonationCta && (
+            <div className="hidden lg:block">
+              <Link to="/donasi" className="btn-accent">
+                <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
+                Donasi Sekarang
+              </Link>
+            </div>
+          )}
 
           {/* Mobile toggle */}
           <button
@@ -98,15 +113,17 @@ export default function Navbar() {
         {open && (
           <div className="border-t border-slate-200 bg-white lg:hidden">
             <div className="container-page flex flex-col gap-1 py-3">
-              {NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <NavLink key={item.path} to={item.path} end={item.path === '/'} className={linkClass}>
                   {item.label}
                 </NavLink>
               ))}
-              <Link to="/donasi" className="btn-accent mt-2 w-full">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-                Donasi Sekarang
-              </Link>
+              {showDonationCta && (
+                <Link to="/donasi" className="btn-accent mt-2 w-full">
+                  <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
+                  Donasi Sekarang
+                </Link>
+              )}
             </div>
           </div>
         )}

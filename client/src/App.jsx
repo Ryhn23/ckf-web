@@ -30,6 +30,8 @@ const DonationsAdmin = lazy(() => import('./pages/admin/DonationsAdmin'));
 const ContactAdmin = lazy(() => import('./pages/admin/ContactAdmin'));
 const UsersAdmin = lazy(() => import('./pages/admin/UsersAdmin'));
 const SettingsAdmin = lazy(() => import('./pages/admin/SettingsAdmin'));
+const HomeContentAdmin = lazy(() => import('./pages/admin/HomeContentAdmin'));
+const TestimonialsAdmin = lazy(() => import('./pages/admin/TestimonialsAdmin'));
 
 function AdminLoadingFallback() {
   return (
@@ -95,10 +97,12 @@ export default function App() {
                 }
               >
                 <Route index element={<Dashboard />} />
+                <Route path="homepage" element={<HomeContentAdmin />} />
                 <Route path="posts" element={<PostsAdmin />} />
                 <Route path="posts/new" element={<PostEditor />} />
                 <Route path="posts/:id/edit" element={<PostEditor />} />
                 <Route path="categories" element={<CategoriesAdmin />} />
+                <Route path="testimonials" element={<TestimonialsAdmin />} />
                 <Route path="media" element={<MediaAdmin />} />
                 <Route path="donations" element={<DonationsAdmin />} />
                 <Route path="contact" element={<ContactAdmin />} />

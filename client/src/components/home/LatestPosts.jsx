@@ -2,11 +2,17 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
 import { getPosts } from '../../api/posts';
+import { useSettings } from '../../context/SettingsContext';
 import PostCard from '../blog/PostCard';
 
 export default function LatestPosts() {
+  const { settings } = useSettings();
   const { data, loading } = useFetch(() => getPosts({ limit: 3 }), []);
   const posts = data?.data || [];
+
+  const badge = settings.home_posts_badge || 'Cerita & Kabar';
+  const title = settings.home_posts_title || 'Artikel Terbaru';
+  const linkText = settings.home_posts_link_text || 'Lihat Semua Artikel';
 
   return (
     <section className="bg-white">
@@ -14,12 +20,12 @@ export default function LatestPosts() {
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div>
             <span className="mb-3 inline-block rounded-full bg-teal-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
-              Cerita & Kabar
+              {badge}
             </span>
-            <h2 className="text-3xl font-bold md:text-4xl">Artikel Terbaru</h2>
+            <h2 className="text-3xl font-bold md:text-4xl">{title}</h2>
           </div>
           <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-700 hover:underline">
-            Lihat Semua Artikel
+            {linkText}
             <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
           </Link>
         </div>

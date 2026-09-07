@@ -7,8 +7,10 @@ import Spinner from '../../components/ui/Spinner';
 
 const NAV_ITEMS = [
   { to: '/admin', label: 'Dashboard', icon: 'fa-gauge', end: true },
+  { to: '/admin/homepage', label: 'Konten Beranda', icon: 'fa-house-laptop' },
   { to: '/admin/posts', label: 'Artikel', icon: 'fa-newspaper' },
   { to: '/admin/categories', label: 'Kategori', icon: 'fa-tags' },
+  { to: '/admin/testimonials', label: 'Testimoni', icon: 'fa-quote-left' },
   { to: '/admin/media', label: 'Media', icon: 'fa-images' },
   { to: '/admin/donations', label: 'Donasi', icon: 'fa-hand-holding-heart' },
   { to: '/admin/contact', label: 'Pesan Kontak', icon: 'fa-envelope' },

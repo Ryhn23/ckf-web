@@ -3,6 +3,7 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
 import { getTestimonials } from '../../api/testimonials';
+import { useSettings } from '../../context/SettingsContext';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -34,17 +35,21 @@ const DEFAULT_TESTIMONIALS = [
 ];
 
 export default function Testimonials() {
+  const { settings } = useSettings();
   const { data } = useFetch(() => getTestimonials(), []);
   const testimonials = data?.data && data.data.length > 0 ? data.data : DEFAULT_TESTIMONIALS;
+
+  const badge = settings.home_testimonials_badge || 'Testimoni';
+  const title = settings.home_testimonials_title || 'Kata Mereka yang Terlayani';
 
   return (
     <section className="bg-slate-50">
       <div className="container-page py-16 lg:py-24">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <span className="mb-3 inline-block rounded-full bg-teal-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
-            Testimoni
+            {badge}
           </span>
-          <h2 className="text-3xl font-bold md:text-4xl">Kata Mereka yang Terlayani</h2>
+          <h2 className="text-3xl font-bold md:text-4xl">{title}</h2>
         </div>
 
         <Swiper

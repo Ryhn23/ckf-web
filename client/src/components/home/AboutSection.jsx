@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSettings } from '../../context/SettingsContext';
 
-const CHECKLIST = [
+const DEFAULT_CHECKLIST = [
   'Transparan dan akuntabel — laporan penyaluran dipublikasikan berkala',
   'Program berbasis asesmen kebutuhan nyata di lapangan',
   'Didukung relawan berdedikasi dan terverifikasi di berbagai wilayah',
@@ -13,6 +13,17 @@ export default function AboutSection() {
   const { settings } = useSettings();
   const years = Number(settings.stat_years);
   const sinceYear = Number.isFinite(years) && years > 0 ? new Date().getFullYear() - years : 2017;
+
+  const checklist = settings.home_about_checklist
+    ? settings.home_about_checklist.split('\n').map((s) => s.trim()).filter(Boolean)
+    : DEFAULT_CHECKLIST;
+
+  const cardTitle = settings.home_about_card_title || `Sejak ${sinceYear}`;
+  const cardSubtitle = settings.home_about_card_subtitle || 'Dedikasi untuk kemanusiaan';
+  const badge = settings.home_about_badge || 'Profil Lembaga';
+  const title = settings.home_about_title || 'Dedikasi Berkelanjutan untuk Kemaslahatan Masyarakat';
+  const btnText = settings.home_about_btn_text || 'Profil Lengkap Yayasan';
+  const btnLink = settings.home_about_btn_link || '/tentang';
 
   return (
     <section className="bg-white">
@@ -28,8 +39,8 @@ export default function AboutSection() {
               <FontAwesomeIcon icon={['fa-solid', 'fa-seedling']} />
             </span>
             <div>
-              <p className="font-heading text-lg font-bold text-slate-900">Sejak {sinceYear}</p>
-              <p className="text-xs text-slate-500">Dedikasi untuk kemanusiaan</p>
+              <p className="font-heading text-lg font-bold text-slate-900">{cardTitle}</p>
+              <p className="text-xs text-slate-500">{cardSubtitle}</p>
             </div>
           </div>
         </div>
@@ -37,17 +48,17 @@ export default function AboutSection() {
         {/* Teks */}
         <div>
           <span className="mb-3 inline-block rounded-full bg-teal-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-teal-700">
-            Profil Lembaga
+            {badge}
           </span>
           <h2 className="text-3xl font-bold leading-snug md:text-4xl">
-            Dedikasi Berkelanjutan untuk Kemaslahatan Masyarakat
+            {title}
           </h2>
           <p className="mt-5 leading-relaxed text-slate-600">
             {settings.about_text ||
               'Yayasan Cinta Kasih Fatimah berkhidmat memfasilitasi akses pendidikan bermutu, pelayanan kesehatan promotif-preventif, serta pemberdayaan sosial ekonomi keluarga prasejahtera melalui program yang berkelanjutan dan terukur.'}
           </p>
           <ul className="mt-6 space-y-3">
-            {CHECKLIST.map((item) => (
+            {checklist.map((item) => (
               <li key={item} className="flex items-start gap-3 text-sm text-slate-700">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-teal-100 text-[10px] text-teal-700">
                   <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
@@ -56,8 +67,8 @@ export default function AboutSection() {
               </li>
             ))}
           </ul>
-          <Link to="/tentang" className="btn-primary mt-8">
-            Profil Lengkap Yayasan
+          <Link to={btnLink} className="btn-primary mt-8">
+            {btnText}
             <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-right']} />
           </Link>
         </div>

@@ -245,8 +245,75 @@ const SETTINGS = [
   ['stat_programs', '350'],
   ['stat_volunteers', '800'],
   ['stat_years', '15'],
+  ['stat_beneficiaries_label', 'Penerima Manfaat'],
+  ['stat_programs_label', 'Program Dikerjakan'],
+  ['stat_volunteers_label', 'Relawan Aktif'],
+  ['stat_years_label', 'Tahun Berkhidmat'],
   ['donation_bank_name', 'Bank Syariah Indonesia (BSI)'],
   ['donation_account_number', '1234567890 a.n. Yayasan Cinta Kasih Fatimah'],
+
+  // Visibilitas Menu Navigasi & Halaman Publik
+  ['menu_donasi_enabled', 'true'],
+  ['menu_program_enabled', 'true'],
+  ['menu_blog_enabled', 'true'],
+  ['menu_galeri_enabled', 'true'],
+  ['menu_kontak_enabled', 'true'],
+  ['menu_tentang_enabled', 'true'],
+
+  // Visibilitas Seksi Halaman Beranda
+  ['home_show_hero', 'true'],
+  ['home_show_stats', 'true'],
+  ['home_show_about', 'true'],
+  ['home_show_programs', 'true'],
+  ['home_show_posts', 'true'],
+  ['home_show_testimonials', 'true'],
+  ['home_show_partners', 'true'],
+  ['home_show_cta', 'true'],
+
+  // Konten Hero Banner
+  ['hero_title', 'Mewujudkan Kemandirian dan Kesejahteraan Masyarakat'],
+  ['hero_excerpt', 'Yayasan Cinta Kasih Fatimah mengelola program terpadu di bidang pendidikan, layanan kesehatan, dan pemberdayaan sosial ekonomi secara transparan dan berkelanjutan.'],
+  ['hero_btn_primary_text', 'Profil Yayasan'],
+  ['hero_btn_primary_link', '/tentang'],
+  ['hero_btn_secondary_text', 'Donasi Sekarang'],
+  ['hero_btn_secondary_link', '/donasi'],
+
+  // Konten Profil / Tentang Kami di Beranda
+  ['home_about_badge', 'Profil Lembaga'],
+  ['home_about_title', 'Dedikasi Berkelanjutan untuk Kemaslahatan Masyarakat'],
+  ['home_about_card_title', 'Sejak 2017'],
+  ['home_about_card_subtitle', 'Dedikasi untuk kemanusiaan'],
+  ['home_about_checklist', 'Transparan dan akuntabel — laporan penyaluran dipublikasikan berkala\nProgram berbasis asesmen kebutuhan nyata di lapangan\nDidukung relawan berdedikasi dan terverifikasi di berbagai wilayah\nSinergi kemitraan strategis dengan pemerintah dan sektor swasta'],
+  ['home_about_btn_text', 'Profil Lengkap Yayasan'],
+  ['home_about_btn_link', '/tentang'],
+
+  // Konten Pilar Program di Beranda
+  ['home_programs_badge', 'Pilar Program'],
+  ['home_programs_title', 'Fokus Pelayanan Yayasan'],
+  ['home_programs_subtitle', 'Inisiatif strategis Yayasan Cinta Kasih Fatimah dalam mewujudkan transformasi sosial, pendidikan, dan kesehatan berkelanjutan.'],
+  ['home_programs_btn_text', 'Seluruh Program Pelayanan'],
+  ['home_programs_btn_link', '/program'],
+
+  // Konten Berita & Artikel di Beranda
+  ['home_posts_badge', 'Cerita & Kabar'],
+  ['home_posts_title', 'Artikel Terbaru'],
+  ['home_posts_link_text', 'Lihat Semua Artikel'],
+
+  // Konten Testimoni di Beranda
+  ['home_testimonials_badge', 'Testimoni'],
+  ['home_testimonials_title', 'Kata Mereka yang Terlayani'],
+
+  // Konten Mitra & Donatur di Beranda
+  ['home_partners_title', 'Mitra & Donatur yang Mendukung Kami'],
+  ['home_partners_list', 'Bank Amanah\nPT Sejahtera Abadi\nKopma Nusantara\nCV Berkah Makmur\nYayasan Harmoni\nDinas Sosial Kota\nBank Sampah Jaya\nKlinik Sehat Bersama'],
+
+  // Konten Ajakan Donasi (CTA)
+  ['home_cta_title', 'Sinergi Kebaikan untuk Dampak Sosial yang Nyata'],
+  ['home_cta_subtitle', 'Donasi Anda disalurkan secara langsung ke program pendidikan, kesehatan, dan pemberdayaan masyarakat dengan pertanggungjawaban publik yang transparan.'],
+  ['home_cta_btn1_text', 'Salurkan Donasi'],
+  ['home_cta_btn1_link', '/donasi'],
+  ['home_cta_btn2_text', 'Pelajari Program'],
+  ['home_cta_btn2_link', '/program'],
 ];
 
 /* ------------------------------------------------------------------ */

@@ -1,25 +1,42 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { getSettings } from '../api/settings';
 
 /**
  * Konteks pengaturan situs (nama yayasan, kontak, sosial media, statistik, dll).
- * Di-fetch sekali saat aplikasi dimuat; komponen publik membaca dari sini agar
- * perubahan dari admin panel langsung tercermin di frontend.
+ * Di-fetch saat aplikasi dimuat; menyediakan method refetch agar perubahan
+ * dari admin panel langsung tercermin seketika di frontend tanpa refresh penuh.
  */
-const SettingsContext = createContext({ settings: {}, loading: true });
+const SettingsContext = createContext({
+  settings: {},
+  loading: true,
+  refetch: () => Promise.resolve({}),
+  updateSettings: () => {},
+});
 
 export function SettingsProvider({ children }) {
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getSettings()
-      .then((res) => setSettings(res?.data || res || {}))
-      .catch(() => {})
+  const fetchSettings = useCallback(() => {
+    return getSettings()
+      .then((res) => {
+        const data = res?.data || res || {};
+        setSettings(data);
+        return data;
+      })
+      .catch(() => ({}))
       .finally(() => setLoading(false));
   }, []);
 
-  return <SettingsContext.Provider value={{ settings, loading }}>{children}</SettingsContext.Provider>;
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
+
+  return (
+    <SettingsContext.Provider value={{ settings, loading, refetch: fetchSettings, updateSettings: setSettings }}>
+      {children}
+    </SettingsContext.Provider>
+  );
 }
 
 export function useSettings() {

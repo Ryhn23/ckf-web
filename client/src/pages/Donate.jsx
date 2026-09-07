@@ -55,6 +55,31 @@ export default function Donate() {
     }
   }
 
+  if (settings.menu_donasi_enabled === 'false') {
+    return (
+      <>
+        <PageHeader title="Layanan Donasi" crumbs={[{ label: 'Donasi' }]} />
+        <section className="container-page max-w-2xl py-16 text-center">
+          <div className="card p-10">
+            <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-400">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
+            </span>
+            <h2 className="mt-5 font-heading text-xl font-bold text-slate-900">
+              Penerimaan Donasi Daring Dinonaktifkan
+            </h2>
+            <p className="mt-3 text-sm text-slate-600">
+              Saat ini kanal donasi daring sedang tidak menerima transaksi baru. Untuk informasi penyaluran bantuan atau kemitraan, silakan hubungi kontak sekretariat yayasan.
+            </p>
+            <div className="mt-6 flex justify-center gap-3">
+              <Link to="/" className="btn-outline">Kembali ke Beranda</Link>
+              <Link to="/kontak" className="btn-primary">Hubungi Kami</Link>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
+
   if (success) {
     return (
       <>

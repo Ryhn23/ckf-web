@@ -1,43 +1,181 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link, NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAuth from '../../hooks/useAuth';
 import Spinner from '../../components/ui/Spinner';
 
-const NAV_ITEMS = [
-  { to: '/admin', label: 'Dashboard', icon: 'fa-gauge', end: true },
-  { to: '/admin/homepage', label: 'Konten Beranda', icon: 'fa-house-laptop' },
-  { to: '/admin/posts', label: 'Artikel', icon: 'fa-newspaper' },
-  { to: '/admin/categories', label: 'Kategori', icon: 'fa-tags' },
-  { to: '/admin/testimonials', label: 'Testimoni', icon: 'fa-quote-left' },
-  { to: '/admin/media', label: 'Media', icon: 'fa-images' },
-  { to: '/admin/donations', label: 'Donasi', icon: 'fa-hand-holding-heart' },
-  { to: '/admin/contact', label: 'Pesan Kontak', icon: 'fa-envelope' },
-  { to: '/admin/users', label: 'Pengguna', icon: 'fa-users' },
-  { to: '/admin/settings', label: 'Pengaturan', icon: 'fa-gear' },
+const MENU_STRUCTURE = [
+  {
+    type: 'single',
+    to: '/admin',
+    label: 'Dashboard',
+    icon: 'fa-gauge',
+    end: true,
+  },
+  {
+    type: 'group',
+    id: 'content',
+    label: 'Konten Situs',
+    icon: 'fa-globe',
+    items: [
+      { to: '/admin/homepage', label: 'Halaman Beranda', icon: 'fa-house-laptop' },
+      { to: '/admin/about', label: 'Halaman Tentang', icon: 'fa-circle-info' },
+      { to: '/admin/testimonials', label: 'Testimoni', icon: 'fa-quote-left' },
+      { to: '/admin/media', label: 'Galeri Media', icon: 'fa-images' },
+    ],
+  },
+  {
+    type: 'group',
+    id: 'publishing',
+    label: 'Publikasi & Program',
+    icon: 'fa-newspaper',
+    items: [
+      { to: '/admin/posts', label: 'Artikel Berita', icon: 'fa-file' },
+      { to: '/admin/categories', label: 'Kategori Program', icon: 'fa-tags' },
+    ],
+  },
+  {
+    type: 'group',
+    id: 'services',
+    label: 'Layanan & Donasi',
+    icon: 'fa-hand-holding-heart',
+    items: [
+      { to: '/admin/donations', label: 'Donasi Masuk', icon: 'fa-sack-dollar' },
+      { to: '/admin/contact', label: 'Pesan Kontak', icon: 'fa-envelope' },
+    ],
+  },
+  {
+    type: 'group',
+    id: 'system',
+    label: 'Sistem & Akses',
+    icon: 'fa-gear',
+    items: [
+      { to: '/admin/settings', label: 'Pengaturan Umum', icon: 'fa-gear' },
+      { to: '/admin/users', label: 'Manajemen Pengguna', icon: 'fa-users' },
+    ],
+  },
 ];
 
 function SidebarContent({ onNavigate }) {
+  const location = useLocation();
+
+  const [openGroups, setOpenGroups] = useState(() => {
+    const initial = {};
+    for (const group of MENU_STRUCTURE) {
+      if (group.type === 'group') {
+        const isChildActive = group.items.some((item) =>
+          item.end
+            ? location.pathname === item.to
+            : location.pathname.startsWith(item.to)
+        );
+        initial[group.id] = isChildActive || group.id === 'content';
+      }
+    }
+    return initial;
+  });
+
+  useEffect(() => {
+    for (const group of MENU_STRUCTURE) {
+      if (group.type === 'group') {
+        const isChildActive = group.items.some((item) =>
+          item.end
+            ? location.pathname === item.to
+            : location.pathname.startsWith(item.to)
+        );
+        if (isChildActive) {
+          setOpenGroups((prev) => ({ ...prev, [group.id]: true }));
+        }
+      }
+    }
+  }, [location.pathname]);
+
+  const toggleGroup = (groupId) => {
+    setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+  };
+
   return (
-    <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-      {NAV_ITEMS.map((item) => (
-        <NavLink
-          key={item.to}
-          to={item.to}
-          end={item.end}
-          onClick={onNavigate}
-          className={({ isActive }) =>
-            `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${isActive
-              ? 'bg-teal-700 text-white shadow'
-              : 'text-slate-600 hover:bg-teal-50 hover:text-teal-800'
-            }`
-          }
-        >
-          <FontAwesomeIcon icon={['fa-solid', item.icon]} className="w-4" />
-          {item.label}
-        </NavLink>
-      ))}
+    <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-4">
+      {MENU_STRUCTURE.map((entry) => {
+        if (entry.type === 'single') {
+          return (
+            <NavLink
+              key={entry.to}
+              to={entry.to}
+              end={entry.end}
+              onClick={onNavigate}
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+                  isActive
+                    ? 'bg-teal-700 text-white shadow'
+                    : 'text-slate-600 hover:bg-teal-50 hover:text-teal-800'
+                }`
+              }
+            >
+              <FontAwesomeIcon icon={['fa-solid', entry.icon]} className="w-4 text-center" />
+              {entry.label}
+            </NavLink>
+          );
+        }
+
+        const isOpen = !!openGroups[entry.id];
+        const isChildActive = entry.items.some((item) =>
+          item.end
+            ? location.pathname === item.to
+            : location.pathname.startsWith(item.to)
+        );
+
+        return (
+          <div key={entry.id} className="space-y-1">
+            <button
+              type="button"
+              onClick={() => toggleGroup(entry.id)}
+              className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                isChildActive
+                  ? 'text-teal-800 bg-teal-50/70'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <FontAwesomeIcon
+                  icon={['fa-solid', entry.icon]}
+                  className={`w-4 text-center ${isChildActive ? 'text-teal-700' : 'text-slate-400'}`}
+                />
+                <span>{entry.label}</span>
+              </div>
+              <FontAwesomeIcon
+                icon={['fa-solid', 'fa-chevron-down']}
+                className={`text-xs transition-transform duration-200 ${
+                  isOpen ? 'rotate-180 text-teal-700' : 'text-slate-400'
+                }`}
+              />
+            </button>
+
+            {isOpen && (
+              <div className="ml-3.5 space-y-1 border-l-2 border-slate-100 pl-2.5 py-0.5">
+                {entry.items.map((subItem) => (
+                  <NavLink
+                    key={subItem.to}
+                    to={subItem.to}
+                    end={subItem.end}
+                    onClick={onNavigate}
+                    className={({ isActive }) =>
+                      `flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition ${
+                        isActive
+                          ? 'bg-teal-700 text-white font-semibold shadow-sm'
+                          : 'text-slate-500 hover:bg-teal-50 hover:text-teal-800'
+                      }`
+                    }
+                  >
+                    <FontAwesomeIcon icon={['fa-solid', subItem.icon]} className="w-3.5 text-center text-[11px]" />
+                    {subItem.label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </nav>
   );
 }

@@ -31,6 +31,7 @@ const ContactAdmin = lazy(() => import('./pages/admin/ContactAdmin'));
 const UsersAdmin = lazy(() => import('./pages/admin/UsersAdmin'));
 const SettingsAdmin = lazy(() => import('./pages/admin/SettingsAdmin'));
 const HomeContentAdmin = lazy(() => import('./pages/admin/HomeContentAdmin'));
+const AboutContentAdmin = lazy(() => import('./pages/admin/AboutContentAdmin'));
 const TestimonialsAdmin = lazy(() => import('./pages/admin/TestimonialsAdmin'));
 
 function AdminLoadingFallback() {
@@ -98,6 +99,7 @@ export default function App() {
               >
                 <Route index element={<Dashboard />} />
                 <Route path="homepage" element={<HomeContentAdmin />} />
+                <Route path="about" element={<AboutContentAdmin />} />
                 <Route path="posts" element={<PostsAdmin />} />
                 <Route path="posts/new" element={<PostEditor />} />
                 <Route path="posts/:id/edit" element={<PostEditor />} />

@@ -82,10 +82,10 @@ export default function MediaAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-            Pustaka Media & Berkas
+            Galeri Media
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Penyimpanan terpusat dokumentasi visual, materi publikasi, dan aset berkas kegiatan.
+            Upload dan kelola file gambar atau dokumen.
           </p>
         </div>
       </div>
@@ -104,9 +104,9 @@ export default function MediaAdmin() {
             </span>
             <div>
               <p className="text-sm font-semibold text-slate-800">
-                {uploading ? `Mengunggah berkas… ${progress}%` : 'Pilih berkas dari perangkat'}
+                {uploading ? `Mengunggah… ${progress}%` : 'Pilih file untuk diupload'}
               </p>
-              <p className="text-xs text-slate-400 mt-0.5">Format didukung: JPG, PNG, GIF, WebP, PDF (Ukuran maksimal 2 MB)</p>
+              <p className="text-xs text-slate-400 mt-0.5">Format: JPG, PNG, GIF, WebP, PDF (maks 2 MB)</p>
             </div>
           </label>
           <input ref={fileRef} id="file" type="file" accept="image/*,application/pdf" className="hidden" onChange={handleUpload} />

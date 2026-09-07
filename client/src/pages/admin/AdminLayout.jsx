@@ -191,19 +191,17 @@ function SidebarContent({ onNavigate }) {
 
 function getBreadcrumbs(pathname) {
   if (pathname === '/admin' || pathname === '/admin/') {
-    return [{ label: 'Dasbor Utama', current: true }];
+    return [{ label: 'Dashboard', current: true }];
   }
   if (pathname.startsWith('/admin/posts/new')) {
     return [
-      { label: 'Publikasi & Program', current: false },
-      { label: 'Artikel Berita', to: '/admin/posts' },
-      { label: 'Tulis Artikel Baru', current: true },
+      { label: 'Artikel', to: '/admin/posts' },
+      { label: 'Tulis Artikel', current: true },
     ];
   }
   if (pathname.includes('/admin/posts/') && pathname.endsWith('/edit')) {
     return [
-      { label: 'Publikasi & Program', current: false },
-      { label: 'Artikel Berita', to: '/admin/posts' },
+      { label: 'Artikel', to: '/admin/posts' },
       { label: 'Edit Artikel', current: true },
     ];
   }
@@ -220,7 +218,7 @@ function getBreadcrumbs(pathname) {
       }
     }
   }
-  return [{ label: 'Sistem Informasi Manajemen', current: true }];
+  return [{ label: 'Admin', current: true }];
 }
 
 export default function AdminLayout() {
@@ -369,7 +367,7 @@ export default function AdminLayout() {
             {/* Breadcrumb navigasi dinamis */}
             <nav aria-label="Breadcrumb" className="hidden sm:flex items-center gap-2 text-xs">
               <Link to="/admin" className="font-medium text-slate-500 hover:text-teal-700 transition">
-                Portal
+                Admin
               </Link>
               {breadcrumbs.map((crumb, idx) => (
                 <div key={idx} className="flex items-center gap-2">
@@ -396,19 +394,13 @@ export default function AdminLayout() {
               className="admin-btn-secondary !px-3 !py-1.5 text-xs font-semibold"
             >
               <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} className="text-slate-400" />
-              <span className="hidden sm:inline">Pratinjau Situs</span>
+              <span className="hidden sm:inline">Lihat Web</span>
             </Link>
 
             <div className="flex items-center gap-2.5 pl-1 pr-1 border-l border-slate-200">
-              <div className="relative">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 border border-teal-200 text-sm font-bold text-teal-800 shadow-xs">
-                  {user?.name?.[0]?.toUpperCase() || 'A'}
-                </span>
-                <span
-                  className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white"
-                  title="Sesi Aktif"
-                />
-              </div>
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 border border-teal-200 text-sm font-bold text-teal-800 shadow-xs">
+                {user?.name?.[0]?.toUpperCase() || 'A'}
+              </span>
               <div className="hidden md:block">
                 <p className="text-xs font-bold leading-tight text-slate-800">{user?.name}</p>
                 <p className="text-[11px] text-slate-400 font-medium">{user?.role || 'Admin'}</p>
@@ -419,10 +411,10 @@ export default function AdminLayout() {
               type="button"
               onClick={handleLogout}
               className="admin-btn-danger !px-3 !py-1.5 text-xs font-semibold"
-              title="Keluar dari sesi admin"
+              title="Logout"
             >
               <FontAwesomeIcon icon={['fa-solid', 'fa-right-from-bracket']} />
-              <span className="hidden sm:inline">Keluar</span>
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </header>

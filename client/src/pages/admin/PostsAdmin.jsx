@@ -48,15 +48,15 @@ export default function PostsAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-            Manajemen Artikel & Publikasi
+            Artikel
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Kelola dan publikasikan warta kegiatan, edukasi dakwah, dan dokumentasi program.
+            Kelola artikel dan berita website.
           </p>
         </div>
         <Link to="/admin/posts/new" className="admin-btn-primary">
           <FontAwesomeIcon icon={['fa-solid', 'fa-plus']} />
-          <span>Tambah Artikel Baru</span>
+          <span>Tulis Artikel</span>
         </Link>
       </div>
 
@@ -68,9 +68,9 @@ export default function PostsAdmin() {
             onChange={(e) => { setStatus(e.target.value); setPage(1); }}
             className="input !w-auto !py-2 text-xs font-medium"
           >
-            <option value="">Semua Status Publikasi</option>
-            <option value="PUBLISHED">Terbit (Publik)</option>
-            <option value="DRAFT">Draf (Privat)</option>
+            <option value="">Semua Status</option>
+            <option value="PUBLISHED">Terbit</option>
+            <option value="DRAFT">Draft</option>
           </select>
 
           <div className="relative">
@@ -82,14 +82,14 @@ export default function PostsAdmin() {
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="input !py-2 pl-9 text-xs w-64 sm:w-80"
-              placeholder="Cari berdasarkan judul artikel…"
+              placeholder="Cari judul artikel…"
             />
           </div>
         </div>
 
         {meta.total !== undefined && (
           <span className="text-xs font-medium text-slate-500">
-            Ditemukan <strong className="text-slate-800 font-semibold">{meta.total}</strong> naskah
+            Total <strong className="text-slate-800 font-semibold">{meta.total}</strong> artikel
           </span>
         )}
       </div>
@@ -98,8 +98,8 @@ export default function PostsAdmin() {
       {posts.length === 0 ? (
         <EmptyState
           icon="fa-newspaper"
-          title="Belum Ada Artikel"
-          description="Silakan buat artikel publikasi baru melalui tombol di atas."
+          title="Belum ada artikel"
+          description="Klik tombol 'Tulis Artikel' untuk membuat artikel baru."
         />
       ) : (
         <div className="admin-card overflow-hidden">
@@ -107,11 +107,11 @@ export default function PostsAdmin() {
             <table className="w-full min-w-[700px] text-left text-sm">
               <thead>
                 <tr>
-                  <th className="admin-th">Judul Artikel</th>
-                  <th className="admin-th">Kategori Program</th>
+                  <th className="admin-th">Judul</th>
+                  <th className="admin-th">Kategori</th>
                   <th className="admin-th">Status</th>
-                  <th className="admin-th">Tayangan</th>
-                  <th className="admin-th">Tanggal Pembaruan</th>
+                  <th className="admin-th">Dibaca</th>
+                  <th className="admin-th">Tanggal</th>
                   <th className="admin-th text-right">Aksi</th>
                 </tr>
               </thead>

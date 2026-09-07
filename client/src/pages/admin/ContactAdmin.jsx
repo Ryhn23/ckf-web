@@ -59,10 +59,10 @@ export default function ContactAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-            Korespondensi & Pesan Masuk
+            Pesan Masuk
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Daftar aspirasi, permohonan kemitraan, dan komunikasi publik melalui formulir kontak.
+            Pesan yang dikirim pengunjung melalui form kontak.
           </p>
         </div>
         <label className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-xs cursor-pointer hover:bg-slate-50">
@@ -72,15 +72,15 @@ export default function ContactAdmin() {
             onChange={(e) => { setUnreadOnly(e.target.checked); setPage(1); }}
             className="h-4 w-4 rounded text-teal-700 accent-teal-700"
           />
-          <span>Hanya Pesan Belum Dibaca</span>
+          <span>Hanya yang belum dibaca</span>
         </label>
       </div>
 
       {messages.length === 0 ? (
         <EmptyState
           icon="fa-inbox"
-          title="Tidak Ada Pesan"
-          description="Pesan korespondensi yang masuk dari publik akan ditampilkan di sini."
+          title="Tidak ada pesan"
+          description="Belum ada pesan masuk dari pengunjung."
         />
       ) : (
         <>

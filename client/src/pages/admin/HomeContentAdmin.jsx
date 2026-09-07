@@ -96,10 +96,10 @@ export default function HomeContentAdmin() {
     <div className="space-y-6">
       <div>
         <h1 className="font-heading text-2xl font-bold text-slate-900">
-          Manajemen Konten & Visibilitas Beranda
+          Konten Beranda
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          Kelola setiap elemen teks, tombol aksi, dan kontrol visibilitas (tampilkan/sembunyikan) menu publik serta seksi halaman beranda.
+          Atur teks, banner, dan tampilan bagian halaman beranda.
         </p>
       </div>
 
@@ -115,10 +115,10 @@ export default function HomeContentAdmin() {
         <div className="admin-card p-6 sm:p-8">
           <div className="border-b border-slate-100 pb-3">
             <h2 className="font-heading text-base font-bold text-slate-900">
-              Visibilitas Menu Navigasi Publik
+              Visibilitas Menu Navigasi
             </h2>
             <p className="mt-0.5 text-xs text-slate-500">
-              Pengaturan tampil atau sembunyikan menu navigasi pada bilah atas (navbar) dan kaki situs (footer).
+              Tampilkan atau sembunyikan menu di navbar dan footer.
             </p>
           </div>
 
@@ -999,13 +999,13 @@ export default function HomeContentAdmin() {
         {/* STICKY BOTTOM SAVE ACTION BAR */}
         <div className="admin-card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200/80 bg-white/95 backdrop-blur">
           <p className="text-xs text-slate-500 hidden sm:block">
-            Perubahan teks dan visibilitas akan langsung diterapkan pada situs publik.
+            Perubahan akan langsung tampil di website.
           </p>
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             {saved && (
-              <span className="flex items-center gap-2 text-sm font-semibold text-emerald-600">
+              <span className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
                 <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} />
-                Konten beranda tersimpan
+                Tersimpan
               </span>
             )}
             <button

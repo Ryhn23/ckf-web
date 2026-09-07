@@ -9,43 +9,43 @@ import EmptyState from '../../components/ui/EmptyState';
 
 const GROUPS = [
   {
-    title: 'Identitas & Profil Lembaga',
+    title: 'Identitas Lembaga',
     fields: [
-      { key: 'foundation_name', label: 'Nama Resmi Lembaga' },
-      { key: 'tagline', label: 'Motto / Semboyan Lembaga' },
-      { key: 'about_text', label: 'Deskripsi Profil Lembaga (Halaman Beranda)', textarea: true },
+      { key: 'foundation_name', label: 'Nama Lembaga' },
+      { key: 'tagline', label: 'Slogan / Tagline' },
+      { key: 'about_text', label: 'Deskripsi Singkat', textarea: true },
     ],
   },
   {
-    title: 'Sekretariat & Kontak Resmi',
+    title: 'Kontak & Alamat',
     fields: [
-      { key: 'email', label: 'Alamat Email Resmi' },
-      { key: 'phone', label: 'Nomor Telepon / WhatsApp Layanan' },
-      { key: 'address', label: 'Alamat Lengkap Kantor Sekretariat' },
+      { key: 'email', label: 'Email' },
+      { key: 'phone', label: 'Telepon / WhatsApp' },
+      { key: 'address', label: 'Alamat Kantor' },
     ],
   },
   {
-    title: 'Kanal Media Sosial Resmi',
+    title: 'Media Sosial',
     fields: [
-      { key: 'social_facebook', label: 'Tautan Facebook' },
-      { key: 'social_instagram', label: 'Tautan Instagram' },
-      { key: 'social_youtube', label: 'Tautan YouTube' },
-      { key: 'social_x', label: 'Tautan X (Twitter)' },
+      { key: 'social_facebook', label: 'Facebook' },
+      { key: 'social_instagram', label: 'Instagram' },
+      { key: 'social_youtube', label: 'YouTube' },
+      { key: 'social_x', label: 'X (Twitter)' },
     ],
   },
   {
-    title: 'Indikator Kinerja & Capaian (Statistik)',
+    title: 'Angka Statistik',
     fields: [
-      { key: 'stat_beneficiaries', label: 'Total Penerima Manfaat' },
-      { key: 'stat_programs', label: 'Total Program Terlaksana' },
-      { key: 'stat_volunteers', label: 'Total Relawan Terlibat' },
-      { key: 'stat_years', label: 'Masa Berkhidmat (Tahun)' },
+      { key: 'stat_beneficiaries', label: 'Penerima Manfaat' },
+      { key: 'stat_programs', label: 'Program Terlaksana' },
+      { key: 'stat_volunteers', label: 'Relawan Terlibat' },
+      { key: 'stat_years', label: 'Tahun Pengalaman' },
     ],
   },
   {
-    title: 'Rekening Perbendaharaan Donasi',
+    title: 'Rekening Donasi',
     fields: [
-      { key: 'donation_bank_name', label: 'Nama Bank Penerima' },
+      { key: 'donation_bank_name', label: 'Nama Bank' },
       { key: 'donation_account_number', label: 'Nomor Rekening & Atas Nama' },
     ],
   },
@@ -88,10 +88,10 @@ export default function SettingsAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-            Konfigurasi Pengaturan Sistem
+            Pengaturan Umum
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Kelola informasi kelembagaan, kontak sekretariat resmi, dan parameter data situs publik.
+            Kelola informasi lembaga, kontak, dan rekening donasi.
           </p>
         </div>
       </div>
@@ -120,10 +120,10 @@ export default function SettingsAdmin() {
                     {f.textarea ? (
                       <textarea
                         id={f.key}
-                        rows={4}
+                        rows={3}
                         value={form[f.key] || ''}
                         onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}
-                        className="input text-xs"
+                        className="input text-xs leading-relaxed"
                       />
                     ) : (
                       <input
@@ -140,19 +140,20 @@ export default function SettingsAdmin() {
           ))}
         </div>
 
-        <div className="admin-card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200 bg-white/95 backdrop-blur-md">
+        {/* Sticky Action Save Bar */}
+        <div className="admin-card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200/80 bg-white/95 backdrop-blur">
           <p className="text-xs text-slate-500 hidden sm:block">
-            Pastikan memeriksa kembali perubahan data parameter sebelum menyimpan.
+            Perubahan akan langsung tampil di website.
           </p>
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             {saved && (
-              <span className="flex items-center gap-2 text-xs font-bold text-emerald-700">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-sm text-emerald-600" />
-                Pengaturan berhasil disimpan
+              <span className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
+                <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} />
+                Tersimpan
               </span>
             )}
             <button type="submit" disabled={saving} className="admin-btn-primary !px-6 !py-2.5 text-xs font-bold shadow-md w-full sm:w-auto">
-              {saving ? 'Menyimpan…' : 'Simpan Seluruh Pengaturan'}
+              {saving ? 'Menyimpan…' : 'Simpan Pengaturan'}
             </button>
           </div>
         </div>

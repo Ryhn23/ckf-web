@@ -94,10 +94,10 @@ export default function AboutContentAdmin() {
     <div className="space-y-6">
       <div>
         <h1 className="font-heading text-2xl font-bold text-slate-900">
-          Manajemen Konten Halaman Tentang Kami
+          Konten Tentang Kami
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          Kelola setiap bagian teks, visi misi, nilai pelayanan, susunan dewan pengurus, dan kendali visibilitas seksi halaman Tentang Kami.
+          Atur teks, visi misi, pengurus, dan tampilan halaman Tentang Kami.
         </p>
       </div>
 
@@ -113,10 +113,10 @@ export default function AboutContentAdmin() {
         <div className="admin-card p-6 sm:p-8">
           <div className="border-b border-slate-100 pb-3">
             <h2 className="font-heading text-base font-bold text-slate-900">
-              Visibilitas Seksi Halaman Tentang Kami
+              Visibilitas Bagian Halaman
             </h2>
             <p className="mt-0.5 text-xs text-slate-500">
-              Pengaturan tampil atau sembunyikan modul konten pada halaman profil lembaga.
+              Tampilkan atau sembunyikan bagian di halaman Tentang Kami.
             </p>
           </div>
 
@@ -547,13 +547,13 @@ export default function AboutContentAdmin() {
         {/* STICKY SAVE BAR */}
         <div className="admin-card sticky bottom-6 z-10 flex items-center justify-between p-4 shadow-lg border border-slate-200/80 bg-white/95 backdrop-blur">
           <p className="text-xs text-slate-500 hidden sm:block">
-            Perubahan konten Tentang Kami akan langsung diterapkan pada halaman publik.
+            Perubahan akan langsung tampil di website.
           </p>
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             {saved && (
-              <span className="flex items-center gap-2 text-sm font-semibold text-emerald-600">
+              <span className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
                 <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} />
-                Konten Tentang Kami tersimpan
+                Tersimpan
               </span>
             )}
             <button
@@ -561,7 +561,7 @@ export default function AboutContentAdmin() {
               disabled={saving}
               className="admin-btn-primary !px-6 !py-2.5 text-xs font-bold shadow-sm w-full sm:w-auto"
             >
-              {saving ? 'Menyimpan…' : 'Simpan Konten'}
+              {saving ? 'Menyimpan…' : 'Simpan Perubahan'}
             </button>
           </div>
         </div>

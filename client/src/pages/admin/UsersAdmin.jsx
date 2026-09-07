@@ -91,10 +91,10 @@ export default function UsersAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-            Manajemen Pengguna & Hak Akses
+            Pengguna
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Pengelolaan akun administrator dan staf pengelola konten sistem informasi.
+            Kelola akun admin dan staf website.
           </p>
         </div>
       </div>
@@ -103,16 +103,16 @@ export default function UsersAdmin() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="admin-card h-fit p-6 lg:col-span-4 lg:sticky lg:top-20 lg:self-start space-y-4">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
-            {editingId ? 'Perbarui Data Pengguna' : 'Registrasi Pengguna Baru'}
+            {editingId ? 'Edit Pengguna' : 'Tambah Pengguna'}
           </h2>
 
           <div>
             <label htmlFor="name" className="label text-xs">Nama Lengkap</label>
-            <input id="name" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className="input text-xs" placeholder="Nama sesuai identitas" />
+            <input id="name" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className="input text-xs" placeholder="Nama lengkap" />
           </div>
 
           <div>
-            <label htmlFor="email" className="label text-xs">Email Pengguna</label>
+            <label htmlFor="email" className="label text-xs">Email</label>
             <input
               id="email"
               type="email"
@@ -121,13 +121,13 @@ export default function UsersAdmin() {
               value={form.email}
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
               className="input text-xs disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
-              placeholder="email@ckf.or.id"
+              placeholder="email@domain.com"
             />
           </div>
 
           <div>
             <label htmlFor="password" className="label text-xs">
-              Kata Sandi {editingId ? '(kosongkan jika tidak diubah)' : ''}
+              Password {editingId ? '(kosongkan jika tidak diubah)' : ''}
             </label>
             <div className="relative">
               <input
@@ -143,10 +143,9 @@ export default function UsersAdmin() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
-                title={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600"
               >
-                <FontAwesomeIcon icon={['fa-solid', showPassword ? 'fa-eye-slash' : 'fa-eye']} className="text-xs" />
+                <FontAwesomeIcon icon={['fa-solid', showPassword ? 'fa-eye-slash' : 'fa-eye']} />
               </button>
             </div>
           </div>

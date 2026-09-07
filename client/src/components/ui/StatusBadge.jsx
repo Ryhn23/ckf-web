@@ -28,24 +28,24 @@ const VARIANT_MAP = {
 const STATUS_ALIASES = {
   // Publikasi artikel
   PUBLISHED: { variant: 'emerald', label: 'Terbit' },
-  DRAFT: { variant: 'amber', label: 'Draf' },
+  DRAFT: { variant: 'amber', label: 'Draft' },
   ARCHIVED: { variant: 'slate', label: 'Arsip' },
 
   // Donasi
-  PROCESSED: { variant: 'emerald', label: 'Terverifikasi' },
+  PROCESSED: { variant: 'emerald', label: 'Selesai' },
 
   // Permohonan Bantuan
-  PENDING: { variant: 'amber', label: 'Menunggu Verifikasi' },
-  REVIEWED: { variant: 'sky', label: 'Sedang Ditinjau' },
+  PENDING: { variant: 'amber', label: 'Menunggu' },
+  REVIEWED: { variant: 'sky', label: 'Ditinjau' },
   APPROVED: { variant: 'emerald', label: 'Disetujui' },
   REJECTED: { variant: 'rose', label: 'Ditolak' },
 
   // Pesan Kontak
   UNREAD: { variant: 'sky', label: 'Belum Dibaca' },
-  READ: { variant: 'slate', label: 'Sudah Dibaca' },
+  READ: { variant: 'slate', label: 'Dibaca' },
 
   // User role
-  ADMIN: { variant: 'purple', label: 'Administrator' },
+  ADMIN: { variant: 'purple', label: 'Admin' },
   EDITOR: { variant: 'sky', label: 'Editor' },
 };
 

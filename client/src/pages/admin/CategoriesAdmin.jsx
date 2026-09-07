@@ -89,10 +89,10 @@ export default function CategoriesAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-            Kategori & Pilar Program
+            Kategori
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Konfigurasi pilar program filantropi dan taksonomi pengelompokan artikel warta.
+            Kelola kategori artikel dan program kerja.
           </p>
         </div>
       </div>
@@ -101,42 +101,42 @@ export default function CategoriesAdmin() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="admin-card h-fit p-6 lg:col-span-4 lg:sticky lg:top-20 lg:self-start space-y-4">
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
-            {editingId ? 'Perbarui Data Kategori' : 'Registrasi Kategori Baru'}
+            {editingId ? 'Edit Kategori' : 'Tambah Kategori'}
           </h2>
 
           <div>
-            <label htmlFor="name" className="label text-xs">Nama Bidang / Kategori</label>
-            <input id="name" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className="input text-xs" placeholder="Contoh: Pendidikan & Dakwah" />
+            <label htmlFor="name" className="label text-xs">Nama Kategori</label>
+            <input id="name" required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className="input text-xs" placeholder="Contoh: Pendidikan" />
           </div>
 
           <div>
-            <label htmlFor="description" className="label text-xs">Deskripsi Program</label>
-            <textarea id="description" rows={2} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className="input text-xs" placeholder="Uraian singkat ruang lingkup program (opsional)" />
+            <label htmlFor="description" className="label text-xs">Deskripsi</label>
+            <textarea id="description" rows={2} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className="input text-xs" placeholder="Deskripsi singkat (opsional)" />
           </div>
 
           <div>
-            <label htmlFor="target" className="label text-xs">Sasaran Penerima Manfaat</label>
-            <input id="target" value={form.target} onChange={(e) => setForm((f) => ({ ...f, target: e.target.value }))} className="input text-xs" placeholder="Contoh: Pelajar dhuafa dan santri pelosok" />
+            <label htmlFor="target" className="label text-xs">Target Penerima</label>
+            <input id="target" value={form.target} onChange={(e) => setForm((f) => ({ ...f, target: e.target.value }))} className="input text-xs" placeholder="Contoh: Pelajar dan santri" />
           </div>
 
           <div>
-            <label htmlFor="impact" className="label text-xs">Capaian & Dampak Utama</label>
-            <input id="impact" value={form.impact} onChange={(e) => setForm((f) => ({ ...f, impact: e.target.value }))} className="input text-xs" placeholder="Contoh: 15 Sekolah Terbantu, 3.200 Siswa" />
+            <label htmlFor="impact" className="label text-xs">Dampak / Capaian</label>
+            <input id="impact" value={form.impact} onChange={(e) => setForm((f) => ({ ...f, impact: e.target.value }))} className="input text-xs" placeholder="Contoh: 15 Sekolah, 3.200 Siswa" />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="icon" className="label text-xs">Ikon (FontAwesome)</label>
+              <label htmlFor="icon" className="label text-xs">Ikon</label>
               <input id="icon" value={form.icon} onChange={(e) => setForm((f) => ({ ...f, icon: e.target.value }))} className="input text-xs" placeholder="fa-solid fa-graduation-cap" />
             </div>
             <div>
-              <label htmlFor="sortOrder" className="label text-xs">Urutan Prioritas</label>
+              <label htmlFor="sortOrder" className="label text-xs">Urutan</label>
               <input id="sortOrder" type="number" value={form.sortOrder} onChange={(e) => setForm((f) => ({ ...f, sortOrder: e.target.value }))} className="input text-xs" />
             </div>
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-slate-400 mb-1.5">Pilihan Ikon Cepat:</p>
+            <p className="text-xs font-semibold text-slate-400 mb-1.5">Pilihan Ikon:</p>
             <div className="flex flex-wrap gap-1.5">
               {CATEGORY_ICON_PRESETS.map((preset) => (
                 <button

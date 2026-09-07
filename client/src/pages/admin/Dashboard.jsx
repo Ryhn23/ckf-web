@@ -42,20 +42,14 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-7">
-      {/* Header Dashboard Eksekutif */}
+      {/* Header Dashboard */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-              Dasbor Eksekutif
-            </h1>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Sistem Aktif
-            </span>
-          </div>
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
+            Dashboard
+          </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Ikhtisar performa publikasi, pengelolaan program donasi, dan pelayanan sosial.
+            Ringkasan data artikel, donasi, dan permintaan bantuan.
           </p>
         </div>
 
@@ -71,11 +65,11 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Baris 1: Metrik Publikasi & Jangkauan */}
+      {/* Baris 1: Artikel & Statistik */}
       <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Publikasi & Jangkauan Warta
+            Artikel & Statistik
           </h2>
           <Link to="/admin/posts" className="text-xs font-semibold text-teal-700 hover:underline">
             Semua Artikel →
@@ -87,14 +81,14 @@ export default function Dashboard() {
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50 text-sky-700 border border-sky-100">
                 <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} className="text-base" />
               </span>
-              <span className="text-[11px] font-semibold text-slate-400">Total Akumulasi</span>
+              <span className="text-[11px] font-semibold text-slate-400">Total</span>
             </div>
             <div className="mt-4">
               <p className="font-heading text-2xl font-extrabold tracking-tight text-slate-900">
                 {Number(stats.totalViews || 0).toLocaleString('id-ID')}
               </p>
               <p className="mt-1 text-xs font-medium text-slate-500">
-                Total pembaca artikel publik
+                Total pembaca artikel
               </p>
             </div>
           </div>
@@ -111,7 +105,7 @@ export default function Dashboard() {
                 {Number(stats.published || 0).toLocaleString('id-ID')}
               </p>
               <p className="mt-1 text-xs font-medium text-slate-500">
-                Dari {Number(stats.totalPosts || 0).toLocaleString('id-ID')} naskah publikasi
+                Artikel terbit
               </p>
             </div>
           </div>
@@ -119,16 +113,16 @@ export default function Dashboard() {
           <div className="admin-card p-5">
             <div className="flex items-center justify-between">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-700 border border-amber-100">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-file-pen']} className="text-base" />
+                <FontAwesomeIcon icon={['fa-solid', 'fa-file-lines']} className="text-base" />
               </span>
-              <StatusBadge status="DRAFT" label="Draf" />
+              <StatusBadge status="DRAFT" label="Draft" />
             </div>
             <div className="mt-4">
               <p className="font-heading text-2xl font-extrabold tracking-tight text-slate-900">
                 {Number(stats.drafts || 0).toLocaleString('id-ID')}
               </p>
               <p className="mt-1 text-xs font-medium text-slate-500">
-                Menunggu peninjauan & rilis
+                Belum terbit
               </p>
             </div>
           </div>
@@ -136,31 +130,28 @@ export default function Dashboard() {
           <div className="admin-card p-5">
             <div className="flex items-center justify-between">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-700 border border-purple-100">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-images']} className="text-base" />
+                <FontAwesomeIcon icon={['fa-solid', 'fa-tags']} className="text-base" />
               </span>
-              <Link to="/admin/media" className="text-xs font-semibold text-teal-700 hover:underline">
-                Kelola
-              </Link>
+              <span className="text-[11px] font-semibold text-slate-400">Kategori</span>
             </div>
             <div className="mt-4">
               <p className="font-heading text-2xl font-extrabold tracking-tight text-slate-900">
-                {Number(stats.totalMedia || 0).toLocaleString('id-ID')}
+                {Number(stats.categoryCount || 0).toLocaleString('id-ID')}
               </p>
               <p className="mt-1 text-xs font-medium text-slate-500">
-                Aset media dokumentasi terunggah
+                Kategori artikel
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Baris 2: Pelayanan Filantropi & Aspirasi */}
+      {/* Baris 2: Donasi & Permintaan Bantuan */}
       <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Layanan Filantropi & Interaksi Publik
+            Donasi & Permintaan Bantuan
           </h2>
-          <span className="text-xs text-slate-400">Verifikasi berkala</span>
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
           <Link
@@ -173,14 +164,14 @@ export default function Dashboard() {
                   <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} className="text-base" />
                 </span>
                 {Number(stats.pendingDonations || 0) > 0 ? (
-                  <StatusBadge status="PENDING" label={`${stats.pendingDonations} Verifikasi`} />
+                  <StatusBadge status="PENDING" label={`${stats.pendingDonations} Menunggu`} />
                 ) : (
-                  <span className="text-xs font-medium text-slate-400">Tervalidasi</span>
+                  <span className="text-xs font-medium text-slate-400">Selesai</span>
                 )}
               </div>
               <div className="mt-4">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Donasi Terverifikasi
+                  Total Donasi
                 </p>
                 <p className="font-heading text-2xl font-black text-slate-900 mt-1">
                   Rp {Number(stats.totalDonationAmount || 0).toLocaleString('id-ID')}
@@ -188,8 +179,8 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
-              <span>{stats.totalDonations || 0} transaksi donasi</span>
-              <span className="font-semibold text-teal-700 group-hover:underline">Buka Data →</span>
+              <span>{stats.totalDonations || 0} transaksi</span>
+              <span className="font-semibold text-teal-700 group-hover:underline">Lihat Donasi →</span>
             </div>
           </Link>
 
@@ -205,7 +196,7 @@ export default function Dashboard() {
                 {Number(stats.pendingAidRequests || 0) > 0 ? (
                   <StatusBadge status="PENDING" label={`${stats.pendingAidRequests} Menunggu`} />
                 ) : (
-                  <span className="text-xs font-medium text-slate-400">Tertangani</span>
+                  <span className="text-xs font-medium text-slate-400">Selesai</span>
                 )}
               </div>
               <div className="mt-4">
@@ -214,13 +205,13 @@ export default function Dashboard() {
                 </p>
                 <p className="font-heading text-2xl font-black text-slate-900 mt-1">
                   {Number(stats.totalAidRequests || 0).toLocaleString('id-ID')}{' '}
-                  <span className="font-sans text-base font-normal text-slate-500">Tiket</span>
+                  <span className="font-sans text-base font-normal text-slate-500">Permintaan</span>
                 </p>
               </div>
             </div>
             <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
-              <span>Bantuan dana & logistik</span>
-              <span className="font-semibold text-teal-700 group-hover:underline">Kelola Tiket →</span>
+              <span>Dana & barang</span>
+              <span className="font-semibold text-teal-700 group-hover:underline">Lihat Permintaan →</span>
             </div>
           </Link>
 
@@ -239,12 +230,12 @@ export default function Dashboard() {
                     {stats.unreadMessages} Pesan Baru
                   </span>
                 ) : (
-                  <span className="text-xs font-medium text-slate-400">Terbaca</span>
+                  <span className="text-xs font-medium text-slate-400">Semua dibaca</span>
                 )}
               </div>
               <div className="mt-4">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Pesan Masuk Publik
+                  Pesan Masuk
                 </p>
                 <p className="font-heading text-2xl font-black text-slate-900 mt-1">
                   {Number(stats.unreadMessages || 0).toLocaleString('id-ID')}{' '}
@@ -253,36 +244,36 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
-              <span>Aspirasi & korespondensi</span>
-              <span className="font-semibold text-teal-700 group-hover:underline">Buka Kotak Masuk →</span>
+              <span>Kontak & pesan</span>
+              <span className="font-semibold text-teal-700 group-hover:underline">Lihat Pesan →</span>
             </div>
           </Link>
         </div>
       </div>
 
-      {/* Baris 3: Visualisasi Distribusi & Publikasi Terkini */}
+      {/* Baris 3: Grafik & Artikel Terbaru */}
       <div className="grid gap-6 lg:grid-cols-5">
         {/* Grafik views per kategori */}
         <div className="admin-card p-6 lg:col-span-3">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
               <h2 className="font-heading text-base font-bold text-slate-900">
-                Distribusi Pembaca per Bidang Program
+                Pembaca per Kategori
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Statistik intensitas pembaca berdasarkan klasifikasi artikel
+                Statistik pembaca berdasarkan kategori artikel
               </p>
             </div>
             <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-              Data Real-time
+              Statistik
             </span>
           </div>
 
           {chartData.length === 0 ? (
             <div className="flex h-72 flex-col items-center justify-center text-center">
               <FontAwesomeIcon icon={['fa-solid', 'fa-chart-simple']} className="text-3xl text-slate-300 mb-2" />
-              <p className="text-sm font-semibold text-slate-600">Belum Ada Data Pembaca</p>
-              <p className="text-xs text-slate-400 mt-0.5">Statistik akan muncul seiring dengan pembacaan artikel di situs publik.</p>
+              <p className="text-sm font-semibold text-slate-600">Belum Ada Data</p>
+              <p className="text-xs text-slate-400 mt-0.5">Data akan muncul setelah ada artikel yang dibaca.</p>
             </div>
           ) : (
             <div className="mt-6 h-72">
@@ -321,8 +312,8 @@ export default function Dashboard() {
           <div>
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div>
-                <h2 className="font-heading text-base font-bold text-slate-900">Publikasi Terkini</h2>
-                <p className="text-xs text-slate-500 mt-0.5">Warta dan berita yang baru diperbarui</p>
+                <h2 className="font-heading text-base font-bold text-slate-900">Artikel Terbaru</h2>
+                <p className="text-xs text-slate-500 mt-0.5">Artikel yang baru diperbarui</p>
               </div>
               <Link to="/admin/posts" className="text-xs font-semibold text-teal-700 hover:underline">
                 Semua
@@ -331,7 +322,7 @@ export default function Dashboard() {
 
             {stats.recentPosts?.length === 0 ? (
               <div className="py-12 text-center text-sm text-slate-400">
-                Belum ada data publikasi artikel.
+                Belum ada artikel.
               </div>
             ) : (
               <ul className="mt-3 divide-y divide-slate-100">
@@ -364,7 +355,7 @@ export default function Dashboard() {
 
           <div className="border-t border-slate-100 pt-4 mt-4 text-center">
             <Link to="/admin/posts/new" className="text-xs font-semibold text-teal-700 hover:underline">
-              + Buat Naskah Publikasi Baru
+              + Tulis Artikel Baru
             </Link>
           </div>
         </div>

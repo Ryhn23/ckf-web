@@ -57,29 +57,29 @@ export default function DonationsAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-            Administrasi Donasi & Infaq
+            Donasi
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Verifikasi penerimaan dana, pembukuan donasi publik, dan konfirmasi peruntukan program.
+            Kelola dan verifikasi transaksi donasi masuk.
           </p>
         </div>
       </div>
 
-      {/* Ringkasan Finansial Seragam */}
+      {/* Ringkasan Finansial */}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="admin-card p-5">
           <div className="flex items-center justify-between">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100">
               <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} className="text-base" />
             </span>
-            <StatusBadge status="PROCESSED" label="Terverifikasi" />
+            <StatusBadge status="PROCESSED" label="Selesai" />
           </div>
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Dana Terverifikasi</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Donasi Diterima</p>
             <p className="font-heading text-2xl font-black text-slate-900 mt-1">
               Rp {Number(summary.processedAmount || 0).toLocaleString('id-ID')}
             </p>
-            <p className="mt-1 text-xs font-medium text-slate-500">{summary.processedCount || 0} donasi telah disalurkan</p>
+            <p className="mt-1 text-xs font-medium text-slate-500">{summary.processedCount || 0} transaksi berhasil</p>
           </div>
         </div>
 
@@ -94,11 +94,11 @@ export default function DonationsAdmin() {
             <StatusBadge status="PENDING" label="Menunggu" />
           </div>
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Menunggu Konfirmasi</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Menunggu Verifikasi</p>
             <p className="font-heading text-2xl font-black text-amber-700 mt-1">
               {summary.pendingCount || 0} Transaksi
             </p>
-            <p className="mt-1 text-xs font-semibold text-teal-700">Klik untuk memfilter daftar →</p>
+            <p className="mt-1 text-xs font-semibold text-teal-700">Klik untuk filter →</p>
           </div>
         </div>
 
@@ -110,7 +110,7 @@ export default function DonationsAdmin() {
             <span className="text-[11px] font-bold text-slate-400 uppercase">Semua</span>
           </div>
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Akumulasi Transaksi</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Transaksi</p>
             <p className="font-heading text-2xl font-black text-slate-900 mt-1">
               {(summary.processedCount || 0) + (summary.pendingCount || 0) + (summary.rejectedCount || 0)} Transaksi
             </p>
@@ -122,9 +122,9 @@ export default function DonationsAdmin() {
       {/* Filter Segmented Controls */}
       <div className="flex flex-wrap gap-2 border-b border-slate-200/80 pb-4">
         {[
-          ['', 'Seluruh Status'],
-          ['PENDING', 'Menunggu Verifikasi'],
-          ['PROCESSED', 'Terverifikasi'],
+          ['', 'Semua Status'],
+          ['PENDING', 'Menunggu'],
+          ['PROCESSED', 'Selesai'],
           ['REJECTED', 'Dibatalkan'],
         ].map(([value, label]) => (
           <button
@@ -199,7 +199,7 @@ export default function DonationsAdmin() {
                               className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-700 focus:border-teal-500 focus:outline-none"
                             >
                               <option value="PENDING">Menunggu</option>
-                              <option value="PROCESSED">Terverifikasi</option>
+                              <option value="PROCESSED">Selesai</option>
                               <option value="REJECTED">Ditolak</option>
                             </select>
                           </div>
@@ -210,9 +210,9 @@ export default function DonationsAdmin() {
                               type="button"
                               onClick={() => setExpandedId(expandedId === d.id ? null : d.id)}
                               className="admin-btn-secondary !px-2.5 !py-1 text-xs font-medium"
-                              title="Lihat rincian donatur"
+                              title="Lihat detail donasi"
                             >
-                              Rincian
+                              Detail
                             </button>
                             <button
                               type="button"

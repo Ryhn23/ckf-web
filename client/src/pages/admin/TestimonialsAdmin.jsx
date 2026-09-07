@@ -110,10 +110,10 @@ export default function TestimonialsAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-            Manajemen Testimoni & Kisah Nyata
+            Testimoni
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Kelola testimoni penerima manfaat, donatur, dan mitra filantropi yang ditampilkan pada situs publik.
+            Kelola testimoni penerima bantuan dan mitra.
           </p>
         </div>
       </div>
@@ -125,7 +125,7 @@ export default function TestimonialsAdmin() {
           className="admin-card h-fit p-6 lg:col-span-4 lg:sticky lg:top-20 lg:self-start space-y-4"
         >
           <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
-            {editingId ? 'Perbarui Testimoni' : 'Tambah Testimoni Baru'}
+            {editingId ? 'Edit Testimoni' : 'Tambah Testimoni'}
           </h2>
 
           <div>
@@ -144,7 +144,7 @@ export default function TestimonialsAdmin() {
 
           <div>
             <label htmlFor="t_role" className="label text-xs">
-              Peran / Status Lembaga
+              Peran / Status
             </label>
             <input
               id="t_role"
@@ -152,13 +152,13 @@ export default function TestimonialsAdmin() {
               value={form.role}
               onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
               className="input text-xs"
-              placeholder="Contoh: Penerima Beasiswa Pendidikan"
+              placeholder="Contoh: Penerima Beasiswa"
             />
           </div>
 
           <div>
             <label htmlFor="t_quote" className="label text-xs">
-              Kutipan Pernyataan / Testimoni
+              Isi Testimoni
             </label>
             <textarea
               id="t_quote"
@@ -167,13 +167,13 @@ export default function TestimonialsAdmin() {
               value={form.quote}
               onChange={(e) => setForm((f) => ({ ...f, quote: e.target.value }))}
               className="input text-xs"
-              placeholder="Tuliskan pengalaman atau pesan kesan..."
+              placeholder="Tulis testimoni atau kesan pesan..."
             />
           </div>
 
           <div>
             <label htmlFor="t_avatar" className="label text-xs">
-              URL Foto / Avatar (Opsional)
+              Foto / Avatar (Opsional)
             </label>
             <input
               id="t_avatar"
@@ -186,7 +186,7 @@ export default function TestimonialsAdmin() {
 
           <div>
             <label htmlFor="t_order" className="label text-xs">
-              Urutan Tampil
+              Urutan
             </label>
             <input
               id="t_order"

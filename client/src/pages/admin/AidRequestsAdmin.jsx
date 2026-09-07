@@ -128,15 +128,15 @@ export default function AidRequestsAdmin() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
-            Permintaan Bantuan Majelis & Lembaga
+            Permintaan Bantuan
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Kelola, verifikasi administrasi, dan koordinasi permohonan bantuan dana serta barang sarana.
+            Kelola dan verifikasi permohonan bantuan dana atau barang.
           </p>
         </div>
       </div>
 
-      {/* Counter Ringkasan / Metrik Seragam */}
+      {/* Counter Ringkasan */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         <div className="admin-card p-4">
           <div className="flex items-center justify-between">
@@ -159,7 +159,7 @@ export default function AidRequestsAdmin() {
             <StatusBadge status="PENDING" label="Menunggu" />
           </div>
           <p className="mt-3 font-heading text-2xl font-black text-slate-900">{summary.pendingCount || 0}</p>
-          <p className="mt-0.5 text-xs text-slate-400">Perlu ditindaklanjuti</p>
+          <p className="mt-0.5 text-xs text-slate-400">Perlu dicek</p>
         </div>
 
         <div className="admin-card p-4">
@@ -170,7 +170,7 @@ export default function AidRequestsAdmin() {
             <StatusBadge status="REVIEWED" label="Ditinjau" />
           </div>
           <p className="mt-3 font-heading text-2xl font-black text-slate-900">{summary.reviewedCount || 0}</p>
-          <p className="mt-0.5 text-xs text-slate-400">Dalam verifikasi berkas</p>
+          <p className="mt-0.5 text-xs text-slate-400">Sedang dicek</p>
         </div>
 
         <div className="admin-card p-4">
@@ -181,7 +181,7 @@ export default function AidRequestsAdmin() {
             <StatusBadge status="APPROVED" label="Disetujui" />
           </div>
           <p className="mt-3 font-heading text-2xl font-black text-slate-900">{summary.approvedCount || 0}</p>
-          <p className="mt-0.5 text-xs text-slate-400">Siap penyaluran bantuan</p>
+          <p className="mt-0.5 text-xs text-slate-400">Disetujui</p>
         </div>
 
         <div className="admin-card p-4 col-span-2 sm:col-span-1">
@@ -192,7 +192,7 @@ export default function AidRequestsAdmin() {
             <StatusBadge status="REJECTED" label="Ditolak" />
           </div>
           <p className="mt-3 font-heading text-2xl font-black text-slate-900">{summary.rejectedCount || 0}</p>
-          <p className="mt-0.5 text-xs text-slate-400">Tidak memenuhi syarat</p>
+          <p className="mt-0.5 text-xs text-slate-400">Ditolak</p>
         </div>
       </div>
 

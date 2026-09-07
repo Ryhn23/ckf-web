@@ -12,7 +12,7 @@ export async function listCategories() {
   });
 }
 
-export async function createCategory({ name, description, icon }) {
+export async function createCategory({ name, description, icon, target, impact }) {
   const slug = slugify(name);
   const exists = await prisma.category.findFirst({
     where: { OR: [{ name: { equals: name, mode: 'insensitive' } }, { slug }] },
@@ -22,11 +22,19 @@ export async function createCategory({ name, description, icon }) {
   const sortOrder = (await prisma.category.count()) || 0;
 
   return prisma.category.create({
-    data: { name, slug, description: description || null, icon: icon || 'fa-solid fa-circle', sortOrder },
+    data: {
+      name,
+      slug,
+      description: description || null,
+      icon: icon || 'fa-solid fa-circle',
+      sortOrder,
+      target: target || null,
+      impact: impact || null,
+    },
   });
 }
 
-export async function updateCategory(id, { name, description, icon, sortOrder }) {
+export async function updateCategory(id, { name, description, icon, sortOrder, target, impact }) {
   const existing = await prisma.category.findUnique({ where: { id } });
   if (!existing) throw ApiError.notFound('Kategori tidak ditemukan');
 
@@ -48,6 +56,8 @@ export async function updateCategory(id, { name, description, icon, sortOrder })
       ...(icon && { icon }),
       ...(sortOrder !== undefined && { sortOrder }),
       ...(slug !== existing.slug && { slug }),
+      ...(target !== undefined && { target: target || null }),
+      ...(impact !== undefined && { impact: impact || null }),
     },
   });
 }

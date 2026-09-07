@@ -111,18 +111,13 @@ export default function AboutContentAdmin() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* 1. KENDALI VISIBILITAS SEKSI */}
         <div className="card p-6 sm:p-8">
-          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} />
-            </span>
-            <div>
-              <h2 className="font-heading text-base font-bold text-slate-900">
-                Visibilitas Seksi Halaman Tentang Kami
-              </h2>
-              <p className="text-xs text-slate-500">
-                Aktifkan atau sembunyikan bagian-bagian tertentu di halaman Tentang Kami.
-              </p>
-            </div>
+          <div className="border-b border-slate-100 pb-3">
+            <h2 className="font-heading text-base font-bold text-slate-900">
+              Visibilitas Seksi Halaman Tentang Kami
+            </h2>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Pengaturan tampil atau sembunyikan modul konten pada halaman profil lembaga.
+            </p>
           </div>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

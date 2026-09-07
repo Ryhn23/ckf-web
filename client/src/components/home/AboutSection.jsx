@@ -30,8 +30,16 @@ export default function AboutSection() {
       <div className="container-page grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
         {/* Visual */}
         <div className="relative">
-          <div className="flex aspect-[4/3] items-center justify-center rounded-3xl bg-gradient-to-br from-teal-600 via-teal-700 to-teal-900 shadow-card">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} className="text-8xl text-white/40" />
+          <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-teal-600 via-teal-700 to-teal-900 shadow-card">
+            {settings.home_about_image ? (
+              <img
+                src={settings.home_about_image}
+                alt="Profil Yayasan"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} className="text-8xl text-white/40" />
+            )}
           </div>
           {/* Kartu mengambang */}
           <div className="absolute -bottom-6 left-6 flex items-center gap-3 rounded-2xl bg-white p-4 shadow-card">

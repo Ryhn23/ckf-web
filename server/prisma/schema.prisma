@@ -35,6 +35,8 @@ model Category {
   description String?
   icon        String   @default("fa-solid fa-circle")
   sortOrder   Int      @default(0)
+  target      String?
+  impact      String?
   posts       Post[]
 }
 

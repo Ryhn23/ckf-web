@@ -7,7 +7,7 @@ import { parseFaIcon, CATEGORY_ICON_PRESETS } from '../../utils/iconUtils';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 
-const EMPTY_FORM = { name: '', description: '', icon: 'fa-solid fa-circle', sortOrder: 0 };
+const EMPTY_FORM = { name: '', description: '', icon: 'fa-solid fa-circle', sortOrder: 0, target: '', impact: '' };
 
 export default function CategoriesAdmin() {
   const [form, setForm] = useState(EMPTY_FORM);
@@ -27,7 +27,14 @@ export default function CategoriesAdmin() {
 
   function startEdit(cat) {
     setEditingId(cat.id);
-    setForm({ name: cat.name, description: cat.description || '', icon: cat.icon || 'fa-solid fa-circle', sortOrder: cat.sortOrder || 0 });
+    setForm({
+      name: cat.name,
+      description: cat.description || '',
+      icon: cat.icon || 'fa-solid fa-circle',
+      sortOrder: cat.sortOrder || 0,
+      target: cat.target || '',
+      impact: cat.impact || '',
+    });
     setError('');
   }
 
@@ -45,6 +52,8 @@ export default function CategoriesAdmin() {
         description: form.description || null,
         icon: form.icon.trim() || 'fa-solid fa-circle',
         sortOrder: Number(form.sortOrder) || 0,
+        target: form.target.trim() || null,
+        impact: form.impact.trim() || null,
       };
       if (editingId) await updateCategory(editingId, payload);
       else await createCategory(payload);
@@ -94,7 +103,13 @@ export default function CategoriesAdmin() {
           <label htmlFor="description" className="label mt-4">Deskripsi Program</label>
           <textarea id="description" rows={2} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} className="input" placeholder="Uraian singkat ruang lingkup program (opsional)" />
 
-          <div className="grid grid-cols-2 gap-3">
+          <label htmlFor="target" className="label mt-4">Sasaran Penerima Manfaat</label>
+          <input id="target" value={form.target} onChange={(e) => setForm((f) => ({ ...f, target: e.target.value }))} className="input" placeholder="Contoh: Pelajar dhuafa dan santri pelosok" />
+
+          <label htmlFor="impact" className="label mt-4">Capaian & Dampak Utama</label>
+          <input id="impact" value={form.impact} onChange={(e) => setForm((f) => ({ ...f, impact: e.target.value }))} className="input" placeholder="Contoh: 15 Sekolah Terbantu, 3.200 Siswa" />
+
+          <div className="grid grid-cols-2 gap-3 mt-4">
             <div>
               <label htmlFor="icon" className="label">Ikon (FontAwesome)</label>
               <input id="icon" value={form.icon} onChange={(e) => setForm((f) => ({ ...f, icon: e.target.value }))} className="input" placeholder="fa-solid fa-graduation-cap" />
@@ -166,7 +181,21 @@ export default function CategoriesAdmin() {
                     <tr key={cat.id} className="transition hover:bg-slate-50/60">
                       <td className="px-5 py-3">
                         <p className="font-semibold text-slate-800">{cat.name}</p>
-                        {cat.description && <p className="mt-0.5 line-clamp-1 text-xs text-slate-400">{cat.description}</p>}
+                        {cat.description && <p className="mt-0.5 line-clamp-1 text-xs text-slate-500">{cat.description}</p>}
+                        {(cat.target || cat.impact) && (
+                          <div className="mt-1.5 flex flex-wrap gap-1.5">
+                            {cat.target && (
+                              <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600">
+                                <span className="font-medium text-slate-500">Sasaran:</span> {cat.target}
+                              </span>
+                            )}
+                            {cat.impact && (
+                              <span className="inline-flex items-center gap-1 rounded bg-teal-50 px-2 py-0.5 text-[11px] font-medium text-teal-700">
+                                <span className="text-teal-600">Dampak:</span> {cat.impact}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </td>
                       <td className="px-5 py-3">
                         <span className="flex items-center gap-2 text-slate-500">

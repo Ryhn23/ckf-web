@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { parseFaIcon } from '../utils/iconUtils';
 import useFetch from '../hooks/useFetch';
 import { getPosts } from '../api/posts';
 import { getCategories } from '../api/categories';
@@ -64,6 +65,47 @@ export default function BlogIndex() {
       />
 
       <section className="container-page py-10 lg:py-14">
+        {/* Navigasi Kategori (Category Pills) */}
+        {categories.length > 0 && (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => updateParams({ category: '' })}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition ${
+                !category
+                  ? 'bg-teal-700 text-white shadow-sm'
+                  : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+              }`}
+            >
+              Semua Topik
+            </button>
+            {categories.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => updateParams({ category: c.slug })}
+                className={`inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold transition ${
+                  category === c.slug
+                    ? 'bg-teal-700 text-white shadow-sm'
+                    : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <FontAwesomeIcon icon={parseFaIcon(c.icon)} className={category === c.slug ? 'text-teal-200' : 'text-slate-400'} />
+                <span>{c.name}</span>
+                {c._count?.posts != null && (
+                  <span
+                    className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                      category === c.slug ? 'bg-teal-800 text-teal-100' : 'bg-slate-100 text-slate-500'
+                    }`}
+                  >
+                    {c._count.posts}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Filter bar */}
         <div className="card mb-8 flex flex-col gap-4 p-4 md:flex-row md:items-center">
           <div className="relative flex-1">

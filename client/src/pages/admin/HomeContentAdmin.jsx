@@ -7,6 +7,7 @@ import { errMsg } from '../../api/client';
 import { useSettings } from '../../context/SettingsContext';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
+import ImageUploadField from '../../components/admin/ImageUploadField';
 
 function ToggleSwitch({ label, description, checked, onChange, id }) {
   return (
@@ -112,18 +113,13 @@ export default function HomeContentAdmin() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* 1. KENDALI VISIBILITAS MENU PUBLIK */}
         <div className="card p-6 sm:p-8">
-          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} />
-            </span>
-            <div>
-              <h2 className="font-heading text-base font-bold text-slate-900">
-                Visibilitas Menu Navigasi Publik
-              </h2>
-              <p className="text-xs text-slate-500">
-                Tentukan menu dan halaman mana yang aktif ditampilkan di navbar dan footer situs publik.
-              </p>
-            </div>
+          <div className="border-b border-slate-100 pb-3">
+            <h2 className="font-heading text-base font-bold text-slate-900">
+              Visibilitas Menu Navigasi Publik
+            </h2>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Pengaturan tampil atau sembunyikan menu navigasi pada bilah atas (navbar) dan kaki situs (footer).
+            </p>
           </div>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -174,18 +170,13 @@ export default function HomeContentAdmin() {
 
         {/* 2. KENDALI VISIBILITAS SEKSI BERANDA */}
         <div className="card p-6 sm:p-8">
-          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-layer-group']} />
-            </span>
-            <div>
-              <h2 className="font-heading text-base font-bold text-slate-900">
-                Visibilitas Seksi Halaman Utama (Beranda)
-              </h2>
-              <p className="text-xs text-slate-500">
-                Aktifkan atau nonaktifkan seksi-seksi tertentu pada halaman utama.
-              </p>
-            </div>
+          <div className="border-b border-slate-100 pb-3">
+            <h2 className="font-heading text-base font-bold text-slate-900">
+              Visibilitas Seksi Halaman Utama (Beranda)
+            </h2>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Pengaturan aktif atau nonaktif seksi-seksi konten pada halaman muka website.
+            </p>
           </div>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -242,73 +233,293 @@ export default function HomeContentAdmin() {
 
         {/* 3. HERO BANNER UTAMA */}
         <div className="card p-6 sm:p-8">
-          <h2 className="font-heading text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
-            Seksi Hero Banner
-          </h2>
-          <p className="mt-1 text-xs text-slate-400">
-            Teks banner utama jika tidak ada artikel sorotan (featured post) yang dipilih atau sebagai pengantar utama.
-          </p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <div className="sm:col-span-2">
-              <label htmlFor="hero_title" className="label">Judul Utama Banner</label>
-              <input
-                id="hero_title"
-                value={form.hero_title || ''}
-                onChange={(e) => handleChange('hero_title', e.target.value)}
-                className="input"
-                placeholder="Mewujudkan Kemandirian dan Kesejahteraan Masyarakat"
-              />
-            </div>
-            <div className="sm:col-span-2">
-              <label htmlFor="hero_excerpt" className="label">Subjudul / Deskripsi Banner</label>
-              <textarea
-                id="hero_excerpt"
-                rows={3}
-                value={form.hero_excerpt || ''}
-                onChange={(e) => handleChange('hero_excerpt', e.target.value)}
-                className="input"
-                placeholder="Uraian singkat misi yayasan..."
-              />
-            </div>
+          <div className="border-b border-slate-100 pb-3">
+            <h2 className="font-heading text-base font-bold text-slate-900">
+              Seksi Hero Banner &amp; Carousel Beranda
+            </h2>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Pengaturan mode tampilan banner utama, pemilihan sumber konten, serta konfigurasi slide gambar carousel beranda.
+            </p>
+          </div>
+
+          <div className="mt-5 space-y-6">
             <div>
-              <label htmlFor="hero_btn_primary_text" className="label">Teks Tombol Utama</label>
-              <input
-                id="hero_btn_primary_text"
-                value={form.hero_btn_primary_text || ''}
-                onChange={(e) => handleChange('hero_btn_primary_text', e.target.value)}
-                className="input"
-                placeholder="Profil Yayasan"
-              />
+              <label className="label">Mode Sumber Tampilan Hero Banner</label>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition ${
+                  (form.hero_mode || 'featured') === 'featured' ? 'border-teal-700 bg-teal-50/50' : 'border-slate-200 bg-white'
+                }`}>
+                  <input
+                    type="radio"
+                    name="hero_mode"
+                    value="featured"
+                    checked={(form.hero_mode || 'featured') === 'featured'}
+                    onChange={() => handleChange('hero_mode', 'featured')}
+                    className="mt-1 accent-teal-700"
+                  />
+                  <div>
+                    <span className="text-sm font-semibold text-slate-900">Otomatis dari Artikel Unggulan (Featured)</span>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Menampilkan artikel publikasi yang ditandai 'Sematan Beranda Utama' secara dinamis.
+                    </p>
+                  </div>
+                </label>
+
+                <label className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition ${
+                  form.hero_mode === 'custom' ? 'border-teal-700 bg-teal-50/50' : 'border-slate-200 bg-white'
+                }`}>
+                  <input
+                    type="radio"
+                    name="hero_mode"
+                    value="custom"
+                    checked={form.hero_mode === 'custom'}
+                    onChange={() => handleChange('hero_mode', 'custom')}
+                    className="mt-1 accent-teal-700"
+                  />
+                  <div>
+                    <span className="text-sm font-semibold text-slate-900">Slide Carousel Kustom</span>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Menampilkan gambar banner promosi kustom dengan teks dan tombol yang dikonfigurasi di bawah ini.
+                    </p>
+                  </div>
+                </label>
+              </div>
             </div>
-            <div>
-              <label htmlFor="hero_btn_primary_link" className="label">Tautan Tombol Utama</label>
-              <input
-                id="hero_btn_primary_link"
-                value={form.hero_btn_primary_link || ''}
-                onChange={(e) => handleChange('hero_btn_primary_link', e.target.value)}
-                className="input"
-                placeholder="/tentang"
+
+            {/* Konfigurasi Slide 1 */}
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                <h3 className="text-sm font-bold text-slate-900">Slide 1 (Banner Utama)</h3>
+                <span className="rounded bg-teal-100 px-2 py-0.5 text-[11px] font-semibold text-teal-800">Slide Utama</span>
+              </div>
+
+              <ImageUploadField
+                id="hero_slide_1_image"
+                label="Gambar Sampul Slide 1"
+                description="Disarankan rasio 16:9 atau panorama beresolusi minimal 1600x900px."
+                value={form.hero_slide_1_image || ''}
+                onChange={(val) => handleChange('hero_slide_1_image', val)}
               />
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="hero_slide_1_badge" className="label">Label Kategori / Badge</label>
+                  <input
+                    id="hero_slide_1_badge"
+                    value={form.hero_slide_1_badge || ''}
+                    onChange={(e) => handleChange('hero_slide_1_badge', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Contoh: Program Unggulan"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_title" className="label">Judul Utama Banner</label>
+                  <input
+                    id="hero_title"
+                    value={form.hero_title || ''}
+                    onChange={(e) => {
+                      handleChange('hero_title', e.target.value);
+                      handleChange('hero_slide_1_title', e.target.value);
+                    }}
+                    className="input text-sm"
+                    placeholder="Mewujudkan Kemandirian dan Kesejahteraan Masyarakat"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label htmlFor="hero_excerpt" className="label">Deskripsi Singkat Slide</label>
+                  <textarea
+                    id="hero_excerpt"
+                    rows={2}
+                    value={form.hero_excerpt || ''}
+                    onChange={(e) => {
+                      handleChange('hero_excerpt', e.target.value);
+                      handleChange('hero_slide_1_subtitle', e.target.value);
+                    }}
+                    className="input text-sm"
+                    placeholder="Uraian singkat misi yayasan..."
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_btn_primary_text" className="label">Teks Tombol Utama</label>
+                  <input
+                    id="hero_btn_primary_text"
+                    value={form.hero_btn_primary_text || ''}
+                    onChange={(e) => handleChange('hero_btn_primary_text', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Profil Yayasan"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_btn_primary_link" className="label">Tautan Tombol Utama</label>
+                  <input
+                    id="hero_btn_primary_link"
+                    value={form.hero_btn_primary_link || ''}
+                    onChange={(e) => handleChange('hero_btn_primary_link', e.target.value)}
+                    className="input text-sm"
+                    placeholder="/tentang"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_btn_secondary_text" className="label">Teks Tombol Donasi</label>
+                  <input
+                    id="hero_btn_secondary_text"
+                    value={form.hero_btn_secondary_text || ''}
+                    onChange={(e) => handleChange('hero_btn_secondary_text', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Donasi Sekarang"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_btn_secondary_link" className="label">Tautan Tombol Donasi</label>
+                  <input
+                    id="hero_btn_secondary_link"
+                    value={form.hero_btn_secondary_link || ''}
+                    onChange={(e) => handleChange('hero_btn_secondary_link', e.target.value)}
+                    className="input text-sm"
+                    placeholder="/donasi"
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <label htmlFor="hero_btn_secondary_text" className="label">Teks Tombol Donasi</label>
-              <input
-                id="hero_btn_secondary_text"
-                value={form.hero_btn_secondary_text || ''}
-                onChange={(e) => handleChange('hero_btn_secondary_text', e.target.value)}
-                className="input"
-                placeholder="Donasi Sekarang"
+
+            {/* Konfigurasi Slide 2 */}
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                <h3 className="text-sm font-bold text-slate-900">Slide 2 (Opsional)</h3>
+                <span className="rounded bg-slate-200 px-2 py-0.5 text-[11px] font-semibold text-slate-600">Slide Tambahan</span>
+              </div>
+
+              <ImageUploadField
+                id="hero_slide_2_image"
+                label="Gambar Sampul Slide 2"
+                description="Unggah gambar sampul jika ingin mengaktifkan slide kedua."
+                value={form.hero_slide_2_image || ''}
+                onChange={(val) => handleChange('hero_slide_2_image', val)}
               />
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="hero_slide_2_badge" className="label">Label Kategori / Badge</label>
+                  <input
+                    id="hero_slide_2_badge"
+                    value={form.hero_slide_2_badge || ''}
+                    onChange={(e) => handleChange('hero_slide_2_badge', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Contoh: Layanan Kesehatan"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_slide_2_title" className="label">Judul Banner Slide 2</label>
+                  <input
+                    id="hero_slide_2_title"
+                    value={form.hero_slide_2_title || ''}
+                    onChange={(e) => handleChange('hero_slide_2_title', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Pelayanan Medis dan Pos Gizi Balita Dhuafa"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label htmlFor="hero_slide_2_subtitle" className="label">Deskripsi Singkat Slide 2</label>
+                  <textarea
+                    id="hero_slide_2_subtitle"
+                    rows={2}
+                    value={form.hero_slide_2_subtitle || ''}
+                    onChange={(e) => handleChange('hero_slide_2_subtitle', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Uraian kegiatan atau ajakan partisipasi..."
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_slide_2_btn_text" className="label">Teks Tombol Aksi</label>
+                  <input
+                    id="hero_slide_2_btn_text"
+                    value={form.hero_slide_2_btn_text || ''}
+                    onChange={(e) => handleChange('hero_slide_2_btn_text', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Lihat Program"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_slide_2_btn_link" className="label">Tautan Tombol Aksi</label>
+                  <input
+                    id="hero_slide_2_btn_link"
+                    value={form.hero_slide_2_btn_link || ''}
+                    onChange={(e) => handleChange('hero_slide_2_btn_link', e.target.value)}
+                    className="input text-sm"
+                    placeholder="/program"
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <label htmlFor="hero_btn_secondary_link" className="label">Tautan Tombol Donasi</label>
-              <input
-                id="hero_btn_secondary_link"
-                value={form.hero_btn_secondary_link || ''}
-                onChange={(e) => handleChange('hero_btn_secondary_link', e.target.value)}
-                className="input"
-                placeholder="/donasi"
+
+            {/* Konfigurasi Slide 3 */}
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-5 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                <h3 className="text-sm font-bold text-slate-900">Slide 3 (Opsional)</h3>
+                <span className="rounded bg-slate-200 px-2 py-0.5 text-[11px] font-semibold text-slate-600">Slide Tambahan</span>
+              </div>
+
+              <ImageUploadField
+                id="hero_slide_3_image"
+                label="Gambar Sampul Slide 3"
+                description="Unggah gambar sampul jika ingin mengaktifkan slide ketiga."
+                value={form.hero_slide_3_image || ''}
+                onChange={(val) => handleChange('hero_slide_3_image', val)}
               />
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="hero_slide_3_badge" className="label">Label Kategori / Badge</label>
+                  <input
+                    id="hero_slide_3_badge"
+                    value={form.hero_slide_3_badge || ''}
+                    onChange={(e) => handleChange('hero_slide_3_badge', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Contoh: Beasiswa Prestasi"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_slide_3_title" className="label">Judul Banner Slide 3</label>
+                  <input
+                    id="hero_slide_3_title"
+                    value={form.hero_slide_3_title || ''}
+                    onChange={(e) => handleChange('hero_slide_3_title', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Mendukung Generasi Penerus Meraih Cita-Cita"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label htmlFor="hero_slide_3_subtitle" className="label">Deskripsi Singkat Slide 3</label>
+                  <textarea
+                    id="hero_slide_3_subtitle"
+                    rows={2}
+                    value={form.hero_slide_3_subtitle || ''}
+                    onChange={(e) => handleChange('hero_slide_3_subtitle', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Uraian program beasiswa..."
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_slide_3_btn_text" className="label">Teks Tombol Aksi</label>
+                  <input
+                    id="hero_slide_3_btn_text"
+                    value={form.hero_slide_3_btn_text || ''}
+                    onChange={(e) => handleChange('hero_slide_3_btn_text', e.target.value)}
+                    className="input text-sm"
+                    placeholder="Donasi Sekarang"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="hero_slide_3_btn_link" className="label">Tautan Tombol Aksi</label>
+                  <input
+                    id="hero_slide_3_btn_link"
+                    value={form.hero_slide_3_btn_link || ''}
+                    onChange={(e) => handleChange('hero_slide_3_btn_link', e.target.value)}
+                    className="input text-sm"
+                    placeholder="/donasi"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -511,6 +722,16 @@ export default function HomeContentAdmin() {
                 onChange={(e) => handleChange('home_about_btn_link', e.target.value)}
                 className="input"
                 placeholder="/tentang"
+              />
+            </div>
+            <div className="sm:col-span-2 border-t border-slate-100 pt-4">
+              <ImageUploadField
+                id="home_about_image"
+                label="Gambar Visual Profil di Beranda"
+                description="Unggah foto kegiatan, gedung sekretariat, atau dokumentasi yayasan untuk ditampilkan di samping teks profil beranda."
+                value={form.home_about_image || ''}
+                onChange={(val) => handleChange('home_about_image', val)}
+                aspectRatio="aspect-[4/3]"
               />
             </div>
           </div>
@@ -753,6 +974,16 @@ export default function HomeContentAdmin() {
                 onChange={(e) => handleChange('home_cta_btn2_link', e.target.value)}
                 className="input"
                 placeholder="/program"
+              />
+            </div>
+            <div className="sm:col-span-2 border-t border-slate-100 pt-4">
+              <ImageUploadField
+                id="home_cta_bg_image"
+                label="Gambar Latar Belakang Banner Ajakan (Opsional)"
+                description="Unggah gambar latar banner ajakan donasi. Sistem akan menerapkan lapisan gelap transparan agar teks tetap jelas terbaca."
+                value={form.home_cta_bg_image || ''}
+                onChange={(val) => handleChange('home_cta_bg_image', val)}
+                aspectRatio="aspect-[21/9]"
               />
             </div>
           </div>

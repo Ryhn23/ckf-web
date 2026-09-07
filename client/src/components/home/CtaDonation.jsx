@@ -21,6 +21,18 @@ export default function CtaDonation() {
     <section className="bg-white">
       <div className="container-page py-16 lg:py-24">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-800 to-teal-900 px-6 py-14 text-center shadow-card md:px-16">
+          {/* Latar Belakang Gambar jika disetel */}
+          {settings.home_cta_bg_image && (
+            <>
+              <img
+                src={settings.home_cta_bg_image}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-teal-950/85 backdrop-blur-[2px]" />
+            </>
+          )}
+
           {/* Dekorasi */}
           <div className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-white/5" />
           <div className="pointer-events-none absolute -bottom-20 -right-12 h-64 w-64 rounded-full bg-amber-400/10" />

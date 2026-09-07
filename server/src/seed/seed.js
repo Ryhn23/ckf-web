@@ -22,12 +22,54 @@ const SEED_DIR = path.join(UPLOAD_DIR, 'seed');
 /* ------------------------------------------------------------------ */
 
 const CATEGORIES = [
-  { name: 'Pendidikan', slug: 'pendidikan', icon: 'fa-solid fa-graduation-cap', description: 'Program pendidikan dan literasi' },
-  { name: 'Kesehatan', slug: 'kesehatan', icon: 'fa-solid fa-heart-pulse', description: 'Kegiatan kesehatan masyarakat' },
-  { name: 'Beasiswa', slug: 'beasiswa', icon: 'fa-solid fa-hand-holding-dollar', description: 'Penyaluran beasiswa pendidikan' },
-  { name: 'Sosial', slug: 'sosial', icon: 'fa-solid fa-earth-asia', description: 'Kegiatan sosial & lingkungan' },
-  { name: 'Kegiatan Internal', slug: 'kegiatan-internal', icon: 'fa-solid fa-users', description: 'Aktivitas internal yayasan' },
-  { name: 'Pengumuman', slug: 'pengumuman', icon: 'fa-solid fa-bullhorn', description: 'Informasi resmi yayasan' },
+  {
+    name: 'Pendidikan',
+    slug: 'pendidikan',
+    icon: 'fa-solid fa-graduation-cap',
+    description: 'Penyediaan sarana belajar, renovasi fasilitas madrasah dan sekolah binaan, serta pelatihan literasi baca tulis anak-anak di pelosok.',
+    target: 'Pelajar tingkat dasar hingga menengah di daerah prasejahtera dan daerah 3T',
+    impact: '15+ Gedung Sekolah Terevitalisasi, 3.200 Siswa Terfasilitasi',
+  },
+  {
+    name: 'Kesehatan',
+    slug: 'kesehatan',
+    icon: 'fa-solid fa-heart-pulse',
+    description: 'Layanan klinik keliling gratis, pemeriksaan kesehatan berkala lansia, khitanan massal dhuafa, serta intervensi nutrisi pencegah stunting balita.',
+    target: 'Keluarga dhuafa, balita rawan stunting, dan lansia tanpa jaminan kesehatan',
+    impact: '4.800+ Pasien Terlayani, 6 Pos Gizi Balita Beroperasi',
+  },
+  {
+    name: 'Beasiswa',
+    slug: 'beasiswa',
+    icon: 'fa-solid fa-hand-holding-dollar',
+    description: 'Program bantuan biaya pendidikan menyeluruh, uang saku bulanan, serta pembinaan karakter intensif bagi anak yatim dan dhuafa berprestasi.',
+    target: 'Anak yatim, piatu, dan santri berprestasi dari keluarga tidak mampu',
+    impact: '120+ Penerima Beasiswa Aktif, 45 Alumni Telah Lulus PTN',
+  },
+  {
+    name: 'Sosial',
+    slug: 'sosial',
+    icon: 'fa-solid fa-earth-asia',
+    description: 'Bantuan pangan pokok rutin, pemberdayaan ekonomi modal usaha mikro perempuan, dan aksi tanggap darurat bencana alam terpadu.',
+    target: 'Janda prasejahtera, kepala keluarga berpenghasilan rendah, korban bencana',
+    impact: '10.000+ Paket Pangan Terdistribusi, 85 Usaha Mikro Terbantu',
+  },
+  {
+    name: 'Kegiatan Internal',
+    slug: 'kegiatan-internal',
+    icon: 'fa-solid fa-users',
+    description: 'Rapat kerja koordinasi, konsolidasi relawan kemanusiaan, serta pelatihan peningkatan kapasitas tata kelola amil yayasan.',
+    target: 'Staf pengurus, relawan penggerak lapangan, dan mitra kelembagaan yayasan',
+    impact: '800+ Relawan Terlatih, Tata Kelola Akuntabel',
+  },
+  {
+    name: 'Pengumuman',
+    slug: 'pengumuman',
+    icon: 'fa-solid fa-bullhorn',
+    description: 'Rilis pers resmi, laporan tahunan berkala, pengumuman seleksi beasiswa, dan transparansi pertanggungjawaban publik yayasan.',
+    target: 'Masyarakat umum, donatur setia, mitra korporasi, dan pemangku kepentingan',
+    impact: 'Transparansi Audit Publik Wajar Tanpa Pengecualian (WTP)',
+  },
 ];
 
 const POSTS = [
@@ -417,7 +459,7 @@ async function seed() {
   for (const [i, cat] of CATEGORIES.entries()) {
     const c = await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: { name: cat.name, icon: cat.icon, description: cat.description, sortOrder: i },
+      update: { name: cat.name, icon: cat.icon, description: cat.description, target: cat.target, impact: cat.impact, sortOrder: i },
       create: { ...cat, sortOrder: i },
     });
     categoryMap[cat.slug] = c;

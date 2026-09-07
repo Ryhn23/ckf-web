@@ -144,12 +144,15 @@ export async function getPostById(id) {
 }
 
 /** Buat post baru. */
-export async function createPost({ title, slug: customSlug, excerpt, content, categoryId, isFeatured, status, tags }, coverUrl, authorId) {
+export async function createPost({ title, slug: customSlug, excerpt, content, categoryId, isFeatured, status, tags, publishedAt: customPublishedAt }, coverUrl, authorId) {
   const category = await prisma.category.findUnique({ where: { id: categoryId } });
   if (!category) throw ApiError.badRequest('Kategori tidak valid');
 
   const slug = await uniqueSlug(customSlug || title);
-  const publishedAt = status === 'PUBLISHED' ? new Date() : null;
+  let publishedAt = null;
+  if (status === 'PUBLISHED') {
+    publishedAt = customPublishedAt ? new Date(customPublishedAt) : new Date();
+  }
 
   return prisma.post.create({
     data: {
@@ -169,7 +172,7 @@ export async function createPost({ title, slug: customSlug, excerpt, content, ca
 }
 
 /** Update post. */
-export async function updatePost(id, { title, slug: customSlug, excerpt, content, categoryId, isFeatured, status, tags, removeCover }, coverUrl) {
+export async function updatePost(id, { title, slug: customSlug, excerpt, content, categoryId, isFeatured, status, tags, removeCover, publishedAt: customPublishedAt }, coverUrl) {
   const existing = await prisma.post.findUnique({ where: { id } });
   if (!existing) throw ApiError.notFound('Post tidak ditemukan');
 
@@ -193,6 +196,15 @@ export async function updatePost(id, { title, slug: customSlug, excerpt, content
     newCoverImage = null;
   }
 
+  let publishedAt = undefined;
+  if (customPublishedAt) {
+    publishedAt = new Date(customPublishedAt);
+  } else if (customPublishedAt === null) {
+    publishedAt = null;
+  } else if (statusChanged && status === 'PUBLISHED' && !existing.publishedAt) {
+    publishedAt = new Date();
+  }
+
   return prisma.post.update({
     where: { id },
     data: {
@@ -203,7 +215,7 @@ export async function updatePost(id, { title, slug: customSlug, excerpt, content
       ...(categoryId && { categoryId }),
       ...(isFeatured !== undefined && { isFeatured: !!isFeatured }),
       ...(status && { status }),
-      ...(statusChanged && status === 'PUBLISHED' && existing.status !== 'PUBLISHED' && { publishedAt: new Date() }),
+      ...(publishedAt !== undefined && { publishedAt }),
       ...(tags !== undefined && { tags: Array.isArray(tags) ? tags : [] }),
       ...(newCoverImage !== undefined && { coverImage: newCoverImage }),
     },

@@ -19,6 +19,14 @@ function slugify(text) {
     .replace(/^-+|-+$/g, '');
 }
 
+function toDateTimeLocal(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '';
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 const EMPTY_FORM = {
   title: '',
   slug: '',
@@ -28,6 +36,7 @@ const EMPTY_FORM = {
   isFeatured: false,
   tags: '',
   content: '',
+  publishedAt: '',
 };
 
 export default function PostEditor() {
@@ -64,6 +73,7 @@ export default function PostEditor() {
       isFeatured: !!p.isFeatured,
       tags: Array.isArray(p.tags) ? p.tags.join(', ') : '',
       content: p.content || '',
+      publishedAt: toDateTimeLocal(p.publishedAt),
     });
     setExistingCover(p.coverImage || '');
     setRemovedCover(false);
@@ -115,6 +125,9 @@ export default function PostEditor() {
     fd.append('status', targetStatus);
     fd.append('isFeatured', String(form.isFeatured));
     fd.append('tags', form.tags || '');
+    if (form.publishedAt) {
+      fd.append('publishedAt', new Date(form.publishedAt).toISOString());
+    }
     if (coverFile) {
       fd.append('cover', coverFile);
     } else if (removedCover) {
@@ -353,6 +366,22 @@ export default function PostEditor() {
                 <option value="DRAFT">Draf Dokumen (Tersimpan Privat)</option>
                 <option value="PUBLISHED">Terbit (Dapat Diakses Publik)</option>
               </select>
+            </div>
+
+            <div className="mt-4">
+              <label htmlFor="publishedAt" className="label">
+                Waktu &amp; Tanggal Rilis Artikel
+              </label>
+              <input
+                id="publishedAt"
+                type="datetime-local"
+                value={form.publishedAt}
+                onChange={(e) => set('publishedAt', e.target.value)}
+                className="input text-sm"
+              />
+              <p className="mt-1.5 text-xs text-slate-400">
+                Atur tanggal rilis artikel. Anda dapat mengatur tanggal lampau untuk dokumentasi arsip kegiatan yayasan.
+              </p>
             </div>
 
             <div className="mt-5 rounded-xl border border-slate-100 bg-slate-50 p-4">

@@ -167,8 +167,16 @@ function SidebarContent({ onNavigate }) {
                       }`
                     }
                   >
-                    <FontAwesomeIcon icon={['fa-solid', subItem.icon]} className="w-3.5 text-center text-[11px]" />
-                    {subItem.label}
+                    {({ isActive }) => (
+                      <>
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full transition-all ${
+                            isActive ? 'bg-white scale-125' : 'bg-slate-300'
+                          }`}
+                        />
+                        <span className="truncate">{subItem.label}</span>
+                      </>
+                    )}
                   </NavLink>
                 ))}
               </div>

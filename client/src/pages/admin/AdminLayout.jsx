@@ -96,7 +96,7 @@ function SidebarContent({ onNavigate }) {
   };
 
   return (
-    <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-4">
+    <nav className="flex-1 space-y-1.5 overflow-y-auto no-scrollbar px-3 py-4">
       {MENU_STRUCTURE.map((entry) => {
         if (entry.type === 'single') {
           return (
@@ -398,7 +398,7 @@ export default function AdminLayout() {
             </Link>
 
             <div className="flex items-center gap-2.5 pl-1 pr-1 border-l border-slate-200">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 border border-teal-200 text-sm font-bold text-teal-800 shadow-xs">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700">
                 {user?.name?.[0]?.toUpperCase() || 'A'}
               </span>
               <div className="hidden md:block">
@@ -410,7 +410,7 @@ export default function AdminLayout() {
             <button
               type="button"
               onClick={handleLogout}
-              className="admin-btn-danger !px-3 !py-1.5 text-xs font-semibold"
+              className="admin-btn-secondary !px-2.5 !py-1.5 text-xs text-slate-600 hover:text-rose-600 hover:border-rose-200 transition"
               title="Logout"
             >
               <FontAwesomeIcon icon={['fa-solid', 'fa-right-from-bracket']} />
@@ -419,7 +419,7 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        <main className="w-full p-4 sm:p-6 lg:p-8 xl:p-10">
+        <main className="w-full p-4 sm:p-5 lg:p-6">
           <Outlet />
         </main>
       </div>

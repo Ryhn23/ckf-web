@@ -140,7 +140,7 @@ export default function AidRequestsAdmin() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         <div className="admin-card p-4">
           <div className="flex items-center justify-between">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-700 border border-teal-100">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
               <FontAwesomeIcon icon={['fa-solid', 'fa-inbox']} className="text-xs" />
             </span>
             <span className="text-[11px] font-bold text-slate-400 uppercase">Total</span>
@@ -153,7 +153,7 @@ export default function AidRequestsAdmin() {
 
         <div className="admin-card p-4">
           <div className="flex items-center justify-between">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-700 border border-amber-100">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
               <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-xs" />
             </span>
             <StatusBadge status="PENDING" label="Menunggu" />
@@ -164,7 +164,7 @@ export default function AidRequestsAdmin() {
 
         <div className="admin-card p-4">
           <div className="flex items-center justify-between">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 text-sky-700 border border-sky-100">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
               <FontAwesomeIcon icon={['fa-solid', 'fa-user-check']} className="text-xs" />
             </span>
             <StatusBadge status="REVIEWED" label="Ditinjau" />
@@ -175,7 +175,7 @@ export default function AidRequestsAdmin() {
 
         <div className="admin-card p-4">
           <div className="flex items-center justify-between">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
               <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-xs" />
             </span>
             <StatusBadge status="APPROVED" label="Disetujui" />
@@ -186,7 +186,7 @@ export default function AidRequestsAdmin() {
 
         <div className="admin-card p-4 col-span-2 sm:col-span-1">
           <div className="flex items-center justify-between">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-50 text-rose-700 border border-rose-100">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
               <FontAwesomeIcon icon={['fa-solid', 'fa-ban']} className="text-xs" />
             </span>
             <StatusBadge status="REJECTED" label="Ditolak" />

@@ -12,11 +12,11 @@ import { formatDate } from '../../utils/formatDate';
 function CustomTooltip({ active, payload, label }) {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-xl border border-slate-700/50 bg-slate-900/95 px-3.5 py-2.5 text-xs text-white shadow-xl backdrop-blur">
+      <div className="rounded-lg border border-slate-700/60 bg-slate-900/95 px-3 py-2 text-xs text-white shadow-lg backdrop-blur">
         <p className="font-semibold text-teal-300">{label}</p>
-        <p className="mt-1 font-heading text-sm font-bold text-white">
+        <p className="mt-0.5 font-heading text-xs font-bold text-white">
           {Number(payload[0].value).toLocaleString('id-ID')}{' '}
-          <span className="font-sans text-xs font-normal text-slate-300">pembaca</span>
+          <span className="font-sans text-[11px] font-normal text-slate-300">pembaca</span>
         </p>
       </div>
     );
@@ -41,254 +41,208 @@ export default function Dashboard() {
   const chartData = (stats.viewsByCategory || []).map((r) => ({ ...r, name: r.category }));
 
   return (
-    <div className="space-y-7">
-      {/* Header Dashboard */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
+    <div className="space-y-4 sm:space-y-5">
+      {/* Header Dashboard Compact */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-3 sm:pb-4">
         <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
             Dashboard
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Ringkasan data artikel, donasi, dan permintaan bantuan.
+          <p className="text-xs text-slate-500">
+            Ringkasan performa dan aktivitas situs.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <Link to="/admin/posts/new" className="admin-btn-primary">
+          <Link to="/admin/posts/new" className="admin-btn-primary !py-1.5 !px-3 text-xs">
             <FontAwesomeIcon icon={['fa-solid', 'fa-plus']} />
             <span>Tulis Artikel</span>
           </Link>
-          <Link to="/admin/settings" className="admin-btn-secondary">
+          <Link to="/admin/settings" className="admin-btn-secondary !py-1.5 !px-3 text-xs">
             <FontAwesomeIcon icon={['fa-solid', 'fa-sliders']} />
             <span className="hidden sm:inline">Pengaturan</span>
           </Link>
         </div>
       </div>
 
-      {/* Baris 1: Artikel & Statistik */}
-      <div>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Artikel & Statistik
-          </h2>
-          <Link to="/admin/posts" className="text-xs font-semibold text-teal-700 hover:underline">
-            Semua Artikel →
-          </Link>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="admin-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50 text-sky-700 border border-sky-100">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} className="text-base" />
+      {/* Grid 6 Ringkasan Metrik Compact */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
+        {/* Total Donasi */}
+        <Link
+          to="/admin/donations"
+          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} />
+            </span>
+            {Number(stats.pendingDonations || 0) > 0 && (
+              <span className="rounded-full bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800">
+                {stats.pendingDonations} Menunggu
               </span>
-              <span className="text-[11px] font-semibold text-slate-400">Total</span>
-            </div>
-            <div className="mt-4">
-              <p className="font-heading text-2xl font-extrabold tracking-tight text-slate-900">
-                {Number(stats.totalViews || 0).toLocaleString('id-ID')}
-              </p>
-              <p className="mt-1 text-xs font-medium text-slate-500">
-                Total pembaca artikel
-              </p>
-            </div>
+            )}
           </div>
+          <div className="mt-3">
+            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900 truncate">
+              Rp {Number(stats.totalDonationAmount || 0).toLocaleString('id-ID')}
+            </p>
+            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+              Total Donasi ({stats.totalDonations || 0})
+            </p>
+          </div>
+        </Link>
 
-          <div className="admin-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-base" />
+        {/* Permintaan Bantuan */}
+        <Link
+          to="/admin/aid-requests"
+          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} />
+            </span>
+            {Number(stats.pendingAidRequests || 0) > 0 && (
+              <span className="rounded-full bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800">
+                {stats.pendingAidRequests} Menunggu
               </span>
-              <StatusBadge status="PUBLISHED" label="Terbit" />
-            </div>
-            <div className="mt-4">
-              <p className="font-heading text-2xl font-extrabold tracking-tight text-slate-900">
-                {Number(stats.published || 0).toLocaleString('id-ID')}
-              </p>
-              <p className="mt-1 text-xs font-medium text-slate-500">
-                Artikel terbit
-              </p>
-            </div>
+            )}
           </div>
+          <div className="mt-3">
+            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+              {Number(stats.totalAidRequests || 0).toLocaleString('id-ID')}
+            </p>
+            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+              Permintaan Bantuan
+            </p>
+          </div>
+        </Link>
 
-          <div className="admin-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-700 border border-amber-100">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-file-lines']} className="text-base" />
+        {/* Pesan Masuk */}
+        <Link
+          to="/admin/contact"
+          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} />
+            </span>
+            {Number(stats.unreadMessages || 0) > 0 && (
+              <span className="rounded-full bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800">
+                {stats.unreadMessages} Baru
               </span>
-              <StatusBadge status="DRAFT" label="Draft" />
-            </div>
-            <div className="mt-4">
-              <p className="font-heading text-2xl font-extrabold tracking-tight text-slate-900">
-                {Number(stats.drafts || 0).toLocaleString('id-ID')}
-              </p>
-              <p className="mt-1 text-xs font-medium text-slate-500">
-                Belum terbit
-              </p>
-            </div>
+            )}
           </div>
+          <div className="mt-3">
+            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+              {Number(stats.unreadMessages || 0).toLocaleString('id-ID')}
+            </p>
+            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+              Pesan Masuk
+            </p>
+          </div>
+        </Link>
 
-          <div className="admin-card p-5">
-            <div className="flex items-center justify-between">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-50 text-purple-700 border border-purple-100">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-tags']} className="text-base" />
-              </span>
-              <span className="text-[11px] font-semibold text-slate-400">Kategori</span>
-            </div>
-            <div className="mt-4">
-              <p className="font-heading text-2xl font-extrabold tracking-tight text-slate-900">
-                {Number(stats.categoryCount || 0).toLocaleString('id-ID')}
-              </p>
-              <p className="mt-1 text-xs font-medium text-slate-500">
-                Kategori artikel
-              </p>
-            </div>
+        {/* Total Pembaca */}
+        <Link
+          to="/admin/posts"
+          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} />
+            </span>
           </div>
-        </div>
+          <div className="mt-3">
+            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+              {Number(stats.totalViews || 0).toLocaleString('id-ID')}
+            </p>
+            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+              Total Pembaca
+            </p>
+          </div>
+        </Link>
+
+        {/* Artikel Terbit */}
+        <Link
+          to="/admin/posts"
+          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-newspaper']} />
+            </span>
+            {Number(stats.drafts || 0) > 0 && (
+              <span className="rounded-full bg-slate-100 border border-slate-200 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
+                {stats.drafts} Draft
+              </span>
+            )}
+          </div>
+          <div className="mt-3">
+            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+              {Number(stats.published || 0).toLocaleString('id-ID')}
+            </p>
+            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+              Artikel Terbit
+            </p>
+          </div>
+        </Link>
+
+        {/* Kategori */}
+        <Link
+          to="/admin/categories"
+          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-tags']} />
+            </span>
+          </div>
+          <div className="mt-3">
+            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+              {Number(stats.categoryCount || 0).toLocaleString('id-ID')}
+            </p>
+            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+              Kategori Aktif
+            </p>
+          </div>
+        </Link>
       </div>
 
-      {/* Baris 2: Donasi & Permintaan Bantuan */}
-      <div>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Donasi & Permintaan Bantuan
-          </h2>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <Link
-            to="/admin/donations"
-            className="admin-card-interactive p-5 group flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100">
-                  <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} className="text-base" />
-                </span>
-                {Number(stats.pendingDonations || 0) > 0 ? (
-                  <StatusBadge status="PENDING" label={`${stats.pendingDonations} Menunggu`} />
-                ) : (
-                  <span className="text-xs font-medium text-slate-400">Selesai</span>
-                )}
-              </div>
-              <div className="mt-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Total Donasi
-                </p>
-                <p className="font-heading text-2xl font-black text-slate-900 mt-1">
-                  Rp {Number(stats.totalDonationAmount || 0).toLocaleString('id-ID')}
-                </p>
-              </div>
-            </div>
-            <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
-              <span>{stats.totalDonations || 0} transaksi</span>
-              <span className="font-semibold text-teal-700 group-hover:underline">Lihat Donasi →</span>
-            </div>
-          </Link>
-
-          <Link
-            to="/admin/aid-requests"
-            className="admin-card-interactive p-5 group flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-700 border border-teal-100">
-                  <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} className="text-base" />
-                </span>
-                {Number(stats.pendingAidRequests || 0) > 0 ? (
-                  <StatusBadge status="PENDING" label={`${stats.pendingAidRequests} Menunggu`} />
-                ) : (
-                  <span className="text-xs font-medium text-slate-400">Selesai</span>
-                )}
-              </div>
-              <div className="mt-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Permintaan Bantuan
-                </p>
-                <p className="font-heading text-2xl font-black text-slate-900 mt-1">
-                  {Number(stats.totalAidRequests || 0).toLocaleString('id-ID')}{' '}
-                  <span className="font-sans text-base font-normal text-slate-500">Permintaan</span>
-                </p>
-              </div>
-            </div>
-            <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
-              <span>Dana & barang</span>
-              <span className="font-semibold text-teal-700 group-hover:underline">Lihat Permintaan →</span>
-            </div>
-          </Link>
-
-          <Link
-            to="/admin/contact"
-            className="admin-card-interactive p-5 group flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50 text-sky-700 border border-sky-100">
-                  <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} className="text-base" />
-                </span>
-                {Number(stats.unreadMessages || 0) > 0 ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 border border-rose-200 px-2.5 py-0.5 text-xs font-bold text-rose-700">
-                    <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-ping" />
-                    {stats.unreadMessages} Pesan Baru
-                  </span>
-                ) : (
-                  <span className="text-xs font-medium text-slate-400">Semua dibaca</span>
-                )}
-              </div>
-              <div className="mt-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Pesan Masuk
-                </p>
-                <p className="font-heading text-2xl font-black text-slate-900 mt-1">
-                  {Number(stats.unreadMessages || 0).toLocaleString('id-ID')}{' '}
-                  <span className="font-sans text-base font-normal text-slate-500">Belum dibaca</span>
-                </p>
-              </div>
-            </div>
-            <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
-              <span>Kontak & pesan</span>
-              <span className="font-semibold text-teal-700 group-hover:underline">Lihat Pesan →</span>
-            </div>
-          </Link>
-        </div>
-      </div>
-
-      {/* Baris 3: Grafik & Artikel Terbaru */}
-      <div className="grid gap-6 lg:grid-cols-5">
+      {/* Grafik & Artikel Terbaru Compact */}
+      <div className="grid gap-4 lg:grid-cols-5">
         {/* Grafik views per kategori */}
-        <div className="admin-card p-6 lg:col-span-3">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div className="admin-card p-3.5 sm:p-4 lg:col-span-3 flex flex-col">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
             <div>
-              <h2 className="font-heading text-base font-bold text-slate-900">
+              <h2 className="font-heading text-sm font-bold text-slate-900">
                 Pembaca per Kategori
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Statistik pembaca berdasarkan kategori artikel
+              <p className="text-[11px] text-slate-400">
+                Statistik tayangan berdasarkan kategori artikel
               </p>
             </div>
-            <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-              Statistik
-            </span>
           </div>
 
           {chartData.length === 0 ? (
-            <div className="flex h-72 flex-col items-center justify-center text-center">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-chart-simple']} className="text-3xl text-slate-300 mb-2" />
-              <p className="text-sm font-semibold text-slate-600">Belum Ada Data</p>
-              <p className="text-xs text-slate-400 mt-0.5">Data akan muncul setelah ada artikel yang dibaca.</p>
+            <div className="flex flex-1 min-h-[170px] flex-col items-center justify-center text-center">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-chart-simple']} className="text-2xl text-slate-300 mb-1.5" />
+              <p className="text-xs font-semibold text-slate-600">Belum Ada Data</p>
+              <p className="text-[11px] text-slate-400">Data akan muncul setelah ada artikel yang dibaca.</p>
             </div>
           ) : (
-            <div className="mt-6 h-72">
+            <div className="mt-2.5 flex-1 min-h-[175px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 12, right: 12, left: -20, bottom: 0 }}>
+                <BarChart data={chartData} margin={{ top: 8, right: 8, left: -24, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis
                     dataKey="name"
-                    tick={{ fontSize: 12, fill: '#64748b' }}
+                    tick={{ fontSize: 11, fill: '#64748b' }}
                     interval={0}
                     axisLine={{ stroke: '#e2e8f0' }}
                     tickLine={false}
                   />
                   <YAxis
-                    tick={{ fontSize: 12, fill: '#64748b' }}
+                    tick={{ fontSize: 11, fill: '#64748b' }}
                     allowDecimals={false}
                     axisLine={false}
                     tickLine={false}
@@ -298,8 +252,8 @@ export default function Dashboard() {
                     dataKey="views"
                     name="Tayangan"
                     fill="#0f766e"
-                    radius={[8, 8, 0, 0]}
-                    maxBarSize={44}
+                    radius={[5, 5, 0, 0]}
+                    maxBarSize={32}
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -308,35 +262,35 @@ export default function Dashboard() {
         </div>
 
         {/* Artikel terbaru */}
-        <div className="admin-card p-6 lg:col-span-2 flex flex-col justify-between">
+        <div className="admin-card p-3.5 sm:p-4 lg:col-span-2 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
               <div>
-                <h2 className="font-heading text-base font-bold text-slate-900">Artikel Terbaru</h2>
-                <p className="text-xs text-slate-500 mt-0.5">Artikel yang baru diperbarui</p>
+                <h2 className="font-heading text-sm font-bold text-slate-900">Artikel Terbaru</h2>
+                <p className="text-[11px] text-slate-400">Baru diperbarui</p>
               </div>
               <Link to="/admin/posts" className="text-xs font-semibold text-teal-700 hover:underline">
-                Semua
+                Semua →
               </Link>
             </div>
 
             {stats.recentPosts?.length === 0 ? (
-              <div className="py-12 text-center text-sm text-slate-400">
+              <div className="py-6 text-center text-xs text-slate-400">
                 Belum ada artikel.
               </div>
             ) : (
-              <ul className="mt-3 divide-y divide-slate-100">
-                {stats.recentPosts.map((post) => (
-                  <li key={post.id} className="py-2.5 first:pt-1 last:pb-1">
+              <ul className="mt-1 divide-y divide-slate-100">
+                {stats.recentPosts.slice(0, 4).map((post) => (
+                  <li key={post.id} className="py-1.5 first:pt-1 last:pb-0">
                     <Link
                       to={`/admin/posts/${post.id}/edit`}
-                      className="group block rounded-xl p-2 transition hover:bg-slate-50"
+                      className="group block rounded-lg px-2 py-1 transition hover:bg-slate-50"
                     >
-                      <p className="line-clamp-1 text-sm font-semibold text-slate-800 group-hover:text-teal-700">
+                      <p className="line-clamp-1 text-xs font-semibold text-slate-800 group-hover:text-teal-700">
                         {post.title}
                       </p>
-                      <div className="mt-1.5 flex items-center gap-2 text-xs text-slate-400">
-                        <StatusBadge status={post.status} />
+                      <div className="mt-0.5 flex items-center gap-2 text-[11px] text-slate-400">
+                        {post.status !== 'PUBLISHED' && <StatusBadge status={post.status} />}
                         <span className="font-medium text-slate-500">{post.category?.name || 'Umum'}</span>
                         <span>•</span>
                         <span className="flex items-center gap-1 text-slate-400">
@@ -352,15 +306,8 @@ export default function Dashboard() {
               </ul>
             )}
           </div>
-
-          <div className="border-t border-slate-100 pt-4 mt-4 text-center">
-            <Link to="/admin/posts/new" className="text-xs font-semibold text-teal-700 hover:underline">
-              + Tulis Artikel Baru
-            </Link>
-          </div>
         </div>
       </div>
     </div>
   );
 }
-

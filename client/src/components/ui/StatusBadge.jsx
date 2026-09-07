@@ -1,23 +1,23 @@
 const VARIANT_MAP = {
   emerald: {
-    badge: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
-    dot: 'bg-emerald-500',
+    badge: 'bg-emerald-50/80 text-emerald-800 border-emerald-200/60',
+    dot: 'bg-emerald-600',
   },
   amber: {
-    badge: 'bg-amber-50 text-amber-700 border-amber-200/80',
+    badge: 'bg-amber-50/80 text-amber-800 border-amber-200/60',
     dot: 'bg-amber-500',
   },
   sky: {
-    badge: 'bg-sky-50 text-sky-700 border-sky-200/80',
-    dot: 'bg-sky-500',
+    badge: 'bg-slate-100 text-slate-700 border-slate-200',
+    dot: 'bg-slate-500',
   },
   rose: {
-    badge: 'bg-rose-50 text-rose-700 border-rose-200/80',
+    badge: 'bg-rose-50/80 text-rose-700 border-rose-200/60',
     dot: 'bg-rose-500',
   },
   purple: {
-    badge: 'bg-purple-50 text-purple-700 border-purple-200/80',
-    dot: 'bg-purple-500',
+    badge: 'bg-slate-100 text-slate-700 border-slate-200',
+    dot: 'bg-slate-500',
   },
   slate: {
     badge: 'bg-slate-100 text-slate-700 border-slate-200',
@@ -28,7 +28,7 @@ const VARIANT_MAP = {
 const STATUS_ALIASES = {
   // Publikasi artikel
   PUBLISHED: { variant: 'emerald', label: 'Terbit' },
-  DRAFT: { variant: 'amber', label: 'Draft' },
+  DRAFT: { variant: 'slate', label: 'Draft' },
   ARCHIVED: { variant: 'slate', label: 'Arsip' },
 
   // Donasi
@@ -36,17 +36,17 @@ const STATUS_ALIASES = {
 
   // Permohonan Bantuan
   PENDING: { variant: 'amber', label: 'Menunggu' },
-  REVIEWED: { variant: 'sky', label: 'Ditinjau' },
+  REVIEWED: { variant: 'slate', label: 'Ditinjau' },
   APPROVED: { variant: 'emerald', label: 'Disetujui' },
   REJECTED: { variant: 'rose', label: 'Ditolak' },
 
   // Pesan Kontak
-  UNREAD: { variant: 'sky', label: 'Belum Dibaca' },
+  UNREAD: { variant: 'amber', label: 'Belum Dibaca' },
   READ: { variant: 'slate', label: 'Dibaca' },
 
   // User role
-  ADMIN: { variant: 'purple', label: 'Admin' },
-  EDITOR: { variant: 'sky', label: 'Editor' },
+  ADMIN: { variant: 'slate', label: 'Admin' },
+  EDITOR: { variant: 'slate', label: 'Editor' },
 };
 
 export default function StatusBadge({ status, variant, label, dot = true, className = '' }) {

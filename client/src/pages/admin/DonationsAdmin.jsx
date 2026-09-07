@@ -69,7 +69,7 @@ export default function DonationsAdmin() {
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="admin-card p-5">
           <div className="flex items-center justify-between">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200/80">
               <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} className="text-base" />
             </span>
             <StatusBadge status="PROCESSED" label="Selesai" />
@@ -88,14 +88,14 @@ export default function DonationsAdmin() {
           className="admin-card-interactive cursor-pointer p-5"
         >
           <div className="flex items-center justify-between">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-700 border border-amber-100">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200/80">
               <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-base" />
             </span>
             <StatusBadge status="PENDING" label="Menunggu" />
           </div>
           <div className="mt-4">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Menunggu Verifikasi</p>
-            <p className="font-heading text-2xl font-black text-amber-700 mt-1">
+            <p className="font-heading text-2xl font-black text-slate-900 mt-1">
               {summary.pendingCount || 0} Transaksi
             </p>
             <p className="mt-1 text-xs font-semibold text-teal-700">Klik untuk filter →</p>
@@ -104,7 +104,7 @@ export default function DonationsAdmin() {
 
         <div className="admin-card p-5">
           <div className="flex items-center justify-between">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-700 border border-teal-100">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200/80">
               <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} className="text-base" />
             </span>
             <span className="text-[11px] font-bold text-slate-400 uppercase">Semua</span>

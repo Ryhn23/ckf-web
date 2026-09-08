@@ -118,6 +118,48 @@ export default function TestimonialsAdmin() {
         </div>
       </div>
 
+      {/* Grid 3 Ringkasan Metrik */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-quote-left']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {testimonials.length}
+          </p>
+          <p className="text-[11px] text-slate-400">Testimoni tercatat</p>
+        </div>
+
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-image']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Dengan Foto</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {testimonials.filter((t) => t.avatar).length}
+          </p>
+          <p className="text-[11px] text-slate-400">Memiliki foto profil</p>
+        </div>
+
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-user']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tanpa Foto</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {testimonials.filter((t) => !t.avatar).length}
+          </p>
+          <p className="text-[11px] text-slate-400">Avatar inisial huruf</p>
+        </div>
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Formulir Sticky */}
         <form
@@ -252,7 +294,7 @@ export default function TestimonialsAdmin() {
                                 className="h-10 w-10 rounded-full object-cover ring-2 ring-slate-100"
                               />
                             ) : (
-                              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white shadow-xs">
+                              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white shadow-xs">
                                 {item.name.charAt(0).toUpperCase()}
                               </span>
                             )}
@@ -269,21 +311,20 @@ export default function TestimonialsAdmin() {
                         </td>
                         <td className="admin-td text-slate-500 font-medium">{item.sortOrder}</td>
                         <td className="admin-td">
-                          <div className="flex justify-end gap-1.5">
+                          <div className="flex justify-end gap-1">
                             <button
                               type="button"
                               onClick={() => startEdit(item)}
-                              className="admin-btn-secondary !px-2.5 !py-1 text-xs font-medium"
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
                               title="Edit Testimoni"
                             >
                               <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} />
-                              <span>Edit</span>
                             </button>
                             <button
                               type="button"
                               disabled={deletingId === item.id}
                               onClick={() => handleDelete(item)}
-                              className="admin-btn-danger !px-2.5 !py-1 text-xs font-medium"
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs"
                               title="Hapus Testimoni"
                             >
                               {deletingId === item.id ? (

@@ -66,56 +66,47 @@ export default function DonationsAdmin() {
       </div>
 
       {/* Ringkasan Finansial */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="admin-card p-5">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
           <div className="flex items-center justify-between">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200/80">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} className="text-base" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} className="text-xs" />
             </span>
-            <StatusBadge status="PROCESSED" label="Selesai" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Diterima</span>
           </div>
-          <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Donasi Diterima</p>
-            <p className="font-heading text-2xl font-black text-slate-900 mt-1">
-              Rp {Number(summary.processedAmount || 0).toLocaleString('id-ID')}
-            </p>
-            <p className="mt-1 text-xs font-medium text-slate-500">{summary.processedCount || 0} transaksi berhasil</p>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            Rp {Number(summary.processedAmount || 0).toLocaleString('id-ID')}
+          </p>
+          <p className="text-[11px] text-slate-400">{summary.processedCount || 0} transaksi berhasil</p>
         </div>
 
         <div
           onClick={() => { setStatus('PENDING'); setPage(1); }}
-          className="admin-card-interactive cursor-pointer p-5"
+          className="admin-card p-4 cursor-pointer transition-all hover:border-slate-300"
         >
           <div className="flex items-center justify-between">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200/80">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-base" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-xs" />
             </span>
-            <StatusBadge status="PENDING" label="Menunggu" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Menunggu</span>
           </div>
-          <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Menunggu Verifikasi</p>
-            <p className="font-heading text-2xl font-black text-slate-900 mt-1">
-              {summary.pendingCount || 0} Transaksi
-            </p>
-            <p className="mt-1 text-xs font-semibold text-teal-700">Klik untuk filter →</p>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {summary.pendingCount || 0} Transaksi
+          </p>
+          <p className="text-[11px] text-slate-400">Klik untuk menyaring</p>
         </div>
 
-        <div className="admin-card p-5">
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
           <div className="flex items-center justify-between">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200/80">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} className="text-base" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} className="text-xs" />
             </span>
-            <span className="text-[11px] font-bold text-slate-400 uppercase">Semua</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
           </div>
-          <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Transaksi</p>
-            <p className="font-heading text-2xl font-black text-slate-900 mt-1">
-              {(summary.processedCount || 0) + (summary.pendingCount || 0) + (summary.rejectedCount || 0)} Transaksi
-            </p>
-            <p className="mt-1 text-xs text-slate-500">{summary.rejectedCount || 0} dibatalkan / tidak valid</p>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {(summary.processedCount || 0) + (summary.pendingCount || 0) + (summary.rejectedCount || 0)} Transaksi
+          </p>
+          <p className="text-[11px] text-slate-400">{summary.rejectedCount || 0} dibatalkan / ditolak</p>
         </div>
       </div>
 
@@ -131,10 +122,10 @@ export default function DonationsAdmin() {
             key={value}
             type="button"
             onClick={() => { setStatus(value); setPage(1); }}
-            className={`rounded-xl px-3.5 py-1.5 text-xs font-semibold transition ${
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
               status === value
-                ? 'bg-teal-700 text-white shadow-xs'
-                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-teal-700'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
             }`}
           >
             {label}
@@ -192,24 +183,23 @@ export default function DonationsAdmin() {
                         </td>
                         <td className="admin-td">
                           <div className="flex items-center gap-2">
-                            <StatusBadge status={d.status} />
                             <select
                               value={d.status}
                               onChange={(e) => changeStatus(d, e.target.value)}
-                              className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-700 focus:border-teal-500 focus:outline-none"
+                              className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:border-slate-300 focus:border-slate-400 focus:outline-none shadow-2xs transition"
                             >
-                              <option value="PENDING">Menunggu</option>
-                              <option value="PROCESSED">Selesai</option>
-                              <option value="REJECTED">Ditolak</option>
+                              <option value="PENDING">● Menunggu</option>
+                              <option value="PROCESSED">● Selesai</option>
+                              <option value="REJECTED">● Ditolak</option>
                             </select>
                           </div>
                         </td>
                         <td className="admin-td">
-                          <div className="flex justify-end gap-1.5">
+                          <div className="flex justify-end gap-1">
                             <button
                               type="button"
                               onClick={() => setExpandedId(expandedId === d.id ? null : d.id)}
-                              className="admin-btn-secondary !px-2.5 !py-1 text-xs font-medium"
+                              className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
                               title="Lihat detail donasi"
                             >
                               Detail
@@ -218,7 +208,7 @@ export default function DonationsAdmin() {
                               type="button"
                               disabled={deletingId === d.id}
                               onClick={() => handleDelete(d)}
-                              className="admin-btn-danger !px-2.5 !py-1 text-xs font-medium"
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs"
                               title="Hapus Catatan Donasi"
                             >
                               {deletingId === d.id ? (

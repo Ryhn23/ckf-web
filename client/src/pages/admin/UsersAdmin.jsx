@@ -99,6 +99,48 @@ export default function UsersAdmin() {
         </div>
       </div>
 
+      {/* Grid 3 Ringkasan Metrik */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-users']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {users.length}
+          </p>
+          <p className="text-[11px] text-slate-400">Akun terdaftar</p>
+        </div>
+
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-user-check']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Akun Anda</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {currentUser?.name || 'Admin'}
+          </p>
+          <p className="text-[11px] text-slate-400 truncate">{currentUser?.email || '—'}</p>
+        </div>
+
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-shield-heart']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hak Akses</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            Superadmin
+          </p>
+          <p className="text-[11px] text-slate-400">Akses penuh sistem</p>
+        </div>
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Form */}
         <form onSubmit={handleSubmit} className="admin-card h-fit p-6 lg:col-span-4 lg:sticky lg:top-20 lg:self-start space-y-4">
@@ -206,21 +248,20 @@ export default function UsersAdmin() {
                         <td className="admin-td text-slate-600 font-mono text-xs">{user.email}</td>
                         <td className="admin-td whitespace-nowrap text-xs text-slate-500">{formatDate(user.createdAt, 'd MMM yyyy')}</td>
                         <td className="admin-td">
-                          <div className="flex justify-end gap-1.5">
+                          <div className="flex justify-end gap-1">
                             <button
                               type="button"
                               onClick={() => startEdit(user)}
-                              className="admin-btn-secondary !px-2.5 !py-1 text-xs font-medium"
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
                               title="Edit Pengguna"
                             >
                               <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} />
-                              <span>Edit</span>
                             </button>
                             <button
                               type="button"
                               disabled={deletingId === user.id || currentUser?.id === user.id}
                               onClick={() => handleDelete(user)}
-                              className="admin-btn-danger !px-2.5 !py-1 text-xs font-medium disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs disabled:opacity-30 disabled:cursor-not-allowed"
                               title={currentUser?.id === user.id ? 'Akun Anda yang sedang aktif tidak dapat dihapus' : 'Hapus pengguna'}
                             >
                               {deletingId === user.id ? (

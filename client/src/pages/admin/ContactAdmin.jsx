@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
 import { getMessages, markMessageRead, toggleMessageRead, deleteMessage } from '../../api/contact';
+import { getDashboardStats } from '../../api/stats';
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
@@ -15,6 +16,9 @@ export default function ContactAdmin() {
   const [unreadOnly, setUnreadOnly] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+
+  const { data: statsData } = useFetch(() => getDashboardStats(), []);
+  const stats = statsData?.data || {};
 
   const { data, loading, error, refetch } = useFetch(
     () => getMessages({ page, limit: PAGE_SIZE, unread: unreadOnly ? 'true' : undefined }),
@@ -70,10 +74,61 @@ export default function ContactAdmin() {
             type="checkbox"
             checked={unreadOnly}
             onChange={(e) => { setUnreadOnly(e.target.checked); setPage(1); }}
-            className="h-4 w-4 rounded text-teal-700 accent-teal-700"
+            className="h-4 w-4 rounded text-slate-900 accent-slate-900"
           />
           <span>Hanya yang belum dibaca</span>
         </label>
+      </div>
+
+      {/* Grid 3 Ringkasan Metrik */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div
+          onClick={() => { setUnreadOnly(false); setPage(1); }}
+          className="admin-card p-4 cursor-pointer transition-all hover:border-slate-300"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-inbox']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {meta.total !== undefined ? meta.total : (messages.length || 0)}
+          </p>
+          <p className="text-[11px] text-slate-400">Total pesan masuk</p>
+        </div>
+
+        <div
+          onClick={() => { setUnreadOnly(true); setPage(1); }}
+          className="admin-card p-4 cursor-pointer transition-all hover:border-slate-300"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Belum Dibaca</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.unreadMessages ?? 0}
+          </p>
+          <p className="text-[11px] text-slate-400">Memerlukan tindak lanjut</p>
+        </div>
+
+        <div
+          onClick={() => { setUnreadOnly(false); setPage(1); }}
+          className="admin-card p-4 cursor-pointer transition-all hover:border-slate-300"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-check-double']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Terbaca</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {meta.total !== undefined ? Math.max(0, meta.total - (stats.unreadMessages || 0)) : '—'}
+          </p>
+          <p className="text-[11px] text-slate-400">Telah ditinjau</p>
+        </div>
       </div>
 
       {messages.length === 0 ? (

@@ -70,24 +70,22 @@ export default function Dashboard() {
         {/* Total Donasi */}
         <Link
           to="/admin/donations"
-          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+          className="admin-card p-3.5 transition-all hover:border-slate-300 flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} className="text-xs" />
             </span>
-            {Number(stats.pendingDonations || 0) > 0 && (
-              <span className="rounded-full bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800">
-                {stats.pendingDonations} Menunggu
-              </span>
-            )}
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              {Number(stats.pendingDonations || 0) > 0 ? `${stats.pendingDonations} Menunggu` : 'Donasi'}
+            </span>
           </div>
-          <div className="mt-3">
-            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900 truncate">
+          <div>
+            <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
               Rp {Number(stats.totalDonationAmount || 0).toLocaleString('id-ID')}
             </p>
-            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
-              Total Donasi ({stats.totalDonations || 0})
+            <p className="text-[11px] text-slate-400 truncate">
+              Total ({stats.totalDonations || 0} donasi)
             </p>
           </div>
         </Link>
@@ -95,24 +93,22 @@ export default function Dashboard() {
         {/* Permintaan Bantuan */}
         <Link
           to="/admin/aid-requests"
-          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+          className="admin-card p-3.5 transition-all hover:border-slate-300 flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} className="text-xs" />
             </span>
-            {Number(stats.pendingAidRequests || 0) > 0 && (
-              <span className="rounded-full bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800">
-                {stats.pendingAidRequests} Menunggu
-              </span>
-            )}
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              {Number(stats.pendingAidRequests || 0) > 0 ? `${stats.pendingAidRequests} Menunggu` : 'Bantuan'}
+            </span>
           </div>
-          <div className="mt-3">
-            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+          <div>
+            <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
               {Number(stats.totalAidRequests || 0).toLocaleString('id-ID')}
             </p>
-            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
-              Permintaan Bantuan
+            <p className="text-[11px] text-slate-400 truncate">
+              Permohonan Bantuan
             </p>
           </div>
         </Link>
@@ -120,23 +116,21 @@ export default function Dashboard() {
         {/* Pesan Masuk */}
         <Link
           to="/admin/contact"
-          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+          className="admin-card p-3.5 transition-all hover:border-slate-300 flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} className="text-xs" />
             </span>
-            {Number(stats.unreadMessages || 0) > 0 && (
-              <span className="rounded-full bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800">
-                {stats.unreadMessages} Baru
-              </span>
-            )}
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              {Number(stats.unreadMessages || 0) > 0 ? `${stats.unreadMessages} Baru` : 'Pesan'}
+            </span>
           </div>
-          <div className="mt-3">
-            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+          <div>
+            <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
               {Number(stats.unreadMessages || 0).toLocaleString('id-ID')}
             </p>
-            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+            <p className="text-[11px] text-slate-400 truncate">
               Pesan Masuk
             </p>
           </div>
@@ -145,18 +139,21 @@ export default function Dashboard() {
         {/* Total Pembaca */}
         <Link
           to="/admin/posts"
-          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+          className="admin-card p-3.5 transition-all hover:border-slate-300 flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Pembaca
             </span>
           </div>
-          <div className="mt-3">
-            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+          <div>
+            <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
               {Number(stats.totalViews || 0).toLocaleString('id-ID')}
             </p>
-            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+            <p className="text-[11px] text-slate-400 truncate">
               Total Pembaca
             </p>
           </div>
@@ -165,23 +162,21 @@ export default function Dashboard() {
         {/* Artikel Terbit */}
         <Link
           to="/admin/posts"
-          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+          className="admin-card p-3.5 transition-all hover:border-slate-300 flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-newspaper']} />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-newspaper']} className="text-xs" />
             </span>
-            {Number(stats.drafts || 0) > 0 && (
-              <span className="rounded-full bg-slate-100 border border-slate-200 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
-                {stats.drafts} Draft
-              </span>
-            )}
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              {Number(stats.drafts || 0) > 0 ? `${stats.drafts} Draft` : 'Artikel'}
+            </span>
           </div>
-          <div className="mt-3">
-            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+          <div>
+            <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
               {Number(stats.published || 0).toLocaleString('id-ID')}
             </p>
-            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+            <p className="text-[11px] text-slate-400 truncate">
               Artikel Terbit
             </p>
           </div>
@@ -190,18 +185,21 @@ export default function Dashboard() {
         {/* Kategori */}
         <Link
           to="/admin/categories"
-          className="admin-card-interactive p-3.5 sm:p-4 rounded-xl flex flex-col justify-between group"
+          className="admin-card p-3.5 transition-all hover:border-slate-300 flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80 text-sm group-hover:bg-slate-200/60 group-hover:text-slate-800 transition">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-tags']} />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-tags']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Kategori
             </span>
           </div>
-          <div className="mt-3">
-            <p className="font-heading text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+          <div>
+            <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
               {Number(stats.categoryCount || 0).toLocaleString('id-ID')}
             </p>
-            <p className="text-xs font-medium text-slate-500 truncate mt-0.5">
+            <p className="text-[11px] text-slate-400 truncate">
               Kategori Aktif
             </p>
           </div>
@@ -251,7 +249,7 @@ export default function Dashboard() {
                   <Bar
                     dataKey="views"
                     name="Tayangan"
-                    fill="#0f766e"
+                    fill="#0f172a"
                     radius={[5, 5, 0, 0]}
                     maxBarSize={32}
                   />
@@ -269,7 +267,7 @@ export default function Dashboard() {
                 <h2 className="font-heading text-sm font-bold text-slate-900">Artikel Terbaru</h2>
                 <p className="text-[11px] text-slate-400">Baru diperbarui</p>
               </div>
-              <Link to="/admin/posts" className="text-xs font-semibold text-teal-700 hover:underline">
+              <Link to="/admin/posts" className="text-xs font-semibold text-slate-700 hover:text-slate-900 transition">
                 Semua →
               </Link>
             </div>

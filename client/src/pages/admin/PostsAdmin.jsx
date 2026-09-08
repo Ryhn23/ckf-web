@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
 import { getPosts, deletePost } from '../../api/posts';
+import { getDashboardStats } from '../../api/stats';
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
@@ -16,6 +17,9 @@ export default function PostsAdmin() {
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
   const [deletingId, setDeletingId] = useState(null);
+
+  const { data: statsData } = useFetch(() => getDashboardStats(), []);
+  const stats = statsData?.data || {};
 
   const { data, loading, error, refetch } = useFetch(
     () => getPosts({ page, limit: PAGE_SIZE, status: status || undefined, search: search || undefined }),
@@ -58,6 +62,70 @@ export default function PostsAdmin() {
           <FontAwesomeIcon icon={['fa-solid', 'fa-plus']} />
           <span>Tulis Artikel</span>
         </Link>
+      </div>
+
+      {/* Grid 4 Ringkasan Metrik */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div
+          onClick={() => { setStatus(''); setPage(1); }}
+          className="admin-card p-4 cursor-pointer transition-all hover:border-slate-300"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-newspaper']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.totalPosts ?? meta.total ?? 0}
+          </p>
+          <p className="text-[11px] text-slate-400">Total seluruh naskah</p>
+        </div>
+
+        <div
+          onClick={() => { setStatus('PUBLISHED'); setPage(1); }}
+          className="admin-card p-4 cursor-pointer transition-all hover:border-slate-300"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Terbit</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.published ?? 0}
+          </p>
+          <p className="text-[11px] text-slate-400">Dapat dibaca publik</p>
+        </div>
+
+        <div
+          onClick={() => { setStatus('DRAFT'); setPage(1); }}
+          className="admin-card p-4 cursor-pointer transition-all hover:border-slate-300"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-file-pen']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Draft</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.drafts ?? 0}
+          </p>
+          <p className="text-[11px] text-slate-400">Naskah konsep</p>
+        </div>
+
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pembaca</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {Number(stats.totalViews || 0).toLocaleString('id-ID')}
+          </p>
+          <p className="text-[11px] text-slate-400">Total pembaca artikel</p>
+        </div>
       </div>
 
       {/* Filter & Toolbar */}
@@ -144,29 +212,25 @@ export default function PostsAdmin() {
                       {formatDate(post.publishedAt || post.createdAt, 'd MMM yyyy')}
                     </td>
                     <td className="admin-td">
-                      <div className="flex justify-end gap-2">
+                      <div className="flex justify-end gap-1">
                         <Link
                           to={`/admin/posts/${post.id}/edit`}
-                          className="admin-btn-secondary !px-2.5 !py-1 text-xs font-medium"
+                          className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
                           title="Edit Artikel"
                         >
-                          <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} className="text-xs" />
-                          <span>Edit</span>
+                          <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} />
                         </Link>
                         <button
                           type="button"
                           disabled={deletingId === post.id}
                           onClick={() => handleDelete(post)}
-                          className="admin-btn-danger !px-2.5 !py-1 text-xs font-medium"
+                          className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs"
                           title="Hapus Artikel"
                         >
                           {deletingId === post.id ? (
                             '…'
                           ) : (
-                            <>
-                              <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} className="text-xs" />
-                              <span>Hapus</span>
-                            </>
+                            <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
                           )}
                         </button>
                       </div>

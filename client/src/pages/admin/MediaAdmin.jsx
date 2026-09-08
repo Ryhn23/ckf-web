@@ -90,34 +90,76 @@ export default function MediaAdmin() {
         </div>
       </div>
 
+      {/* Grid 3 Ringkasan Metrik */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-images']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {meta.total !== undefined ? meta.total : media.length}
+          </p>
+          <p className="text-[11px] text-slate-400">Total berkas tersimpan</p>
+        </div>
+
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-image']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gambar</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {media.filter((m) => m.mimeType?.startsWith('image/')).length}
+          </p>
+          <p className="text-[11px] text-slate-400">Foto & ilustrasi</p>
+        </div>
+
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-file']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Dokumen</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {media.filter((m) => !m.mimeType?.startsWith('image/')).length}
+          </p>
+          <p className="text-[11px] text-slate-400">PDF & dokumen berkas</p>
+        </div>
+      </div>
+
       {/* Upload Box */}
-      <form onSubmit={(e) => { e.preventDefault(); fileRef.current?.click(); }} className="admin-card p-6">
+      <form onSubmit={(e) => { e.preventDefault(); fileRef.current?.click(); }} className="admin-card p-5">
         <div className="flex flex-wrap items-center gap-4">
           <label
             htmlFor="file"
-            className={`flex flex-1 cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed px-6 py-5 transition ${
-              uploading ? 'border-teal-400 bg-teal-50/70' : 'border-slate-200 hover:border-teal-500 hover:bg-slate-50/70'
+            className={`flex flex-1 cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed px-5 py-4 transition ${
+              uploading ? 'border-slate-400 bg-slate-50' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/70'
             }`}
           >
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-teal-700 border border-teal-100">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-cloud-arrow-up']} className="text-base" />
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-cloud-arrow-up']} className="text-sm" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-slate-800">
-                {uploading ? `Mengunggah… ${progress}%` : 'Pilih file untuk diupload'}
+              <p className="text-xs font-semibold text-slate-800">
+                {uploading ? `Mengunggah… ${progress}%` : 'Pilih file untuk diunggah'}
               </p>
-              <p className="text-xs text-slate-400 mt-0.5">Format: JPG, PNG, GIF, WebP, PDF (maks 2 MB)</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Format: JPG, PNG, GIF, WebP, PDF (maks 2 MB)</p>
             </div>
           </label>
           <input ref={fileRef} id="file" type="file" accept="image/*,application/pdf" className="hidden" onChange={handleUpload} />
         </div>
         {uploading && (
-          <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
-            <div className="h-full rounded-full bg-teal-600 transition-all" style={{ width: `${progress}%` }} />
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100">
+            <div className="h-full rounded-full bg-slate-900 transition-all" style={{ width: `${progress}%` }} />
           </div>
         )}
         {error && (
-          <p className="mt-4 flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-xs font-medium text-rose-700">
+          <p className="mt-3 flex items-center gap-2 rounded-xl bg-rose-50 border border-rose-200 px-3.5 py-2 text-xs font-medium text-rose-700">
             <FontAwesomeIcon icon={['fa-solid', 'fa-circle-exclamation']} />
             {error}
           </p>

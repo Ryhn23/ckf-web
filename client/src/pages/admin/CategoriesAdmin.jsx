@@ -97,6 +97,48 @@ export default function CategoriesAdmin() {
         </div>
       </div>
 
+      {/* Grid 3 Ringkasan Metrik */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-tags']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {categories.length}
+          </p>
+          <p className="text-[11px] text-slate-400">Kategori terdaftar</p>
+        </div>
+
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-newspaper']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Artikel</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {categories.reduce((acc, c) => acc + (c._count?.posts || 0), 0)}
+          </p>
+          <p className="text-[11px] text-slate-400">Total artikel tertaut</p>
+        </div>
+
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-bullseye']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Program</span>
+          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {categories.filter((c) => c.target || c.impact).length}
+          </p>
+          <p className="text-[11px] text-slate-400">Dengan target & capaian</p>
+        </div>
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Form */}
         <form onSubmit={handleSubmit} className="admin-card h-fit p-6 lg:col-span-4 lg:sticky lg:top-20 lg:self-start space-y-4">
@@ -145,11 +187,11 @@ export default function CategoriesAdmin() {
                   onClick={() => setForm((f) => ({ ...f, icon: preset.icon }))}
                   className={`rounded-lg border px-2 py-1 text-[11px] font-medium transition ${
                     form.icon === preset.icon
-                      ? 'border-teal-600 bg-teal-50 text-teal-800'
+                      ? 'border-slate-900 bg-slate-900 text-white font-semibold shadow-xs'
                       : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
                   }`}
                 >
-                  <FontAwesomeIcon icon={parseFaIcon(preset.icon)} className="mr-1 text-slate-400" />
+                  <FontAwesomeIcon icon={parseFaIcon(preset.icon)} className={`mr-1 ${form.icon === preset.icon ? 'text-slate-300' : 'text-slate-400'}`} />
                   {preset.label}
                 </button>
               ))}
@@ -224,29 +266,23 @@ export default function CategoriesAdmin() {
                         <td className="admin-td text-slate-600 font-semibold">{cat._count?.posts ?? 0}</td>
                         <td className="admin-td text-slate-500">{cat.sortOrder}</td>
                         <td className="admin-td">
-                          <div className="flex justify-end gap-1.5">
+                          <div className="flex justify-end gap-1">
                             <button
                               type="button"
                               onClick={() => startEdit(cat)}
-                              className="admin-btn-secondary !px-2.5 !py-1 text-xs font-medium"
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
                               title="Edit Kategori"
                             >
                               <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} />
-                              <span>Edit</span>
                             </button>
                             <button
                               type="button"
                               disabled={deletingId === cat.id}
                               onClick={() => handleDelete(cat)}
-                              className="admin-btn-danger !px-2.5 !py-1 text-xs font-medium"
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs"
                               title="Hapus Kategori"
                             >
-                              {deletingId === cat.id ? '…' : (
-                                <>
-                                  <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
-                                  <span>Hapus</span>
-                                </>
-                              )}
+                              {deletingId === cat.id ? '…' : <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />}
                             </button>
                           </div>
                         </td>

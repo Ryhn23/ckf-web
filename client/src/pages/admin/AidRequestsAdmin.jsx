@@ -415,7 +415,7 @@ export default function AidRequestsAdmin() {
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
                   <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-xs" />
                 </span>
-                <StatusBadge status="PENDING" label="Menunggu" />
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Menunggu</span>
               </div>
               <p className="mt-2.5 font-heading text-xl font-bold text-slate-900">{summary.pendingCount || 0}</p>
               <p className="text-[11px] text-slate-400">Perlu diverifikasi</p>
@@ -426,7 +426,7 @@ export default function AidRequestsAdmin() {
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
                   <FontAwesomeIcon icon={['fa-solid', 'fa-user-check']} className="text-xs" />
                 </span>
-                <StatusBadge status="REVIEWED" label="Ditinjau" />
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Ditinjau</span>
               </div>
               <p className="mt-2.5 font-heading text-xl font-bold text-slate-900">{summary.reviewedCount || 0}</p>
               <p className="text-[11px] text-slate-400">Sedang ditinjau</p>
@@ -437,7 +437,7 @@ export default function AidRequestsAdmin() {
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
                   <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-xs" />
                 </span>
-                <StatusBadge status="APPROVED" label="Disetujui" />
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Disetujui</span>
               </div>
               <p className="mt-2.5 font-heading text-xl font-bold text-slate-900">{summary.approvedCount || 0}</p>
               <p className="text-[11px] text-slate-400">Disetujui</p>
@@ -448,7 +448,7 @@ export default function AidRequestsAdmin() {
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
                   <FontAwesomeIcon icon={['fa-solid', 'fa-ban']} className="text-xs" />
                 </span>
-                <StatusBadge status="REJECTED" label="Ditolak" />
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Ditolak</span>
               </div>
               <p className="mt-2.5 font-heading text-xl font-bold text-slate-900">{summary.rejectedCount || 0}</p>
               <p className="text-[11px] text-slate-400">Ditolak</p>
@@ -632,28 +632,25 @@ export default function AidRequestsAdmin() {
 
                         {/* Status & Ubah (Desain Netral Bersih) */}
                         <td className="admin-td">
-                          <div className="flex items-center gap-2">
-                            <StatusBadge status={item.status} />
-                            <select
-                              value={item.status}
-                              onChange={(e) => handleStatusChange(item.id, e.target.value)}
-                              className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-700 focus:border-slate-400 focus:outline-none"
-                            >
-                              <option value="PENDING">Menunggu</option>
-                              <option value="REVIEWED">Ditinjau</option>
-                              <option value="APPROVED">Disetujui</option>
-                              <option value="REJECTED">Ditolak</option>
-                            </select>
-                          </div>
+                          <select
+                            value={item.status}
+                            onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                            className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:border-slate-300 focus:border-slate-400 focus:outline-none shadow-2xs transition"
+                          >
+                            <option value="PENDING">● Menunggu</option>
+                            <option value="REVIEWED">● Ditinjau</option>
+                            <option value="APPROVED">● Disetujui</option>
+                            <option value="REJECTED">● Ditolak</option>
+                          </select>
                         </td>
 
                         {/* Aksi */}
                         <td className="admin-td text-right">
-                          <div className="inline-flex items-center gap-1.5">
+                          <div className="inline-flex items-center gap-1">
                             <button
                               type="button"
                               onClick={() => handleOpenDetail(item)}
-                              className="admin-btn-secondary !py-1 !px-2.5 text-xs"
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-500 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
                               title="Lihat Rincian"
                             >
                               <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} />
@@ -662,7 +659,7 @@ export default function AidRequestsAdmin() {
                               type="button"
                               onClick={() => handleDelete(item.id, item.ticketNumber)}
                               disabled={deletingId === item.id}
-                              className="admin-btn-danger !py-1 !px-2 text-xs"
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs"
                               title="Hapus"
                             >
                               <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
@@ -815,26 +812,26 @@ export default function AidRequestsAdmin() {
                             <button
                               type="button"
                               onClick={() => handleToggleCampaignStatus(c)}
-                              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold border transition ${
+                              className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-semibold border transition ${
                                 c.isActive
-                                  ? 'border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
-                                  : 'border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                  ? 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                                  : 'border-slate-200 bg-slate-50 text-slate-400 hover:bg-slate-100'
                               }`}
                               title="Klik untuk mengubah status buka/tutup"
                             >
-                              <span className={`h-1.5 w-1.5 rounded-full ${c.isActive ? 'bg-emerald-500' : 'bg-slate-400'}`} />
+                              <span className={`h-1.5 w-1.5 rounded-full ${c.isActive ? 'bg-emerald-500' : 'bg-slate-300'}`} />
                               <span>{c.isActive ? 'Terbuka' : 'Ditutup'}</span>
                             </button>
                           </td>
 
                           {/* Aksi */}
                           <td className="admin-td text-right">
-                            <div className="inline-flex items-center gap-1.5">
+                            <div className="inline-flex items-center gap-1">
                               <a
                                 href={`/ajukan-bantuan/${c.slug}`}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="admin-btn-secondary !py-1 !px-2 text-xs"
+                                className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
                                 title="Buka Formulir di Tab Baru"
                               >
                                 <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} />
@@ -842,7 +839,7 @@ export default function AidRequestsAdmin() {
                               <button
                                 type="button"
                                 onClick={() => handleOpenEditCampaign(c)}
-                                className="admin-btn-secondary !py-1 !px-2 text-xs"
+                                className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
                                 title="Edit Event"
                               >
                                 <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} />
@@ -851,7 +848,7 @@ export default function AidRequestsAdmin() {
                                 type="button"
                                 onClick={() => handleDeleteCampaign(c)}
                                 disabled={deletingCampaignId === c.id}
-                                className="admin-btn-danger !py-1 !px-2 text-xs"
+                                className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs"
                                 title="Hapus Event"
                               >
                                 <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />

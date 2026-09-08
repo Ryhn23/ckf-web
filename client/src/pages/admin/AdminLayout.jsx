@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, NavLink, Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { motion, AnimatePresence } from 'framer-motion';
 import useAuth from '../../hooks/useAuth';
 import Spinner from '../../components/ui/Spinner';
 
@@ -108,8 +109,8 @@ function SidebarContent({ onNavigate }) {
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
                   isActive
-                    ? 'bg-teal-700 text-white shadow'
-                    : 'text-slate-600 hover:bg-teal-50 hover:text-teal-800'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                 }`
               }
             >
@@ -133,55 +134,77 @@ function SidebarContent({ onNavigate }) {
               onClick={() => toggleGroup(entry.id)}
               className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold transition ${
                 isChildActive
-                  ? 'text-teal-800 bg-teal-50/70'
+                  ? 'text-slate-900 bg-slate-100 font-bold'
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
               <div className="flex items-center gap-3">
                 <FontAwesomeIcon
                   icon={['fa-solid', entry.icon]}
-                  className={`w-4 text-center ${isChildActive ? 'text-teal-700' : 'text-slate-400'}`}
+                  className={`w-4 text-center ${isChildActive ? 'text-slate-900' : 'text-slate-400'}`}
                 />
                 <span>{entry.label}</span>
               </div>
               <FontAwesomeIcon
                 icon={['fa-solid', 'fa-chevron-down']}
                 className={`text-xs transition-transform duration-200 ${
-                  isOpen ? 'rotate-180 text-teal-700' : 'text-slate-400'
+                  isOpen ? 'rotate-180 text-slate-800' : 'text-slate-400'
                 }`}
               />
             </button>
 
-            {isOpen && (
-              <div className="ml-3.5 space-y-1 border-l-2 border-slate-100 pl-2.5 py-0.5">
-                {entry.items.map((subItem) => (
-                  <NavLink
-                    key={subItem.to}
-                    to={subItem.to}
-                    end={subItem.end}
-                    onClick={onNavigate}
-                    className={({ isActive }) =>
-                      `flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition ${
-                        isActive
-                          ? 'bg-teal-700 text-white font-semibold shadow-sm'
-                          : 'text-slate-500 hover:bg-teal-50 hover:text-teal-800'
-                      }`
-                    }
-                  >
-                    {({ isActive }) => (
-                      <>
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full transition-all ${
-                            isActive ? 'bg-white scale-125' : 'bg-slate-300'
-                          }`}
-                        />
-                        <span className="truncate">{subItem.label}</span>
-                      </>
-                    )}
-                  </NavLink>
-                ))}
-              </div>
-            )}
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.div
+                  key={`submenu-${entry.id}`}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{
+                    height: 'auto',
+                    opacity: 1,
+                    transition: {
+                      height: { duration: 0.22, ease: [0.04, 0.62, 0.23, 0.98] },
+                      opacity: { duration: 0.16, delay: 0.04 },
+                    },
+                  }}
+                  exit={{
+                    height: 0,
+                    opacity: 0,
+                    transition: {
+                      height: { duration: 0.18, ease: [0.04, 0.62, 0.23, 0.98] },
+                      opacity: { duration: 0.1 },
+                    },
+                  }}
+                  className="overflow-hidden ml-3.5 space-y-1 border-l-2 border-slate-100 pl-2.5 py-0.5"
+                >
+                  {entry.items.map((subItem) => (
+                    <NavLink
+                      key={subItem.to}
+                      to={subItem.to}
+                      end={subItem.end}
+                      onClick={onNavigate}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition ${
+                          isActive
+                            ? 'bg-slate-900 text-white font-semibold shadow-xs'
+                            : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                        }`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full transition-all ${
+                              isActive ? 'bg-white scale-125' : 'bg-slate-300'
+                            }`}
+                          />
+                          <span className="truncate">{subItem.label}</span>
+                        </>
+                      )}
+                    </NavLink>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         );
       })}

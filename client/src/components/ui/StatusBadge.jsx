@@ -1,26 +1,26 @@
 const VARIANT_MAP = {
   emerald: {
-    badge: 'bg-emerald-50/80 text-emerald-800 border-emerald-200/60',
-    dot: 'bg-emerald-600',
+    badge: 'bg-slate-50 text-slate-700 border-slate-200/80',
+    dot: 'bg-emerald-500',
   },
   amber: {
-    badge: 'bg-amber-50/80 text-amber-800 border-amber-200/60',
+    badge: 'bg-slate-50 text-slate-700 border-slate-200/80',
     dot: 'bg-amber-500',
   },
   sky: {
-    badge: 'bg-slate-100 text-slate-700 border-slate-200',
-    dot: 'bg-slate-500',
+    badge: 'bg-slate-50 text-slate-700 border-slate-200/80',
+    dot: 'bg-sky-500',
   },
   rose: {
-    badge: 'bg-rose-50/80 text-rose-700 border-rose-200/60',
+    badge: 'bg-slate-50 text-slate-700 border-slate-200/80',
     dot: 'bg-rose-500',
   },
   purple: {
-    badge: 'bg-slate-100 text-slate-700 border-slate-200',
+    badge: 'bg-slate-50 text-slate-700 border-slate-200/80',
     dot: 'bg-slate-500',
   },
   slate: {
-    badge: 'bg-slate-100 text-slate-700 border-slate-200',
+    badge: 'bg-slate-50 text-slate-700 border-slate-200/80',
     dot: 'bg-slate-400',
   },
 };

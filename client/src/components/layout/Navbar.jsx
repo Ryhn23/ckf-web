@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_ITEMS } from '../../utils/constants';
 import { useSettings } from '../../context/SettingsContext';
 
@@ -122,23 +123,45 @@ export default function Navbar() {
         </div>
 
         {/* Mobile menu */}
-        {open && (
-          <div className="border-t border-slate-200 bg-white lg:hidden">
-            <div className="container-page flex flex-col gap-1 py-3">
-              {navItems.map((item) => (
-                <NavLink key={item.path} to={item.path} end={item.path === '/'} className={linkClass}>
-                  {item.label}
-                </NavLink>
-              ))}
-              {showDonationCta && (
-                <Link to="/donasi" className="btn-accent mt-2 w-full">
-                  <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-                  Donasi Sekarang
-                </Link>
-              )}
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              key="mobile-nav-menu"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden border-t border-slate-200 bg-white lg:hidden"
+            >
+              <div className="container-page flex flex-col gap-1 py-3">
+                {navItems.map((item, idx) => (
+                  <motion.div
+                    key={item.path}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.03, duration: 0.2 }}
+                  >
+                    <NavLink to={item.path} end={item.path === '/'} className={linkClass}>
+                      {item.label}
+                    </NavLink>
+                  </motion.div>
+                ))}
+                {showDonationCta && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: navItems.length * 0.03, duration: 0.2 }}
+                  >
+                    <Link to="/donasi" className="btn-accent mt-2 w-full">
+                      <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
+                      Donasi Sekarang
+                    </Link>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
   );

@@ -327,42 +327,59 @@ export default function AdminLayout() {
       </aside>
 
       {/* Sidebar mobile */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-              <Link to="/admin" className="flex items-center gap-2.5 select-none" onClick={() => setMobileOpen(false)}>
-                <img
-                  src="/logo.png"
-                  alt="Logo Cinta Kasih Fatimah"
-                  className="h-10 w-auto object-contain"
-                />
-                <div className="flex flex-col justify-center leading-none text-slate-900">
-                  <span className="font-heading text-[10px] font-extrabold uppercase tracking-wider text-slate-900">
-                    CINTA KASIH
-                  </span>
-                  <span className="font-heading text-[14px] font-black uppercase tracking-wide mt-0.5 text-black">
-                    FATIMAH
-                  </span>
-                  <span className="font-sans text-[7.5px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-900">
-                    FOUNDATION
-                  </span>
-                </div>
-              </Link>
-              <button
-                type="button"
-                onClick={() => setMobileOpen(false)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-                aria-label="Tutup menu"
-              >
-                <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
-              </button>
-            </div>
-            {sidebar}
-          </aside>
-        </div>
-      )}
+      <AnimatePresence>
+        {mobileOpen && (
+          <div className="fixed inset-0 z-40 lg:hidden">
+            <motion.div
+              key="mobile-sidebar-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
+              onClick={() => setMobileOpen(false)}
+            />
+            <motion.aside
+              key="mobile-sidebar-drawer"
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+              className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white shadow-2xl"
+            >
+              <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+                <Link to="/admin" className="flex items-center gap-2.5 select-none" onClick={() => setMobileOpen(false)}>
+                  <img
+                    src="/logo.png"
+                    alt="Logo Cinta Kasih Fatimah"
+                    className="h-10 w-auto object-contain"
+                  />
+                  <div className="flex flex-col justify-center leading-none text-slate-900">
+                    <span className="font-heading text-[10px] font-extrabold uppercase tracking-wider text-slate-900">
+                      CINTA KASIH
+                    </span>
+                    <span className="font-heading text-[14px] font-black uppercase tracking-wide mt-0.5 text-black">
+                      FATIMAH
+                    </span>
+                    <span className="font-sans text-[7.5px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-900">
+                      FOUNDATION
+                    </span>
+                  </div>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                  aria-label="Tutup menu"
+                >
+                  <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
+                </button>
+              </div>
+              {sidebar}
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Konten */}
       <div className={`transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:pl-64' : 'lg:pl-0'}`}>

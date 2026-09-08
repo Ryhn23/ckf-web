@@ -82,7 +82,10 @@ export default function App() {
 
               {/* Standalone Portal Permohonan Bantuan (Khusus / Terpisah dari Navigasi Publik) */}
               <Route path="/ajukan-bantuan" element={<AidRequest />} />
+              <Route path="/ajukan-bantuan/:slug" element={<AidRequest />} />
               <Route path="/bantuan" element={<Navigate to="/ajukan-bantuan" replace />} />
+              <Route path="/bantuan/:slug" element={<AidRequest />} />
+
 
               {/* Login */}
               <Route

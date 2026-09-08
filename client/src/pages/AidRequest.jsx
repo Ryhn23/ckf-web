@@ -1,46 +1,41 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Seo from '../components/Seo';
 import { useSettings } from '../context/SettingsContext';
-import { submitAidRequest } from '../api/aidRequests';
+import { submitAidRequest, getPublicAidCampaign } from '../api/aidRequests';
 import Spinner from '../components/ui/Spinner';
 
 function PortalHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group py-1" title="Kembali ke Website Utama">
+      <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-4 sm:px-6">
+        <Link to="/" className="flex items-center gap-2.5 group py-1" title="Kembali ke Website Utama">
           <img
             src="/logo.png"
             alt="Logo Yayasan Cinta Kasih Fatimah"
-            className="h-11 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
+            className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
           />
           <div className="flex flex-col justify-center leading-none select-none text-slate-900">
-            <span className="font-heading text-[11px] sm:text-[12px] font-extrabold uppercase tracking-wider text-slate-900">
+            <span className="font-heading text-[10px] font-extrabold uppercase tracking-wider text-slate-900">
               CINTA KASIH
             </span>
-            <span className="font-heading text-[15px] sm:text-[17px] font-black uppercase tracking-wide mt-0.5 text-black">
+            <span className="font-heading text-[13px] font-black uppercase tracking-wide mt-0.5 text-black">
               FATIMAH
             </span>
-            <span className="font-sans text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-900">
+            <span className="font-sans text-[7px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-600">
               FOUNDATION
             </span>
           </div>
         </Link>
 
-        <div className="flex items-center gap-3 sm:gap-4">
-          <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-teal-50 border border-teal-200/60 px-3 py-1 text-xs font-semibold text-teal-800">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-shield-heart']} className="text-teal-600 text-xs" />
-            Portal Khusus Bantuan
-          </span>
-
+        <div className="flex items-center gap-2.5">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-xs hover:border-slate-300 hover:text-teal-700 transition"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 hover:border-slate-300 hover:text-slate-900 transition shadow-2xs"
           >
             <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-left']} className="text-[10px]" />
-            <span>Website Utama</span>
+            <span>Web Utama</span>
           </Link>
         </div>
       </div>
@@ -50,32 +45,30 @@ function PortalHeader() {
 
 function PortalFooter({ phone, email }) {
   return (
-    <footer className="mt-auto border-t border-slate-200/80 bg-white py-10 text-xs text-slate-500">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-100 pb-8 text-center md:text-left">
-          <div className="max-w-md">
-            <p className="font-bold text-slate-800 text-sm">Yayasan Cinta Kasih Fatimah</p>
-            <p className="mt-1 text-slate-500 leading-relaxed text-xs">
-              Portal permohonan bantuan resmi. Seluruh informasi yang Anda kirimkan dilindungi kerahasiaannya dan hanya digunakan untuk proses verifikasi tim lapangan.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center gap-4 text-xs text-slate-600">
+    <footer className="mt-auto border-t border-slate-200/80 bg-white py-6 text-xs text-slate-500">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center">
+        <p className="font-semibold text-slate-800 text-xs">Yayasan Cinta Kasih Fatimah</p>
+        <p className="mt-1 text-[11px] text-slate-500 max-w-md mx-auto">
+          Portal permohonan bantuan resmi. Pengajuan 100% bebas biaya dan seluruh data dijaga kerahasiaannya.
+        </p>
+        {(phone || email) && (
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-600">
             {phone && (
               <span className="inline-flex items-center gap-1.5">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-phone']} className="text-teal-700 text-xs" />
+                <FontAwesomeIcon icon={['fa-solid', 'fa-phone']} className="text-slate-400 text-xs" />
                 <span>{phone}</span>
               </span>
             )}
             {email && (
               <span className="inline-flex items-center gap-1.5">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} className="text-teal-700 text-xs" />
+                <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} className="text-slate-400 text-xs" />
                 <span>{email}</span>
               </span>
             )}
           </div>
-        </div>
-        <p className="mt-6 text-center text-[11px] text-slate-400">
-          © {new Date().getFullYear()} Cinta Kasih Fatimah Foundation. Seluruh hak cipta dilindungi.
+        )}
+        <p className="mt-3 text-[10px] text-slate-400">
+          © {new Date().getFullYear()} Cinta Kasih Fatimah Foundation.
         </p>
       </div>
     </footer>
@@ -86,7 +79,6 @@ const PRESET_AMOUNTS = [
   { label: 'Rp 2,5 Juta', value: 2500000 },
   { label: 'Rp 5 Juta', value: 5000000 },
   { label: 'Rp 10 Juta', value: 10000000 },
-  { label: 'Rp 25 Juta', value: 25000000 },
 ];
 
 function formatRupiah(num) {
@@ -95,9 +87,16 @@ function formatRupiah(num) {
 }
 
 export default function AidRequest() {
+  const { slug } = useParams();
   const { settings } = useSettings();
 
+  const [campaign, setCampaign] = useState(null);
+  const [loadingCampaign, setLoadingCampaign] = useState(Boolean(slug));
+  const [campaignNotFound, setCampaignNotFound] = useState(false);
+
   const [requestType, setRequestType] = useState('DANA'); // 'DANA' | 'BARANG'
+  const [sameAsLeader, setSameAsLeader] = useState(false);
+
   const [formData, setFormData] = useState({
     institutionName: '',
     leaderName: '',
@@ -108,7 +107,6 @@ export default function AidRequest() {
     goodsDescription: '',
     reason: '',
     consentAgreement: false,
-    consentPrivacy: false,
   });
 
   const [submitting, setSubmitting] = useState(false);
@@ -116,12 +114,61 @@ export default function AidRequest() {
   const [submissionResult, setSubmissionResult] = useState(null);
   const [copiedTicket, setCopiedTicket] = useState(false);
 
+  useEffect(() => {
+    if (!slug) {
+      setLoadingCampaign(false);
+      setCampaign(null);
+      return;
+    }
+
+    let isMounted = true;
+    setLoadingCampaign(true);
+    setCampaignNotFound(false);
+
+    getPublicAidCampaign(slug)
+      .then((res) => {
+        if (isMounted) {
+          setCampaign(res.data);
+          setLoadingCampaign(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setCampaignNotFound(true);
+          setLoadingCampaign(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    setFormData((prev) => {
+      const next = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      };
+      if (sameAsLeader && (name === 'leaderName' || name === 'leaderPhone')) {
+        if (name === 'leaderName') next.picName = value;
+        if (name === 'leaderPhone') next.picPhone = value;
+      }
+      return next;
+    });
+  };
+
+  const handleSameAsLeaderToggle = (e) => {
+    const checked = e.target.checked;
+    setSameAsLeader(checked);
+    if (checked) {
+      setFormData((prev) => ({
+        ...prev,
+        picName: prev.leaderName,
+        picPhone: prev.leaderPhone,
+      }));
+    }
   };
 
   const handleAmountChange = (e) => {
@@ -137,16 +184,19 @@ export default function AidRequest() {
     e.preventDefault();
     setErrorMessage('');
 
-    // Validasi form
     if (!formData.institutionName.trim()) {
-      setErrorMessage('Nama majelis atau yayasan wajib diisi.');
+      setErrorMessage('Nama majelis atau lembaga wajib diisi.');
       return;
     }
     if (!formData.leaderName.trim() || !formData.leaderPhone.trim()) {
       setErrorMessage('Nama dan nomor WhatsApp pimpinan wajib diisi.');
       return;
     }
-    if (!formData.picName.trim() || !formData.picPhone.trim()) {
+
+    const finalPicName = sameAsLeader ? formData.leaderName.trim() : formData.picName.trim();
+    const finalPicPhone = sameAsLeader ? formData.leaderPhone.trim() : formData.picPhone.trim();
+
+    if (!finalPicName || !finalPicPhone) {
       setErrorMessage('Nama dan nomor WhatsApp penanggung jawab (PJ) wajib diisi.');
       return;
     }
@@ -161,19 +211,19 @@ export default function AidRequest() {
       amountOrGoods = `Rp ${formatRupiah(num)}`;
     } else {
       if (!formData.goodsDescription.trim()) {
-        setErrorMessage('Silakan rincikan jenis dan estimasi kebutuhan barang/logistik.');
+        setErrorMessage('Silakan rincikan kebutuhan barang atau logistik.');
         return;
       }
       amountOrGoods = formData.goodsDescription.trim();
     }
 
-    if (!formData.reason.trim() || formData.reason.trim().length < 15) {
-      setErrorMessage('Penjelasan alasan permohonan bantuan minimal 15 karakter.');
+    if (!formData.reason.trim() || formData.reason.trim().length < 10) {
+      setErrorMessage('Mohon tuliskan penjelasan alasan atau urgensi permohonan secara ringkas.');
       return;
     }
 
-    if (!formData.consentAgreement || !formData.consentPrivacy) {
-      setErrorMessage('Mohon centang seluruh kotak persetujuan sebelum mengirimkan permohonan.');
+    if (!formData.consentAgreement) {
+      setErrorMessage('Mohon centang pernyataan persetujuan sebelum mengirimkan permohonan.');
       return;
     }
 
@@ -181,11 +231,13 @@ export default function AidRequest() {
     try {
       const payload = {
         type: requestType,
+        campaignSlug: slug || undefined,
+        campaignId: campaign?.id || undefined,
         institutionName: formData.institutionName.trim(),
         leaderName: formData.leaderName.trim(),
         leaderPhone: formData.leaderPhone.trim(),
-        picName: formData.picName.trim(),
-        picPhone: formData.picPhone.trim(),
+        picName: finalPicName,
+        picPhone: finalPicPhone,
         amountOrGoods,
         reason: formData.reason.trim(),
         agreementConsent: true,
@@ -206,30 +258,43 @@ export default function AidRequest() {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(ticket);
       setCopiedTicket(true);
-      setTimeout(() => setCopiedTicket(false), 2500);
+      setTimeout(() => setCopiedTicket(false), 2000);
     }
   };
 
-  // Jika permohonan bantuan dinonaktifkan di pengaturan admin
-  if (settings.menu_bantuan_enabled === 'false') {
+  if (loadingCampaign) {
     return (
       <div className="min-h-screen flex flex-col justify-between bg-slate-50 font-sans text-slate-700">
-        <Seo title="Permintaan Bantuan Ditutup - Cinta Kasih Fatimah" description="Layanan pengajuan bantuan kemanusiaan" />
         <PortalHeader />
-        <main className="mx-auto max-w-xl px-4 py-16 text-center my-auto">
-          <div className="card p-8 sm:p-10 shadow-sm border border-slate-200/80 bg-white">
-            <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-400">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} />
+        <main className="my-auto py-16 text-center">
+          <Spinner label="Memuat formulir..." />
+        </main>
+        <PortalFooter phone={settings.phone} email={settings.email} />
+      </div>
+    );
+  }
+
+  // Jika campaign slug tidak ditemukan
+  if (slug && campaignNotFound) {
+    return (
+      <div className="min-h-screen flex flex-col justify-between bg-slate-50 font-sans text-slate-700">
+        <Seo title="Formulir Tidak Ditemukan - Cinta Kasih Fatimah" description="Formulir permohonan bantuan" />
+        <PortalHeader />
+        <main className="mx-auto max-w-md px-4 py-16 text-center my-auto">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-xl text-slate-400">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-link-slash']} />
             </span>
-            <h2 className="mt-5 font-heading text-xl font-bold text-slate-900">
-              Penerimaan Permohonan Bantuan Sedang Ditutup
+            <h2 className="mt-4 font-heading text-lg font-bold text-slate-900">
+              Formulir Event Tidak Ditemukan
             </h2>
-            <p className="mt-3 text-sm text-slate-600 leading-relaxed">
-              Saat ini kanal permohonan bantuan sedang tidak menerima pengajuan baru. Untuk kebutuhan mendesak atau klarifikasi koordinasi, silakan hubungi kontak sekretariat yayasan.
+            <p className="mt-2 text-xs text-slate-500 leading-relaxed">
+              Tautan formulir khusus ini mungkin sudah kadaluarsa atau salah penulisan.
             </p>
             <div className="mt-6 flex justify-center gap-3">
-              <Link to="/" className="btn-outline text-xs sm:text-sm">Ke Website Utama</Link>
-              <Link to="/kontak" className="btn-primary text-xs sm:text-sm">Hubungi Kami</Link>
+              <Link to="/ajukan-bantuan" className="admin-btn-primary !py-2 !px-4 text-xs">
+                Ke Formulir Umum
+              </Link>
             </div>
           </div>
         </main>
@@ -238,276 +303,300 @@ export default function AidRequest() {
     );
   }
 
+  // Jika event khusus non-aktif
+  if (campaign && !campaign.isActive) {
+    return (
+      <div className="min-h-screen flex flex-col justify-between bg-slate-50 font-sans text-slate-700">
+        <Seo title={`${campaign.title} Ditutup - Cinta Kasih Fatimah`} description="Formulir permohonan bantuan" />
+        <PortalHeader />
+        <main className="mx-auto max-w-md px-4 py-16 text-center my-auto">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-xl text-slate-400">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-lock']} />
+            </span>
+            <h2 className="mt-4 font-heading text-lg font-bold text-slate-900">
+              Penerimaan Telah Ditutup
+            </h2>
+            <p className="mt-2 text-xs text-slate-500 leading-relaxed">
+              Penerimaan permohonan bantuan untuk program <strong>{campaign.title}</strong> saat ini telah ditutup oleh panitia.
+            </p>
+            <div className="mt-6 flex justify-center gap-3">
+              <Link to="/" className="admin-btn-secondary !py-2 !px-4 text-xs">
+                Ke Website Utama
+              </Link>
+            </div>
+          </div>
+        </main>
+        <PortalFooter phone={settings.phone} email={settings.email} />
+      </div>
+    );
+  }
+
+  // Jika bukan event khusus tapi setting permohonan umum ditutup
+  if (!slug && settings.menu_bantuan_enabled === 'false') {
+    return (
+      <div className="min-h-screen flex flex-col justify-between bg-slate-50 font-sans text-slate-700">
+        <Seo title="Permohonan Ditutup - Cinta Kasih Fatimah" description="Layanan permohonan bantuan" />
+        <PortalHeader />
+        <main className="mx-auto max-w-md px-4 py-16 text-center my-auto">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-xl text-slate-400">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} />
+            </span>
+            <h2 className="mt-4 font-heading text-lg font-bold text-slate-900">
+              Penerimaan Permohonan Ditutup
+            </h2>
+            <p className="mt-2 text-xs text-slate-500 leading-relaxed">
+              Saat ini kanal permohonan bantuan umum sedang tidak menerima pengajuan baru.
+            </p>
+            <div className="mt-6 flex justify-center gap-3">
+              <Link to="/" className="admin-btn-secondary !py-2 !px-4 text-xs">
+                Ke Website Utama
+              </Link>
+            </div>
+          </div>
+        </main>
+        <PortalFooter phone={settings.phone} email={settings.email} />
+      </div>
+    );
+  }
+
+  const pageTitle = campaign
+    ? `${campaign.title} - Permohonan Bantuan`
+    : 'Formulir Permohonan Bantuan - Cinta Kasih Fatimah';
+
   return (
     <div className="min-h-screen flex flex-col justify-between bg-slate-50 font-sans text-slate-700">
       <Seo
-        title="Formulir Permohonan Bantuan - Cinta Kasih Fatimah"
-        description="Pengajuan permohonan bantuan dana atau barang logistik untuk majelis, yayasan, dan lembaga sosial kemasyarakatan."
+        title={pageTitle}
+        description={campaign?.description || 'Formulir permohonan bantuan kemanusiaan Yayasan Cinta Kasih Fatimah.'}
       />
       <PortalHeader />
 
-      {/* Hero Banner Standalone */}
-      <section className="border-b border-slate-200/80 bg-gradient-to-b from-teal-900 via-teal-800 to-teal-900 text-white py-10 sm:py-14">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold text-teal-200 backdrop-blur">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} />
-            Layanan Pengajuan Terarah
-          </span>
-          <h1 className="mt-4 font-heading text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Permohonan Bantuan Kemanusiaan
-          </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-xs sm:text-sm text-teal-100/90 leading-relaxed">
-            Kanal resmi bagi perwakilan majelis, yayasan, dan lembaga kemasyarakatan untuk mengajukan bantuan dana atau barang logistik secara langsung.
-          </p>
-
-          {/* 3 Trust badges */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-teal-100">
-            <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-teal-300 text-xs" />
-              100% Bebas Biaya
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-shield-heart']} className="text-teal-300 text-xs" />
-              Kerahasiaan Terjamin
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-teal-300 text-xs" />
-              Verifikasi Langsung Tim
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <main className="flex-1 mx-auto w-full max-w-6xl px-4 sm:px-6 py-10 sm:py-14">
+      <main className="flex-1 mx-auto w-full max-w-xl px-4 py-8 sm:py-10">
         {submissionResult ? (
-          /* STATE SUKSES */
-          <div className="mx-auto max-w-2xl animate-fade-in">
-            <div className="card border border-teal-100 p-8 text-center sm:p-10 shadow-lg">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-teal-100 text-3xl text-teal-700">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
-              </div>
+          /* STATE SUKSES COMPACT */
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm text-center animate-fade-in">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-800 border border-slate-200">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
+            </div>
 
-              <span className="mt-6 inline-block rounded-full bg-teal-50 px-4 py-1 text-xs font-bold text-teal-700 uppercase tracking-wider">
-                Permohonan Diterima
-              </span>
+            <h2 className="mt-4 font-heading text-xl font-bold text-slate-900">
+              Permohonan Berhasil Dikirim
+            </h2>
+            <p className="mt-1.5 text-xs text-slate-500 leading-relaxed">
+              Data permohonan untuk <strong>{submissionResult.institutionName}</strong> telah tersimpan dan akan diverifikasi oleh tim pengelola.
+            </p>
 
-              <h2 className="mt-3 font-heading text-2xl font-bold text-slate-900 sm:text-3xl">
-                Terima Kasih, Permohonan Anda Berhasil Dikirim
-              </h2>
-
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                Data permohonan bantuan untuk <strong>{submissionResult.institutionName}</strong> telah tersimpan di sistem kami dan akan segera ditinjau oleh tim verifikasi.
-              </p>
-
-              {/* Box Nomor Tiket */}
-              <div className="mt-6 rounded-2xl bg-slate-50 border border-slate-200/80 p-5 text-left">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/70 pb-3">
-                  <div>
-                    <p className="text-xs font-semibold text-slate-400 uppercase">Nomor Tiket Registrasi</p>
-                    <p className="font-mono text-xl font-bold text-teal-800">{submissionResult.ticketNumber}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleCopyTicket(submissionResult.ticketNumber)}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50"
-                  >
-                    <FontAwesomeIcon icon={['fa-solid', copiedTicket ? 'fa-check' : 'fa-copy']} className={copiedTicket ? 'text-teal-600' : ''} />
-                    {copiedTicket ? 'Tersalin' : 'Salin Tiket'}
-                  </button>
+            {/* Box Tiket */}
+            <div className="mt-5 rounded-xl bg-slate-50 border border-slate-200/80 p-4 text-left">
+              <div className="flex items-center justify-between gap-2 border-b border-slate-200/70 pb-2.5">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">Nomor Registrasi</p>
+                  <p className="font-mono text-base font-bold text-slate-900">{submissionResult.ticketNumber}</p>
                 </div>
-
-                <div className="mt-4 grid gap-3 text-xs text-slate-600 sm:grid-cols-2">
-                  <div>
-                    <span className="font-medium text-slate-500">Jenis Bantuan:</span>{' '}
-                    <span className="font-semibold text-slate-900">
-                      {submissionResult.type === 'DANA' ? 'Bantuan Dana Tunai' : 'Bantuan Barang / Logistik'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="font-medium text-slate-500">Kebutuhan:</span>{' '}
-                    <span className="font-semibold text-slate-900">{submissionResult.amountOrGoods}</span>
-                  </div>
-                  <div>
-                    <span className="font-medium text-slate-500">Pimpinan:</span>{' '}
-                    <span className="text-slate-800">{submissionResult.leaderName} ({submissionResult.leaderPhone})</span>
-                  </div>
-                  <div>
-                    <span className="font-medium text-slate-500">Penanggung Jawab:</span>{' '}
-                    <span className="text-slate-800">{submissionResult.picName} ({submissionResult.picPhone})</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Petunjuk Langkah Selanjutnya */}
-              <div className="mt-6 rounded-xl bg-amber-50/80 border border-amber-200/80 p-4 text-left text-xs text-amber-900">
-                <div className="flex gap-2.5">
-                  <FontAwesomeIcon icon={['fa-solid', 'fa-circle-info']} className="mt-0.5 shrink-0 text-amber-600" />
-                  <div>
-                    <p className="font-semibold">Langkah Verifikasi Selanjutnya:</p>
-                    <ul className="mt-1.5 list-disc space-y-1 pl-4 text-amber-800">
-                      <li>Tim kami akan menghubungi nomor WhatsApp Penanggung Jawab atau Pimpinan untuk verifikasi dokumen pendukung.</li>
-                      <li>Simpan nomor tiket di atas untuk pengecekan atau konfirmasi koordinasi.</li>
-                      <li>Seluruh proses pengajuan dan penyaluran bantuan <strong>tidak dipungut biaya apapun (gratis)</strong>.</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <button
                   type="button"
-                  onClick={() => {
-                    setSubmissionResult(null);
-                    setFormData({
-                      institutionName: '',
-                      leaderName: '',
-                      leaderPhone: '',
-                      picName: '',
-                      picPhone: '',
-                      rawAmount: '5000000',
-                      goodsDescription: '',
-                      reason: '',
-                      consentAgreement: false,
-                      consentPrivacy: false,
-                    });
-                  }}
-                  className="btn-outline text-sm"
+                  onClick={() => handleCopyTicket(submissionResult.ticketNumber)}
+                  className="admin-btn-secondary !py-1 !px-2.5 text-[11px]"
                 >
-                  Ajukan Permohonan Lain
+                  <FontAwesomeIcon icon={['fa-solid', copiedTicket ? 'fa-check' : 'fa-copy']} />
+                  <span>{copiedTicket ? 'Tersalin' : 'Salin'}</span>
                 </button>
-                <Link to="/" className="btn-primary text-sm">
-                  Kembali ke Beranda
-                </Link>
               </div>
+
+              <div className="mt-2.5 space-y-1 text-xs text-slate-600">
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Bantuan:</span>
+                  <span className="font-semibold text-slate-800">
+                    [{submissionResult.type === 'DANA' ? 'Dana Tunai' : 'Barang'}] {submissionResult.amountOrGoods}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Pimpinan:</span>
+                  <span className="text-slate-800">{submissionResult.leaderName} ({submissionResult.leaderPhone})</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Penanggung Jawab:</span>
+                  <span className="text-slate-800">{submissionResult.picName} ({submissionResult.picPhone})</span>
+                </div>
+              </div>
+            </div>
+
+            <p className="mt-4 text-[11px] text-slate-400 leading-normal">
+              Simpan nomor registrasi di atas. Tim kami akan menghubungi kontak tertera untuk koordinasi selanjutnya.
+            </p>
+
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setSubmissionResult(null);
+                  setFormData({
+                    institutionName: '',
+                    leaderName: '',
+                    leaderPhone: '',
+                    picName: '',
+                    picPhone: '',
+                    rawAmount: '5000000',
+                    goodsDescription: '',
+                    reason: '',
+                    consentAgreement: false,
+                  });
+                  setSameAsLeader(false);
+                }}
+                className="admin-btn-secondary !py-2 !px-4 text-xs"
+              >
+                Ajukan Lainnya
+              </button>
+              <Link to="/" className="admin-btn-primary !py-2 !px-4 text-xs">
+                Ke Beranda
+              </Link>
             </div>
           </div>
         ) : (
-          /* FORMULIR UTAMA */
-          <div className="grid gap-10 lg:grid-cols-12">
-            {/* Kolom Kiri: Form */}
-            <div className="lg:col-span-8">
-              <form onSubmit={handleSubmit} className="card p-6 sm:p-8 space-y-8 shadow-sm">
-                {/* 1. Selector Jenis Bantuan */}
+          /* FORMULIR COMPACT & TO THE POINT */
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-7 shadow-sm">
+            {/* Header Formulir / Banner Event Opsional */}
+            {campaign && campaign.image && (
+              <div className="mb-5 overflow-hidden rounded-xl border border-slate-200/80">
+                <img
+                  src={campaign.image}
+                  alt={campaign.title}
+                  className="w-full max-h-52 object-cover"
+                />
+              </div>
+            )}
+
+            <div className="mb-6 border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 border border-slate-200/80">
+                  <FontAwesomeIcon icon={['fa-solid', campaign ? 'fa-calendar-check' : 'fa-hand-holding-heart']} className="text-xs" />
+                  {campaign ? 'Formulir Program Event' : 'Formulir Bantuan'}
+                </span>
+                <span className="text-[11px] text-slate-400">· 100% Bebas Biaya</span>
+              </div>
+
+              <h1 className="mt-2 font-heading text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+                {campaign ? campaign.title : 'Permohonan Bantuan'}
+              </h1>
+              {campaign?.description ? (
+                <p className="mt-1 text-xs text-slate-600 leading-relaxed whitespace-pre-line">
+                  {campaign.description}
+                </p>
+              ) : (
+                <p className="mt-1 text-xs text-slate-500">
+                  Kanal pengajuan bantuan dana atau logistik untuk majelis dan lembaga kemasyarakatan.
+                </p>
+              )}
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+              {/* Jenis Bantuan Toggle Switch */}
+              <div>
+                <label className="block font-semibold text-slate-800 mb-1.5">
+                  Bentuk Bantuan <span className="text-rose-500">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setRequestType('DANA')}
+                    className={`flex items-center justify-center gap-2 rounded-xl border py-2.5 px-3 text-center font-bold transition ${
+                      requestType === 'DANA'
+                        ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                        : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={['fa-solid', 'fa-sack-dollar']} />
+                    <span>Dana Tunai</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setRequestType('BARANG')}
+                    className={`flex items-center justify-center gap-2 rounded-xl border py-2.5 px-3 text-center font-bold transition ${
+                      requestType === 'BARANG'
+                        ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                        : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={['fa-solid', 'fa-box-open']} />
+                    <span>Barang / Logistik</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Data Lembaga */}
+              <div>
+                <label htmlFor="institutionName" className="block font-semibold text-slate-800 mb-1">
+                  Nama Majelis / Yayasan / Lembaga <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="institutionName"
+                  name="institutionName"
+                  value={formData.institutionName}
+                  onChange={handleChange}
+                  placeholder="Contoh: Majelis Ta'lim Nurul Huda"
+                  required
+                  className="input !text-xs !py-2"
+                />
+              </div>
+
+              {/* Pimpinan */}
+              <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-bold text-slate-900 mb-2">
-                    1. Jenis Bantuan yang Dimohonkan <span className="text-red-500">*</span>
+                  <label htmlFor="leaderName" className="block font-semibold text-slate-800 mb-1">
+                    Nama Pimpinan <span className="text-rose-500">*</span>
                   </label>
-                  <p className="text-xs text-slate-500 mb-4">
-                    Pilih bentuk bantuan yang paling sesuai dengan kebutuhan majelis atau yayasan Anda.
-                  </p>
+                  <input
+                    type="text"
+                    id="leaderName"
+                    name="leaderName"
+                    value={formData.leaderName}
+                    onChange={handleChange}
+                    placeholder="Nama pimpinan lembaga"
+                    required
+                    className="input !text-xs !py-2"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="leaderPhone" className="block font-semibold text-slate-800 mb-1">
+                    No. WhatsApp Pimpinan <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    id="leaderPhone"
+                    name="leaderPhone"
+                    value={formData.leaderPhone}
+                    onChange={handleChange}
+                    placeholder="08123456789"
+                    required
+                    className="input !text-xs !py-2"
+                  />
+                </div>
+              </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setRequestType('DANA')}
-                      className={`flex flex-col items-center justify-center gap-2 rounded-xl border p-4 text-center transition ${
-                        requestType === 'DANA'
-                          ? 'border-teal-600 bg-teal-50/70 text-teal-900 ring-2 ring-teal-500/20 shadow-sm'
-                          : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                      }`}
-                    >
-                      <FontAwesomeIcon
-                        icon={['fa-solid', 'fa-sack-dollar']}
-                        className={`text-2xl ${requestType === 'DANA' ? 'text-teal-700' : 'text-slate-400'}`}
-                      />
-                      <span className="font-bold text-sm">Bantuan Dana Tunai</span>
-                      <span className="text-[11px] text-slate-500">Dukungan operasional / kegiatan / fasilitas</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setRequestType('BARANG')}
-                      className={`flex flex-col items-center justify-center gap-2 rounded-xl border p-4 text-center transition ${
-                        requestType === 'BARANG'
-                          ? 'border-teal-600 bg-teal-50/70 text-teal-900 ring-2 ring-teal-500/20 shadow-sm'
-                          : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                      }`}
-                    >
-                      <FontAwesomeIcon
-                        icon={['fa-solid', 'fa-box-open']}
-                        className={`text-2xl ${requestType === 'BARANG' ? 'text-teal-700' : 'text-slate-400'}`}
-                      />
-                      <span className="font-bold text-sm">Bantuan Barang / Logistik</span>
-                      <span className="text-[11px] text-slate-500">Perlengkapan, sarana ibadah, sembako, dll</span>
-                    </button>
-                  </div>
+              {/* Penanggung Jawab Lapangan */}
+              <div className="rounded-xl border border-slate-200/80 bg-slate-50/60 p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-semibold text-slate-800">
+                    Penanggung Jawab (PJ) Lapangan <span className="text-rose-500">*</span>
+                  </span>
+                  <label className="inline-flex items-center gap-1.5 cursor-pointer text-[11px] text-slate-600 font-medium">
+                    <input
+                      type="checkbox"
+                      checked={sameAsLeader}
+                      onChange={handleSameAsLeaderToggle}
+                      className="rounded border-slate-300 accent-slate-900"
+                    />
+                    <span>Sama dengan Pimpinan</span>
+                  </label>
                 </div>
 
-                {/* 2. Data Lembaga / Majelis */}
-                <div className="border-t border-slate-100 pt-6">
-                  <h3 className="font-heading text-base font-bold text-slate-900 mb-1">
-                    2. Identitas Lembaga / Majelis / Yayasan
-                  </h3>
-                  <p className="text-xs text-slate-500 mb-4">
-                    Isikan nama entitas dan informasi kontak pimpinan utama.
-                  </p>
-
-                  <div className="space-y-4">
+                {!sameAsLeader ? (
+                  <div className="grid gap-2.5 sm:grid-cols-2 pt-1">
                     <div>
-                      <label htmlFor="institutionName" className="block text-xs font-semibold text-slate-700 mb-1">
-                        Nama Majelis / Yayasan / Lembaga <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="institutionName"
-                        name="institutionName"
-                        value={formData.institutionName}
-                        onChange={handleChange}
-                        placeholder="Contoh: Majelis Ta'lim Nurul Huda"
-                        required
-                        className="input"
-                      />
-                    </div>
-
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label htmlFor="leaderName" className="block text-xs font-semibold text-slate-700 mb-1">
-                          Nama Pimpinan Majelis / Yayasan <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          id="leaderName"
-                          name="leaderName"
-                          value={formData.leaderName}
-                          onChange={handleChange}
-                          placeholder="Nama lengkap pimpinan"
-                          required
-                          className="input"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="leaderPhone" className="block text-xs font-semibold text-slate-700 mb-1">
-                          Nomor WhatsApp Pimpinan <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          id="leaderPhone"
-                          name="leaderPhone"
-                          value={formData.leaderPhone}
-                          onChange={handleChange}
-                          placeholder="Contoh: 081234567890"
-                          required
-                          className="input"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. Data Penanggung Jawab Lapangan */}
-                <div className="border-t border-slate-100 pt-6">
-                  <h3 className="font-heading text-base font-bold text-slate-900 mb-1">
-                    3. Data Penanggung Jawab (PJ)
-                  </h3>
-                  <p className="text-xs text-slate-500 mb-4">
-                    Pihak pelaksana operasional yang dapat dihubungi secara langsung oleh tim verifikasi.
-                  </p>
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <label htmlFor="picName" className="block text-xs font-semibold text-slate-700 mb-1">
-                        Nama Penanggung Jawab <span className="text-red-500">*</span>
-                      </label>
                       <input
                         type="text"
                         id="picName"
@@ -515,253 +604,148 @@ export default function AidRequest() {
                         value={formData.picName}
                         onChange={handleChange}
                         placeholder="Nama penanggung jawab"
-                        required
-                        className="input"
+                        required={!sameAsLeader}
+                        className="input !text-xs !py-1.5 bg-white"
                       />
                     </div>
                     <div>
-                      <label htmlFor="picPhone" className="block text-xs font-semibold text-slate-700 mb-1">
-                        Nomor WhatsApp Penanggung Jawab <span className="text-red-500">*</span>
-                      </label>
                       <input
                         type="tel"
                         id="picPhone"
                         name="picPhone"
                         value={formData.picPhone}
                         onChange={handleChange}
-                        placeholder="Contoh: 081298765432"
-                        required
-                        className="input"
+                        placeholder="No. WA penanggung jawab"
+                        required={!sameAsLeader}
+                        className="input !text-xs !py-1.5 bg-white"
                       />
                     </div>
                   </div>
-                </div>
-
-                {/* 4. Kebutuhan Bantuan */}
-                <div className="border-t border-slate-100 pt-6">
-                  <h3 className="font-heading text-base font-bold text-slate-900 mb-1">
-                    4. {requestType === 'DANA' ? 'Nominal Dana yang Diperlukan' : 'Rincian Kebutuhan Barang'}
-                  </h3>
-                  <p className="text-xs text-slate-500 mb-4">
-                    {requestType === 'DANA'
-                      ? 'Tentukan estimasi alokasi dana yang dibutuhkan secara wajar dan akuntabel.'
-                      : 'Tuliskan jenis barang, spesifikasi, dan kuantitas unit yang dimohonkan.'}
+                ) : (
+                  <p className="text-[11px] text-slate-500 italic">
+                    Data PJ disamakan dengan {formData.leaderName || 'Pimpinan'} ({formData.leaderPhone || '-'}).
                   </p>
-
-                  {requestType === 'DANA' ? (
-                    <div className="space-y-3">
-                      <div className="relative">
-                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-slate-500">
-                          Rp
-                        </span>
-                        <input
-                          type="text"
-                          id="rawAmount"
-                          name="rawAmount"
-                          value={formData.rawAmount ? formatRupiah(formData.rawAmount) : ''}
-                          onChange={handleAmountChange}
-                          placeholder="5.000.000"
-                          required
-                          className="input pl-11 text-base font-bold text-slate-900"
-                        />
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-2 pt-1">
-                        <span className="text-xs text-slate-400">Pilihan cepat:</span>
-                        {PRESET_AMOUNTS.map((p) => (
-                          <button
-                            key={p.value}
-                            type="button"
-                            onClick={() => handlePresetSelect(p.value)}
-                            className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
-                              formData.rawAmount === String(p.value)
-                                ? 'bg-teal-700 text-white shadow-sm'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                            }`}
-                          >
-                            {p.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <textarea
-                        id="goodsDescription"
-                        name="goodsDescription"
-                        value={formData.goodsDescription}
-                        onChange={handleChange}
-                        rows={3}
-                        placeholder="Contoh: 10 rol karpet sajadah musholla, 1 unit amplifier & mikrofon, serta 50 paket mushaf Al-Qur'an."
-                        required
-                        className="input"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* 5. Alasan / Penjelasan Kebutuhan */}
-                <div className="border-t border-slate-100 pt-6">
-                  <h3 className="font-heading text-base font-bold text-slate-900 mb-1">
-                    5. Latar Belakang & Alasan Permohonan Bantuan <span className="text-red-500">*</span>
-                  </h3>
-                  <p className="text-xs text-slate-500 mb-3">
-                    Ceritakan kondisi riil di lapangan, latar belakang lembaga, peruntukan bantuan, dan jumlah penerima manfaat yang terbantu.
-                  </p>
-                  <textarea
-                    id="reason"
-                    name="reason"
-                    value={formData.reason}
-                    onChange={handleChange}
-                    rows={5}
-                    placeholder="Jelaskan secara mandiri alasan pengajuan, latar belakang lembaga, aktivitas jamaah, dan urgensi kebutuhan bantuan saat ini..."
-                    required
-                    className="input text-sm leading-relaxed"
-                  />
-                  <p className="mt-1.5 text-right text-[11px] text-slate-400">
-                    {formData.reason.length} karakter
-                  </p>
-                </div>
-
-                {/* 6. Checkbox Persetujuan */}
-                <div className="border-t border-slate-100 pt-6 space-y-3">
-                  <h3 className="font-heading text-base font-bold text-slate-900 mb-2">
-                    6. Pernyataan & Persetujuan
-                  </h3>
-
-                  <label className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 transition hover:bg-slate-50 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="consentAgreement"
-                      checked={formData.consentAgreement}
-                      onChange={handleChange}
-                      className="mt-0.5 h-4 w-4 rounded border-slate-300 accent-teal-700"
-                    />
-                    <span className="text-xs leading-relaxed text-slate-700">
-                      <strong>Persetujuan Permohonan Bantuan:</strong> Saya menyatakan bahwa permohonan ini diajukan secara sadar, tanpa paksaan, dan seluruh data yang diisikan adalah benar serta dapat dipertanggungjawabkan keabsahannya.
-                    </span>
-                  </label>
-
-                  <label className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 transition hover:bg-slate-50 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="consentPrivacy"
-                      checked={formData.consentPrivacy}
-                      onChange={handleChange}
-                      className="mt-0.5 h-4 w-4 rounded border-slate-300 accent-teal-700"
-                    />
-                    <span className="text-xs leading-relaxed text-slate-700">
-                      <strong>Persetujuan Pengiriman Data:</strong> Saya menyetujui nama dan nomor WhatsApp pimpinan serta penanggung jawab di atas dikirimkan dan disimpan sebatas untuk keperluan pendataan, verifikasi faktual, dan koordinasi penyaluran bantuan oleh pihak pengelola.
-                    </span>
-                  </label>
-                </div>
-
-                {errorMessage && (
-                  <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700 flex items-center gap-2">
-                    <FontAwesomeIcon icon={['fa-solid', 'fa-circle-exclamation']} className="text-sm shrink-0" />
-                    <span>{errorMessage}</span>
-                  </div>
                 )}
-
-                {/* Tombol Submit */}
-                <div className="border-t border-slate-100 pt-6">
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="btn-primary w-full py-3.5 text-base font-bold shadow-md shadow-teal-700/20 hover:shadow-teal-700/30 flex items-center justify-center gap-2"
-                  >
-                    {submitting ? (
-                      <>
-                        <Spinner size="sm" />
-                        <span>Mengirimkan Permohonan...</span>
-                      </>
-                    ) : (
-                      <>
-                        <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-                        <span>Kirim Permohonan Bantuan</span>
-                      </>
-                    )}
-                  </button>
-                  <p className="mt-2 text-center text-[11px] text-slate-400">
-                    Pastikan nomor WhatsApp yang dimasukkan aktif dan terhubung ke internet.
-                  </p>
-                </div>
-              </form>
-            </div>
-
-            {/* Kolom Kanan: Panduan & Sidebar */}
-            <div className="lg:col-span-4 space-y-6">
-              {/* Alur Pengajuan */}
-              <div className="card p-6 shadow-sm">
-                <h3 className="font-heading text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-                  <FontAwesomeIcon icon={['fa-solid', 'fa-list-check']} className="text-teal-700" />
-                  Alur Penyaluran Bantuan
-                </h3>
-                <ol className="relative border-l border-slate-200 pl-4 space-y-5 text-xs text-slate-600">
-                  <li className="relative">
-                    <span className="absolute -left-[21px] top-0 flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-[11px] font-bold text-teal-800">
-                      1
-                    </span>
-                    <p className="font-bold text-slate-900">Pengajuan Formulir</p>
-                    <p className="mt-0.5 leading-relaxed text-slate-500">
-                      Isi rincian lembaga, pimpinan, PJ, dan penjelasan kebutuhan bantuan secara lengkap.
-                    </p>
-                  </li>
-                  <li className="relative">
-                    <span className="absolute -left-[21px] top-0 flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-[11px] font-bold text-teal-800">
-                      2
-                    </span>
-                    <p className="font-bold text-slate-900">Verifikasi Tim</p>
-                    <p className="mt-0.5 leading-relaxed text-slate-500">
-                      Tim pengelola akan melakukan pengecekan data dan wawancara klarifikasi via WhatsApp resmi.
-                    </p>
-                  </li>
-                  <li className="relative">
-                    <span className="absolute -left-[21px] top-0 flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-[11px] font-bold text-teal-800">
-                      3
-                    </span>
-                    <p className="font-bold text-slate-900">Persetujuan & Penyaluran</p>
-                    <p className="mt-0.5 leading-relaxed text-slate-500">
-                      Bantuan disalurkan sesuai alokasi dana atau logistik yang disepakati bersama.
-                    </p>
-                  </li>
-                </ol>
               </div>
 
-              {/* Jaminan Integritas */}
-              <div className="card p-6 bg-gradient-to-br from-teal-900 to-teal-800 text-white shadow-sm">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg text-amber-400">
-                    <FontAwesomeIcon icon={['fa-solid', 'fa-shield-heart']} />
+              {/* Kebutuhan: Dana vs Barang */}
+              <div>
+                <label className="block font-semibold text-slate-800 mb-1">
+                  {requestType === 'DANA' ? 'Nominal Dana yang Dibutuhkan' : 'Rincian Kebutuhan Barang'} <span className="text-rose-500">*</span>
+                </label>
+                {requestType === 'DANA' ? (
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-xs">
+                        Rp
+                      </span>
+                      <input
+                        type="text"
+                        id="rawAmount"
+                        name="rawAmount"
+                        value={formData.rawAmount ? formatRupiah(formData.rawAmount) : ''}
+                        onChange={handleAmountChange}
+                        placeholder="5.000.000"
+                        required
+                        className="input !text-sm !font-bold !pl-9 !py-2 text-slate-900"
+                      />
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[11px] text-slate-400">Pilihan cepat:</span>
+                      {PRESET_AMOUNTS.map((p) => (
+                        <button
+                          key={p.value}
+                          type="button"
+                          onClick={() => handlePresetSelect(p.value)}
+                          className={`rounded-lg px-2 py-0.5 text-[11px] font-semibold border transition ${
+                            formData.rawAmount === String(p.value)
+                              ? 'border-slate-800 bg-slate-800 text-white'
+                              : 'border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200'
+                          }`}
+                        >
+                          {p.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <textarea
+                    id="goodsDescription"
+                    name="goodsDescription"
+                    value={formData.goodsDescription}
+                    onChange={handleChange}
+                    rows={2}
+                    placeholder="Contoh: 10 rol sajadah musholla dan 50 paket sembako santunan."
+                    required
+                    className="input !text-xs !py-2"
+                  />
+                )}
+              </div>
+
+              {/* Alasan / Urgensi */}
+              <div>
+                <label htmlFor="reason" className="block font-semibold text-slate-800 mb-1">
+                  Alasan / Urgensi Kebutuhan <span className="text-rose-500">*</span>
+                </label>
+                <textarea
+                  id="reason"
+                  name="reason"
+                  value={formData.reason}
+                  onChange={handleChange}
+                  rows={3}
+                  placeholder="Jelaskan ringkas peruntukan bantuan dan urgensi kebutuhan di lapangan..."
+                  required
+                  className="input !text-xs !py-2 leading-relaxed"
+                />
+              </div>
+
+              {/* Persetujuan To The Point */}
+              <div className="pt-1">
+                <label className="flex items-start gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50/60 p-3 cursor-pointer hover:bg-slate-50 transition">
+                  <input
+                    type="checkbox"
+                    name="consentAgreement"
+                    checked={formData.consentAgreement}
+                    onChange={handleChange}
+                    className="mt-0.5 h-3.5 w-3.5 rounded border-slate-300 accent-slate-900"
+                  />
+                  <span className="text-[11px] text-slate-600 leading-relaxed">
+                    Saya menyatakan data yang diisi adalah benar, diajukan secara sadar, dan bersedia diverifikasi oleh tim pengelola Yayasan Cinta Kasih Fatimah.
                   </span>
-                  <div>
-                    <h4 className="font-bold text-sm">Bebas Biaya (Gratis)</h4>
-                    <p className="text-[11px] text-teal-200">100% Layanan Sosial</p>
-                  </div>
-                </div>
-                <p className="mt-3 text-xs leading-relaxed text-teal-100">
-                  Seluruh proses permohonan bantuan tidak memungut biaya administrasi atau imbalan apapun. Waspadai pihak yang mengatasnamakan lembaga untuk meminta transfer uang.
-                </p>
+                </label>
               </div>
 
-              {/* Bantuan / Kontak Layanan */}
-              <div className="card p-6 shadow-sm text-xs text-slate-600">
-                <h4 className="font-bold text-sm text-slate-900 mb-2">Butuh Bantuan Pengisian?</h4>
-                <p className="leading-relaxed text-slate-500 mb-4">
-                  Apabila mengalami kendala dalam pengisian formulir, silakan berkonsultasi melalui narahubung sekretariat kami:
-                </p>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-slate-700">
-                    <FontAwesomeIcon icon={['fa-solid', 'fa-phone']} className="text-teal-700 w-3.5" />
-                    <span>{settings.phone || '(021) 555-0123'}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-slate-700">
-                    <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} className="text-teal-700 w-3.5" />
-                    <span>{settings.email || 'halo@ckf.or.id'}</span>
-                  </div>
+              {errorMessage && (
+                <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-700 flex items-center gap-2">
+                  <FontAwesomeIcon icon={['fa-solid', 'fa-circle-exclamation']} className="shrink-0" />
+                  <span>{errorMessage}</span>
                 </div>
+              )}
+
+              {/* Tombol Kirim */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="admin-btn-primary w-full !py-2.5 !text-sm font-bold flex items-center justify-center gap-2"
+                >
+                  {submitting ? (
+                    <>
+                      <Spinner size="sm" />
+                      <span>Mengirimkan...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={['fa-solid', 'fa-paper-plane']} />
+                      <span>Kirim Permohonan</span>
+                    </>
+                  )}
+                </button>
+                <p className="mt-2 text-center text-[10px] text-slate-400">
+                  Data Anda aman dan tidak disebarluaskan ke pihak ketiga.
+                </p>
               </div>
-            </div>
+            </form>
           </div>
         )}
       </main>

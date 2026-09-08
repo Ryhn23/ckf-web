@@ -206,8 +206,8 @@ export default function CategoriesAdmin() {
                                 </span>
                               )}
                               {cat.impact && (
-                                <span className="inline-flex items-center gap-1 rounded-md bg-teal-50 border border-teal-100 px-2 py-0.5 text-[11px] font-medium text-teal-700">
-                                  <span className="text-teal-600 font-semibold">Dampak:</span> {cat.impact}
+                                <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 border border-slate-200/80 px-2 py-0.5 text-[11px] font-medium text-slate-700">
+                                  <span className="text-slate-500 font-semibold">Dampak:</span> {cat.impact}
                                 </span>
                               )}
                             </div>
@@ -215,7 +215,7 @@ export default function CategoriesAdmin() {
                         </td>
                         <td className="admin-td">
                           <span className="flex items-center gap-2 text-slate-600">
-                            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 text-teal-700">
+                            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 text-slate-700 border border-slate-200/60">
                               <FontAwesomeIcon icon={parseFaIcon(cat.icon)} className="text-xs" />
                             </span>
                             <code className="text-xs text-slate-400">{cat.icon}</code>

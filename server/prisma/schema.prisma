@@ -134,10 +134,27 @@ enum AidRequestStatus {
   REJECTED
 }
 
+model AidCampaign {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  description String?
+  image       String?
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  requests    AidRequest[]
+
+  @@index([slug])
+  @@index([isActive])
+}
+
 model AidRequest {
   id               String           @id @default(cuid())
   ticketNumber     String           @unique
   type             AidRequestType   @default(DANA)
+  campaignId       String?
+  campaign         AidCampaign?     @relation(fields: [campaignId], references: [id], onDelete: SetNull)
   institutionName  String
   leaderName       String
   leaderPhone      String
@@ -153,4 +170,6 @@ model AidRequest {
 
   @@index([status, createdAt(sort: Desc)])
   @@index([type])
+  @@index([campaignId])
 }
+

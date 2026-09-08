@@ -10,6 +10,8 @@ const router = Router();
 const createSchema = validate({
   body: z.object({
     type: z.enum(['DANA', 'BARANG']),
+    campaignId: z.string().optional().nullable(),
+    campaignSlug: z.string().optional().nullable(),
     institutionName: z.string().min(2, 'Nama majelis/lembaga minimal 2 karakter').max(150),
     leaderName: z.string().min(2, 'Nama pimpinan minimal 2 karakter').max(100),
     leaderPhone: z.string().min(8, 'Nomor WhatsApp pimpinan tidak valid').max(30),
@@ -29,6 +31,7 @@ const listSchema = validate({
     limit: z.coerce.number().int().min(1).max(50).optional(),
     status: z.enum(['PENDING', 'REVIEWED', 'APPROVED', 'REJECTED']).optional(),
     type: z.enum(['DANA', 'BARANG']).optional(),
+    campaignId: z.string().optional(),
     q: z.string().max(100).optional(),
   }),
 });
@@ -40,13 +43,41 @@ const updateStatusSchema = validate({
   }),
 });
 
-/** POST /api/aid-requests (publik) */
+const campaignCreateSchema = validate({
+  body: z.object({
+    title: z.string().min(2, 'Nama program atau event minimal 2 karakter').max(150),
+    slug: z.string().max(150).optional(),
+    description: z.string().max(3000).optional().nullable(),
+    image: z.string().max(500).optional().nullable(),
+    isActive: z.boolean().optional(),
+  }),
+});
+
+const campaignUpdateSchema = validate({
+  body: z.object({
+    title: z.string().min(2).max(150).optional(),
+    slug: z.string().max(150).optional(),
+    description: z.string().max(3000).optional().nullable(),
+    image: z.string().max(500).optional().nullable(),
+    isActive: z.boolean().optional(),
+  }),
+});
+
+/** Public routes */
+router.get('/campaigns/public/:slug', aidRequestController.getPublicCampaign);
 router.post('/', createSchema, aidRequestController.create);
 
-/** Admin routes */
+/** Admin Campaign routes */
+router.get('/campaigns', authMiddleware, requireAdmin, aidRequestController.listCampaigns);
+router.post('/campaigns', authMiddleware, requireAdmin, campaignCreateSchema, aidRequestController.createCampaign);
+router.patch('/campaigns/:id', authMiddleware, requireAdmin, campaignUpdateSchema, aidRequestController.updateCampaign);
+router.delete('/campaigns/:id', authMiddleware, requireAdmin, aidRequestController.deleteCampaign);
+
+/** Admin Aid Request routes */
 router.get('/', authMiddleware, requireAdmin, listSchema, aidRequestController.list);
 router.get('/:id', authMiddleware, requireAdmin, aidRequestController.getById);
 router.patch('/:id/status', authMiddleware, requireAdmin, updateStatusSchema, aidRequestController.updateStatus);
 router.delete('/:id', authMiddleware, requireAdmin, aidRequestController.remove);
 
 export default router;
+

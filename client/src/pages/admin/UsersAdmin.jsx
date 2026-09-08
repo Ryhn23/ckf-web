@@ -190,7 +190,7 @@ export default function UsersAdmin() {
                       <tr key={user.id} className="transition hover:bg-slate-50/70">
                         <td className="admin-td font-semibold text-slate-900">
                           <div className="flex items-center gap-2.5">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-800 border border-teal-100 text-xs font-bold">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-700 border border-slate-200/80 text-xs font-bold">
                               {user.name.charAt(0).toUpperCase()}
                             </span>
                             <div>

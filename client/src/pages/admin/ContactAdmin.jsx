@@ -92,7 +92,7 @@ export default function ContactAdmin() {
                   type="button"
                   onClick={() => toggleRead(msg)}
                   className={`flex w-full items-center gap-4 px-5 py-4 text-left transition ${
-                    msg.isRead ? 'hover:bg-slate-50/70' : 'bg-teal-50/25 hover:bg-teal-50/50'
+                    msg.isRead ? 'hover:bg-slate-50/70' : 'bg-slate-50/80 hover:bg-slate-100/70 font-semibold'
                   }`}
                 >
                   <StatusBadge

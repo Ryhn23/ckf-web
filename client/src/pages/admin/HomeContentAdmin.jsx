@@ -167,8 +167,8 @@ export default function HomeContentAdmin() {
             />
             <ToggleSwitch
               id="menu_bantuan_enabled"
-              label="Menu Permohonan Bantuan"
-              description="Menampilkan formulir permohonan bantuan"
+              label="Penerimaan Permohonan Bantuan"
+              description="Buka atau tutup penerimaan pengajuan bantuan pada tautan khusus portal"
               checked={isEnabled('menu_bantuan_enabled')}
               onChange={() => handleToggle('menu_bantuan_enabled')}
             />

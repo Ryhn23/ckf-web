@@ -29,6 +29,16 @@ export default function AidRequestsAdmin() {
   const [typeFilter, setTypeFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeQuery, setActiveQuery] = useState('');
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  const handleCopyPortalLink = () => {
+    const url = `${window.location.origin}/ajukan-bantuan`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    }
+  };
 
   // Modal / Detail state
   const [selectedItem, setSelectedItem] = useState(null);
@@ -134,6 +144,60 @@ export default function AidRequestsAdmin() {
             Kelola dan verifikasi permohonan bantuan dana atau barang.
           </p>
         </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleCopyPortalLink}
+            className="admin-btn-secondary !py-1.5 !px-3 text-xs"
+            title="Salin tautan formulir permohonan bantuan"
+          >
+            <FontAwesomeIcon
+              icon={['fa-solid', copiedLink ? 'fa-check' : 'fa-copy']}
+              className={copiedLink ? 'text-teal-600' : 'text-slate-400'}
+            />
+            <span>{copiedLink ? 'Link Berhasil Disalin!' : 'Salin Link Formulir'}</span>
+          </button>
+
+          <a
+            href="/ajukan-bantuan"
+            target="_blank"
+            rel="noreferrer"
+            className="admin-btn-primary !py-1.5 !px-3 text-xs"
+            title="Buka portal formulir permohonan bantuan di tab baru"
+          >
+            <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} />
+            <span>Buka Formulir</span>
+          </a>
+        </div>
+      </div>
+
+      {/* Banner Informasi Link Khusus Standalone */}
+      <div className="rounded-xl border border-teal-200/70 bg-teal-50/50 p-4 text-xs text-teal-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-start sm:items-center gap-3">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-teal-800 text-sm">
+            <FontAwesomeIcon icon={['fa-solid', 'fa-shield-heart']} />
+          </span>
+          <div>
+            <p className="font-bold text-slate-900">
+              Formulir Permohonan
+            </p>
+            <p className="text-slate-600 mt-0.5">
+              Tautan formulir:
+              <code className="ml-1.5 rounded bg-white px-2 py-0.5 font-mono text-[11px] font-semibold text-teal-800 border border-teal-200">
+                {typeof window !== 'undefined' ? window.location.origin : ''}/ajukan-bantuan
+              </code>
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={handleCopyPortalLink}
+          className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-white border border-teal-300 px-3 py-1.5 font-semibold text-teal-800 hover:bg-teal-50 transition shadow-xs"
+        >
+          <FontAwesomeIcon icon={['fa-solid', copiedLink ? 'fa-check' : 'fa-copy']} />
+          <span>{copiedLink ? 'Tersalin' : 'Salin Link'}</span>
+        </button>
       </div>
 
       {/* Counter Ringkasan */}
@@ -316,11 +380,10 @@ export default function AidRequestsAdmin() {
                       {/* Bantuan & Kebutuhan */}
                       <td className="admin-td">
                         <span
-                          className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold ${
-                            item.type === 'DANA'
+                          className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold ${item.type === 'DANA'
                               ? 'bg-amber-50 text-amber-800 border border-amber-200'
                               : 'bg-teal-50 text-teal-800 border border-teal-200'
-                          }`}
+                            }`}
                         >
                           <FontAwesomeIcon
                             icon={['fa-solid', item.type === 'DANA' ? 'fa-sack-dollar' : 'fa-box-open']}

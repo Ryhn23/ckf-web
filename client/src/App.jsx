@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { SettingsProvider } from './context/SettingsContext';
@@ -76,10 +76,13 @@ export default function App() {
                 <Route path="/blog/:slug" element={<BlogDetail />} />
                 <Route path="/galeri" element={<Gallery />} />
                 <Route path="/donasi" element={<Donate />} />
-                <Route path="/bantuan" element={<AidRequest />} />
                 <Route path="/kontak" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
+
+              {/* Standalone Portal Permohonan Bantuan (Khusus / Terpisah dari Navigasi Publik) */}
+              <Route path="/ajukan-bantuan" element={<AidRequest />} />
+              <Route path="/bantuan" element={<Navigate to="/ajukan-bantuan" replace />} />
 
               {/* Login */}
               <Route

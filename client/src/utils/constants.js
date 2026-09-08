@@ -6,7 +6,6 @@ export const NAV_ITEMS = [
   { label: 'Blog', path: '/blog' },
   { label: 'Galeri', path: '/galeri' },
   { label: 'Donasi', path: '/donasi' },
-  { label: 'Bantuan', path: '/bantuan' },
   { label: 'Kontak', path: '/kontak' },
 ];
 

@@ -1,11 +1,86 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PageHeader from '../components/layout/PageHeader';
 import Seo from '../components/Seo';
 import { useSettings } from '../context/SettingsContext';
 import { submitAidRequest } from '../api/aidRequests';
 import Spinner from '../components/ui/Spinner';
+
+function PortalHeader() {
+  return (
+    <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group py-1" title="Kembali ke Website Utama">
+          <img
+            src="/logo.png"
+            alt="Logo Yayasan Cinta Kasih Fatimah"
+            className="h-11 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
+          />
+          <div className="flex flex-col justify-center leading-none select-none text-slate-900">
+            <span className="font-heading text-[11px] sm:text-[12px] font-extrabold uppercase tracking-wider text-slate-900">
+              CINTA KASIH
+            </span>
+            <span className="font-heading text-[15px] sm:text-[17px] font-black uppercase tracking-wide mt-0.5 text-black">
+              FATIMAH
+            </span>
+            <span className="font-sans text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-900">
+              FOUNDATION
+            </span>
+          </div>
+        </Link>
+
+        <div className="flex items-center gap-3 sm:gap-4">
+          <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-teal-50 border border-teal-200/60 px-3 py-1 text-xs font-semibold text-teal-800">
+            <FontAwesomeIcon icon={['fa-solid', 'fa-shield-heart']} className="text-teal-600 text-xs" />
+            Portal Khusus Bantuan
+          </span>
+
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-xs hover:border-slate-300 hover:text-teal-700 transition"
+          >
+            <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-left']} className="text-[10px]" />
+            <span>Website Utama</span>
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function PortalFooter({ phone, email }) {
+  return (
+    <footer className="mt-auto border-t border-slate-200/80 bg-white py-10 text-xs text-slate-500">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-100 pb-8 text-center md:text-left">
+          <div className="max-w-md">
+            <p className="font-bold text-slate-800 text-sm">Yayasan Cinta Kasih Fatimah</p>
+            <p className="mt-1 text-slate-500 leading-relaxed text-xs">
+              Portal permohonan bantuan resmi. Seluruh informasi yang Anda kirimkan dilindungi kerahasiaannya dan hanya digunakan untuk proses verifikasi tim lapangan.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center gap-4 text-xs text-slate-600">
+            {phone && (
+              <span className="inline-flex items-center gap-1.5">
+                <FontAwesomeIcon icon={['fa-solid', 'fa-phone']} className="text-teal-700 text-xs" />
+                <span>{phone}</span>
+              </span>
+            )}
+            {email && (
+              <span className="inline-flex items-center gap-1.5">
+                <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} className="text-teal-700 text-xs" />
+                <span>{email}</span>
+              </span>
+            )}
+          </div>
+        </div>
+        <p className="mt-6 text-center text-[11px] text-slate-400">
+          © {new Date().getFullYear()} Cinta Kasih Fatimah Foundation. Seluruh hak cipta dilindungi.
+        </p>
+      </div>
+    </footer>
+  );
+}
 
 const PRESET_AMOUNTS = [
   { label: 'Rp 2,5 Juta', value: 2500000 },
@@ -135,46 +210,75 @@ export default function AidRequest() {
     }
   };
 
-  // Jika menu bantuan dinonaktifkan di pengaturan admin
+  // Jika permohonan bantuan dinonaktifkan di pengaturan admin
   if (settings.menu_bantuan_enabled === 'false') {
     return (
-      <>
-        <Seo title="Permintaan Bantuan" description="Layanan pengajuan bantuan" />
-        <PageHeader title="Layanan Permintaan Bantuan" crumbs={[{ label: 'Bantuan' }]} />
-        <section className="container-page max-w-2xl py-16 text-center">
-          <div className="card p-10">
+      <div className="min-h-screen flex flex-col justify-between bg-slate-50 font-sans text-slate-700">
+        <Seo title="Permintaan Bantuan Ditutup - Cinta Kasih Fatimah" description="Layanan pengajuan bantuan kemanusiaan" />
+        <PortalHeader />
+        <main className="mx-auto max-w-xl px-4 py-16 text-center my-auto">
+          <div className="card p-8 sm:p-10 shadow-sm border border-slate-200/80 bg-white">
             <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-400">
               <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} />
             </span>
             <h2 className="mt-5 font-heading text-xl font-bold text-slate-900">
-              Layanan Permohonan Bantuan Sedang Ditutup
+              Penerimaan Permohonan Bantuan Sedang Ditutup
             </h2>
-            <p className="mt-3 text-sm text-slate-600">
-              Saat ini kanal permohonan bantuan sedang tidak menerima pengajuan baru. Untuk informasi kemitraan atau kebutuhan mendesak, silakan hubungi kontak sekretariat kami.
+            <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+              Saat ini kanal permohonan bantuan sedang tidak menerima pengajuan baru. Untuk kebutuhan mendesak atau klarifikasi koordinasi, silakan hubungi kontak sekretariat yayasan.
             </p>
             <div className="mt-6 flex justify-center gap-3">
-              <Link to="/" className="btn-outline">Kembali ke Beranda</Link>
-              <Link to="/kontak" className="btn-primary">Hubungi Kami</Link>
+              <Link to="/" className="btn-outline text-xs sm:text-sm">Ke Website Utama</Link>
+              <Link to="/kontak" className="btn-primary text-xs sm:text-sm">Hubungi Kami</Link>
             </div>
           </div>
-        </section>
-      </>
+        </main>
+        <PortalFooter phone={settings.phone} email={settings.email} />
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col justify-between bg-slate-50 font-sans text-slate-700">
       <Seo
-        title="Formulir Permintaan Bantuan - Cinta Kasih Fatimah"
+        title="Formulir Permohonan Bantuan - Cinta Kasih Fatimah"
         description="Pengajuan permohonan bantuan dana atau barang logistik untuk majelis, yayasan, dan lembaga sosial kemasyarakatan."
       />
-      <PageHeader
-        title="Permohonan Bantuan"
-        subtitle="Kanal resmi pengajuan bantuan dana dan logistik untuk majelis, yayasan, dan lembaga kemasyarakatan."
-        crumbs={[{ label: 'Bantuan' }]}
-      />
+      <PortalHeader />
 
-      <div className="container-page py-12 md:py-16">
+      {/* Hero Banner Standalone */}
+      <section className="border-b border-slate-200/80 bg-gradient-to-b from-teal-900 via-teal-800 to-teal-900 text-white py-10 sm:py-14">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 text-center">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold text-teal-200 backdrop-blur">
+            <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-hand']} />
+            Layanan Pengajuan Terarah
+          </span>
+          <h1 className="mt-4 font-heading text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+            Permohonan Bantuan Kemanusiaan
+          </h1>
+          <p className="mx-auto mt-3 max-w-2xl text-xs sm:text-sm text-teal-100/90 leading-relaxed">
+            Kanal resmi bagi perwakilan majelis, yayasan, dan lembaga kemasyarakatan untuk mengajukan bantuan dana atau barang logistik secara langsung.
+          </p>
+
+          {/* 3 Trust badges */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-teal-100">
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-teal-300 text-xs" />
+              100% Bebas Biaya
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-shield-heart']} className="text-teal-300 text-xs" />
+              Kerahasiaan Terjamin
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-teal-300 text-xs" />
+              Verifikasi Langsung Tim
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <main className="flex-1 mx-auto w-full max-w-6xl px-4 sm:px-6 py-10 sm:py-14">
         {submissionResult ? (
           /* STATE SUKSES */
           <div className="mx-auto max-w-2xl animate-fade-in">
@@ -660,7 +764,9 @@ export default function AidRequest() {
             </div>
           </div>
         )}
-      </div>
-    </>
+      </main>
+
+      <PortalFooter phone={settings.phone} email={settings.email} />
+    </div>
   );
 }

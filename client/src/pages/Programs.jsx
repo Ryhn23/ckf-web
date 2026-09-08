@@ -25,33 +25,6 @@ export default function Programs() {
       />
 
       <section className="container-page py-12 lg:py-16">
-        {/* Ringkasan Misi Program */}
-        <div className="mb-12 rounded-3xl border border-teal-100 bg-gradient-to-r from-teal-900 via-teal-800 to-teal-900 p-8 text-white shadow-xl lg:p-10">
-          <div className="grid gap-6 lg:grid-cols-12 lg:items-center">
-            <div className="lg:col-span-8">
-              <span className="inline-block rounded-full bg-teal-700/80 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-teal-200">
-                Pilar Keberlanjutan Program
-              </span>
-              <h2 className="mt-3 font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Pendekatan Holistik untuk Kesejahteraan Umat
-              </h2>
-              <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-teal-100/90 sm:text-base">
-                Seluruh program dirancang dengan asesmen kebutuhan mendalam di lapangan, pelaksanaan terukur, serta pelaporan terbuka demi memastikan setiap donasi dan kepedulian Anda tepat sasaran.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3 lg:col-span-4 lg:justify-end">
-              <Link to="/donasi" className="btn-primary !border-teal-400 !bg-teal-500 !text-white hover:!bg-teal-400">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-heart']} />
-                Donasi Sekarang
-              </Link>
-              <Link to="/blog" className="btn-outline !border-white/30 !bg-white/10 !text-white hover:!bg-white/20">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-newspaper']} />
-                Warta & Dokumentasi
-              </Link>
-            </div>
-          </div>
-        </div>
-
         {/* Daftar Direktori Program */}
         {catLoading ? (
           <Spinner label="Memuat pilar program…" />
@@ -153,31 +126,6 @@ export default function Programs() {
             ))}
           </div>
         )}
-
-        {/* Section Komitmen & Akuntabilitas */}
-        <div className="mt-16 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm lg:p-12">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-50 text-teal-700">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-shield-halved']} className="text-xl" />
-            </span>
-            <h3 className="mt-4 font-heading text-2xl font-bold text-slate-900">
-              Komitmen Transparansi dan Akuntabilitas
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">
-              Setiap realisasi kegiatan dan penyaluran dana diawasi secara ketat dan didokumentasikan secara berkala. Seluruh laporan kegiatan dipublikasikan melalui kanal warta dan laporan tahunan resmi.
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link to="/donasi" className="btn-primary text-sm">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-heart']} />
-                Salurkan Donasi Umum
-              </Link>
-              <Link to="/kontak" className="btn-outline text-sm">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-envelope']} />
-                Hubungi Pengurus
-              </Link>
-            </div>
-          </div>
-        </div>
       </section>
     </>
   );

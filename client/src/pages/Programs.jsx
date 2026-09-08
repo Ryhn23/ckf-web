@@ -101,27 +101,6 @@ export default function Programs() {
                     )}
                   </div>
                 </div>
-
-                {/* Tombol Aksi */}
-                <div className="mt-6 border-t border-slate-100 pt-5">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <Link
-                      to={`/donasi?program=${cat.slug}`}
-                      className="btn-primary flex-1 justify-center !py-2.5 text-xs shadow-sm"
-                    >
-                      <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} />
-                      Salurkan Donasi
-                    </Link>
-                    <Link
-                      to={`/blog?category=${cat.slug}`}
-                      className="btn-outline justify-center !py-2.5 text-xs"
-                      title={`Lihat artikel dan warta kegiatan ${cat.name}`}
-                    >
-                      <FontAwesomeIcon icon={['fa-solid', 'fa-newspaper']} />
-                      Warta Kegiatan
-                    </Link>
-                  </div>
-                </div>
               </div>
             ))}
           </div>

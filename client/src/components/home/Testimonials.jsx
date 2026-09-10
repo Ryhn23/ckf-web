@@ -36,7 +36,7 @@ const DEFAULT_TESTIMONIALS = [
 
 export default function Testimonials() {
   const { settings } = useSettings();
-  const { data } = useFetch(() => getTestimonials(), []);
+  const { data, loading } = useFetch(() => getTestimonials(), []);
   const testimonials = data?.data && data.data.length > 0 ? data.data : DEFAULT_TESTIMONIALS;
 
   const badge = settings.home_testimonials_badge || 'Testimoni';
@@ -52,7 +52,14 @@ export default function Testimonials() {
           <h2 className="text-3xl font-bold md:text-4xl">{title}</h2>
         </div>
 
-        <Swiper
+        {loading ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-56 animate-pulse rounded-2xl bg-white border border-slate-200/80 p-6" />
+            ))}
+          </div>
+        ) : (
+          <Swiper
           modules={[Autoplay, Pagination]}
           autoplay={{ delay: 4500, disableOnInteraction: false }}
           pagination={{ clickable: true }}
@@ -93,6 +100,7 @@ export default function Testimonials() {
             </SwiperSlide>
           ))}
         </Swiper>
+        )}
       </div>
     </section>
   );

@@ -11,7 +11,7 @@ import { useSettings } from '../../context/SettingsContext';
 
 export default function HeroCarousel() {
   const { settings } = useSettings();
-  const { data } = useFetch(() => getFeaturedPosts(), []);
+  const { data, loading: loadingPosts } = useFetch(() => getFeaturedPosts(), []);
   const posts = data?.data || [];
 
   const isCustom = settings.hero_mode === 'custom';
@@ -63,8 +63,28 @@ export default function HeroCarousel() {
     });
   }
 
-  const slides = isCustom ? customSlides : posts.length > 0 ? posts : customSlides;
   const showDonationBtn = settings.menu_donasi_enabled !== 'false';
+
+  // Jangan tampilkan customSlides sementara jika sedang memuat artikel unggulan
+  if (!isCustom && loadingPosts) {
+    return (
+      <section className="relative overflow-hidden bg-teal-900">
+        <div className="container-page relative flex min-h-[480px] sm:min-h-[540px] md:min-h-[600px] lg:min-h-[640px] items-center py-16 pb-24 sm:py-20 sm:pb-28 md:py-24 md:pb-32">
+          <div className="max-w-2xl space-y-4 animate-pulse">
+            <div className="h-10 sm:h-12 w-3/4 rounded-2xl bg-white/20" />
+            <div className="h-5 sm:h-6 w-full rounded-xl bg-white/10" />
+            <div className="h-5 sm:h-6 w-2/3 rounded-xl bg-white/10" />
+            <div className="pt-4 flex gap-3">
+              <div className="h-11 w-36 rounded-full bg-amber-500/80" />
+              {showDonationBtn && <div className="h-11 w-36 rounded-full bg-white/15" />}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const slides = isCustom ? customSlides : posts.length > 0 ? posts : customSlides;
 
   return (
     <section className="relative overflow-hidden bg-teal-900">

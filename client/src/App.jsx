@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
-import { SettingsProvider } from './context/SettingsContext';
+import { SettingsProvider, useSettings } from './context/SettingsContext';
 import ScrollTop from './components/layout/ScrollTop';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -47,7 +47,30 @@ function AdminLoadingFallback() {
   );
 }
 
+function InitialSiteLoader() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50">
+      <div className="flex flex-col items-center gap-4">
+        <img
+          src="/logo.png"
+          alt="Logo Cinta Kasih Fatimah"
+          className="h-14 w-auto object-contain animate-pulse"
+        />
+        <div className="h-1.5 w-32 overflow-hidden rounded-full bg-slate-200">
+          <div className="h-full w-full animate-pulse bg-teal-700" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PublicLayout() {
+  const { hasLoaded } = useSettings();
+
+  if (!hasLoaded) {
+    return <InitialSiteLoader />;
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />

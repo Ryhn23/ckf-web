@@ -5,12 +5,12 @@ import { useSettings } from '../../context/SettingsContext';
 function StatItem({ stat }) {
   const [ref, value] = useCountUp(stat.target);
   return (
-    <div ref={ref} className="flex flex-col items-center gap-3 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-xl text-amber-400">
+    <div ref={ref} className="flex flex-col items-center gap-2 text-center">
+      <span className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-white/10 text-lg sm:text-xl text-amber-400">
         <FontAwesomeIcon icon={stat.icon} />
       </span>
-      <p className="font-heading text-3xl font-bold text-white md:text-4xl">{stat.format(value)}</p>
-      <p className="text-sm font-medium text-teal-200">{stat.label}</p>
+      <p className="font-heading text-2xl font-bold text-white md:text-3xl">{stat.format(value)}</p>
+      <p className="text-xs font-medium text-teal-200 sm:text-sm">{stat.label}</p>
     </div>
   );
 }
@@ -51,7 +51,7 @@ export default function StatsCounter() {
 
   return (
     <section className="relative z-10 border-t border-teal-700/60 bg-teal-800 shadow-inner">
-      <div className="container-page grid grid-cols-2 gap-8 py-14 sm:py-16 md:py-20 lg:grid-cols-4">
+      <div className="container-page grid grid-cols-2 gap-6 py-6 sm:py-8 md:py-10 lg:grid-cols-4">
         {STATS.map((stat) => (
           <StatItem key={stat.label} stat={stat} />
         ))}

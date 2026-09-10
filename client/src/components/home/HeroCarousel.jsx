@@ -88,20 +88,8 @@ export default function HeroCarousel() {
               <div className="absolute inset-0 bg-gradient-to-r from-teal-950/90 via-teal-900/70 to-teal-900/30" />
 
               {/* Konten */}
-              <div className="container-page relative flex min-h-[520px] sm:min-h-[580px] md:min-h-[640px] lg:min-h-[700px] items-center py-20 pb-28 sm:py-24 sm:pb-32 md:py-28 md:pb-36 lg:py-32 lg:pb-40">
+              <div className="container-page relative flex min-h-[480px] sm:min-h-[540px] md:min-h-[600px] lg:min-h-[640px] items-center py-16 pb-24 sm:py-20 sm:pb-28 md:py-24 md:pb-32">
                 <div className="max-w-2xl">
-                  {(slide.category || slide.badge) && (
-                    <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-amber-300 ring-1 ring-white/20 backdrop-blur">
-                      <FontAwesomeIcon
-                        icon={
-                          slide.category?.icon
-                            ? [slide.category.icon.split(' ')[0], slide.category.icon.split(' ')[1]]
-                            : ['fa-solid', 'fa-award']
-                        }
-                      />
-                      {slide.category ? slide.category.name : slide.badge}
-                    </span>
-                  )}
                   <h1 className="font-heading text-3xl font-bold leading-tight text-white md:text-5xl">
                     {slide.title}
                   </h1>

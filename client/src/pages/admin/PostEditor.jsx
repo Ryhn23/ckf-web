@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
 import { createPost, updatePost, getPostById } from '../../api/posts';
 import { getCategories } from '../../api/categories';
+import { uploadMedia } from '../../api/media';
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
@@ -128,6 +129,8 @@ export default function PostEditor() {
     fd.append('tags', form.tags || '');
     if (form.publishedAt) {
       fd.append('publishedAt', new Date(form.publishedAt).toISOString());
+    } else {
+      fd.append('publishedAt', '');
     }
     if (coverFile) {
       fd.append('cover', coverFile);
@@ -168,17 +171,54 @@ export default function PostEditor() {
   const wordCount = textContent ? textContent.split(/\s+/).filter(Boolean).length : 0;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-  const quillModules = {
-    toolbar: [
-      [{ header: [2, 3, 4, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['blockquote', 'code-block'],
-      ['link', 'image'],
-      [{ align: [] }],
-      ['clean'],
-    ],
-  };
+  const quillRef = useRef(null);
+
+  const handleImageUpload = useCallback(() => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      try {
+        const res = await uploadMedia(file);
+        const url = res?.data?.url;
+        if (url) {
+          const quill = quillRef.current?.getEditor();
+          if (quill) {
+            const range = quill.getSelection(true);
+            quill.insertEmbed(range.index, 'image', url);
+            quill.setSelection(range.index + 1);
+          }
+        }
+      } catch (err) {
+        alert(errMsg(err, 'Gagal mengunggah gambar ke artikel'));
+      }
+    };
+  }, []);
+
+  const quillModules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          [{ header: [2, 3, 4, false] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['blockquote', 'code-block'],
+          ['link', 'image'],
+          [{ align: [] }],
+          ['clean'],
+        ],
+        handlers: {
+          image: handleImageUpload,
+        },
+      },
+    }),
+    [handleImageUpload],
+  );
 
   return (
     <div className="w-full space-y-6">
@@ -324,6 +364,7 @@ export default function PostEditor() {
               </div>
 
               <ReactQuill
+                ref={quillRef}
                 theme="snow"
                 className="quill-editor"
                 value={form.content}
@@ -364,18 +405,38 @@ export default function PostEditor() {
             </div>
 
             <div className="mt-4">
-              <label htmlFor="publishedAt" className="label">
-                Tanggal Terbit
-              </label>
+              <div className="flex items-center justify-between">
+                <label htmlFor="publishedAt" className="label !mb-0">
+                  Tanggal Terbit
+                </label>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => set('publishedAt', toDateTimeLocal(new Date()))}
+                    className="text-xs font-semibold text-teal-700 hover:underline"
+                  >
+                    Sekarang
+                  </button>
+                  {form.publishedAt && (
+                    <button
+                      type="button"
+                      onClick={() => set('publishedAt', '')}
+                      className="text-xs font-semibold text-slate-400 hover:text-red-500 hover:underline"
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
+              </div>
               <input
                 id="publishedAt"
                 type="datetime-local"
                 value={form.publishedAt}
                 onChange={(e) => set('publishedAt', e.target.value)}
-                className="input text-sm"
+                className="input mt-1.5 text-sm"
               />
               <p className="mt-1.5 text-xs text-slate-400">
-                Atur tanggal terbit artikel.
+                Atur tanggal terbit artikel atau kosongkan untuk waktu saat disimpan.
               </p>
             </div>
 

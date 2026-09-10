@@ -28,24 +28,29 @@ const listSchema = validate({
 const createSchema = validate({
   body: z.object({
     title: z.string().min(5, 'Judul minimal 5 karakter').max(200),
+    slug: z.string().max(200).optional(),
     excerpt: z.string().max(300).optional().default(''),
     content: z.string().min(1, 'Konten wajib diisi'),
     categoryId: z.string().min(1),
     status: z.enum(['DRAFT', 'PUBLISHED']).optional().default('PUBLISHED'),
     isFeatured: boolField.optional().default(false),
     tags: z.string().optional(),
+    publishedAt: z.string().optional().nullable(),
   }),
 });
 
 const updateSchema = validate({
   body: z.object({
     title: z.string().min(5).max(200).optional(),
+    slug: z.string().max(200).optional(),
     excerpt: z.string().max(300).optional(),
     content: z.string().min(1).optional(),
     categoryId: z.string().min(1).optional(),
     status: z.enum(['DRAFT', 'PUBLISHED']).optional(),
     isFeatured: boolField.optional(),
     tags: z.string().optional(),
+    publishedAt: z.string().optional().nullable(),
+    removeCover: boolField.optional(),
   }),
 });
 

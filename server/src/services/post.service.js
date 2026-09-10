@@ -1,7 +1,44 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { randomUUID } from 'node:crypto';
+import sharp from 'sharp';
 import prisma from '../config/prisma.js';
+import env from '../config/env.js';
 import ApiError from '../utils/ApiError.js';
 import slugify from '../utils/slugify.js';
 import sanitizeHtml from 'sanitize-html';
+
+const UPLOAD_DIR = path.resolve(process.cwd(), env.uploadDir);
+fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
+/** Ekstrak gambar base64 inline dan simpan sebagai file WebP di /uploads agar tidak membebani database */
+async function processInlineImages(content) {
+  if (!content || typeof content !== 'string') return content;
+  const dataUriRegex = /src=["']data:image\/([a-zA-Z0-9+.-]+);base64,([^"']+)["']/g;
+  const matches = [...content.matchAll(dataUriRegex)];
+  if (matches.length === 0) return content;
+
+  let updated = content;
+  for (const match of matches) {
+    try {
+      const fullMatch = match[0];
+      const base64Data = match[2];
+      const buffer = Buffer.from(base64Data, 'base64');
+      const filename = `${randomUUID()}.webp`;
+      const finalPath = path.join(UPLOAD_DIR, filename);
+
+      await sharp(buffer)
+        .resize({ width: 1600, withoutEnlargement: true })
+        .webp({ quality: 82 })
+        .toFile(finalPath);
+
+      updated = updated.replace(fullMatch, `src="/uploads/${filename}"`);
+    } catch (err) {
+      console.error('Gagal convert inline image base64:', err);
+    }
+  }
+  return updated;
+}
 
 /** Allowlist tag quill — buang script/style/iframe/onclick dsb. */
 export function sanitizeContent(html) {
@@ -150,16 +187,21 @@ export async function createPost({ title, slug: customSlug, excerpt, content, ca
 
   const slug = await uniqueSlug(customSlug || title);
   let publishedAt = null;
-  if (status === 'PUBLISHED') {
-    publishedAt = customPublishedAt ? new Date(customPublishedAt) : new Date();
+  if (customPublishedAt) {
+    const d = new Date(customPublishedAt);
+    if (!isNaN(d.getTime())) publishedAt = d;
+  } else if (status === 'PUBLISHED') {
+    publishedAt = new Date();
   }
+
+  const processedContent = await processInlineImages(content);
 
   return prisma.post.create({
     data: {
       title,
       slug,
       excerpt,
-      content: sanitizeContent(content),
+      content: sanitizeContent(processedContent),
       coverImage: coverUrl || null,
       status,
       isFeatured: !!isFeatured,
@@ -198,11 +240,17 @@ export async function updatePost(id, { title, slug: customSlug, excerpt, content
 
   let publishedAt = undefined;
   if (customPublishedAt) {
-    publishedAt = new Date(customPublishedAt);
+    const d = new Date(customPublishedAt);
+    if (!isNaN(d.getTime())) publishedAt = d;
   } else if (customPublishedAt === null) {
     publishedAt = null;
   } else if (statusChanged && status === 'PUBLISHED' && !existing.publishedAt) {
     publishedAt = new Date();
+  }
+
+  let processedContent = undefined;
+  if (content !== undefined) {
+    processedContent = sanitizeContent(await processInlineImages(content));
   }
 
   return prisma.post.update({
@@ -211,7 +259,7 @@ export async function updatePost(id, { title, slug: customSlug, excerpt, content
       ...(title !== undefined && { title }),
       ...(slug !== existing.slug && { slug }),
       ...(excerpt !== undefined && { excerpt }),
-      ...(content !== undefined && { content: sanitizeContent(content) }),
+      ...(processedContent !== undefined && { content: processedContent }),
       ...(categoryId && { categoryId }),
       ...(isFeatured !== undefined && { isFeatured: !!isFeatured }),
       ...(status && { status }),

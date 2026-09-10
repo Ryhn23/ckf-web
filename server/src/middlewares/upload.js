@@ -16,7 +16,10 @@ const storage = multer.diskStorage({
 
 export const upload = multer({
   storage,
-  limits: { fileSize: env.maxUploadMb * 1024 * 1024 },
+  limits: {
+    fileSize: env.maxUploadMb * 1024 * 1024,
+    fieldSize: 50 * 1024 * 1024, // 50MB agar konten artikel dengan media/base64 tidak memicu error LIMIT_FIELD_VALUE
+  },
   fileFilter: (req, file, cb) => {
     if (/^image\//.test(file.mimetype)) cb(null, true);
     else cb(ApiError.badRequest('Hanya file gambar yang diizinkan'));
@@ -26,7 +29,10 @@ export const upload = multer({
 /** Multer untuk media galeri: gambar + video (tanpa proses resize). */
 export const uploadMedia = multer({
   storage,
-  limits: { fileSize: env.maxUploadMb * 1024 * 1024 },
+  limits: {
+    fileSize: env.maxUploadMb * 1024 * 1024,
+    fieldSize: 50 * 1024 * 1024,
+  },
   fileFilter: (req, file, cb) => {
     if (/^(image\/|video\/)/.test(file.mimetype)) cb(null, true);
 

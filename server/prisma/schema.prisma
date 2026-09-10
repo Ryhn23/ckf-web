@@ -173,3 +173,35 @@ model AidRequest {
   @@index([campaignId])
 }
 
+model CustomForm {
+  id             String                 @id @default(cuid())
+  title          String
+  slug           String                 @unique
+  description    String?
+  coverImage     String?
+  fields         Json                   // [{ id, label, type, required, placeholder, helpText, options }]
+  isActive       Boolean                @default(true)
+  successMessage String?                @default("Terima kasih, formulir Anda telah berhasil dikirim.")
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  submissions    CustomFormSubmission[]
+
+  @@index([slug])
+  @@index([isActive])
+  @@index([createdAt(sort: Desc)])
+}
+
+model CustomFormSubmission {
+  id          String      @id @default(cuid())
+  formId      String
+  form        CustomForm  @relation(fields: [formId], references: [id], onDelete: Cascade)
+  data        Json        // Key-value pairs: { [fieldId]: value or uploadedUrl }
+  status      String      @default("BARU") // BARU, DIPROSES, SELESAI
+  adminNotes  String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([formId, createdAt(sort: Desc)])
+  @@index([status])
+}
+

@@ -21,6 +21,7 @@ import donationRoutes from './routes/donation.routes.js';
 import contactRoutes from './routes/contact.routes.js';
 import userRoutes from './routes/user.routes.js';
 import aidRequestRoutes from './routes/aidRequest.routes.js';
+import customFormRoutes from './routes/customForm.routes.js';
 
 const app = express();
 
@@ -122,6 +123,7 @@ app.use('/api/donations', donationRoutes);
 app.use('/api/contact-messages', contactRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/aid-requests', aidRequestRoutes);
+app.use('/api/custom-forms', customFormRoutes);
 
 // 404 + error handler (paling akhir)
 app.use(notFound);

@@ -44,6 +44,13 @@ const STATUS_ALIASES = {
   UNREAD: { variant: 'amber', label: 'Belum Dibaca' },
   READ: { variant: 'slate', label: 'Dibaca' },
 
+  // Formulir Kustom
+  BARU: { variant: 'sky', label: 'Baru' },
+  DIPROSES: { variant: 'amber', label: 'Diproses' },
+  SELESAI: { variant: 'emerald', label: 'Selesai' },
+  AKTIF: { variant: 'emerald', label: 'Aktif' },
+  NONAKTIF: { variant: 'slate', label: 'Tutup' },
+
   // User role
   ADMIN: { variant: 'slate', label: 'Admin' },
   EDITOR: { variant: 'slate', label: 'Editor' },

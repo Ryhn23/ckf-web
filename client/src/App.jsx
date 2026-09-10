@@ -17,6 +17,7 @@ import Gallery from './pages/Gallery';
 import Donate from './pages/Donate';
 import Contact from './pages/Contact';
 import AidRequest from './pages/AidRequest';
+import CustomFormView from './pages/CustomFormView';
 import NotFound from './pages/NotFound';
 
 // Admin (Lazy loaded untuk code-splitting)
@@ -26,6 +27,8 @@ const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const PostsAdmin = lazy(() => import('./pages/admin/PostsAdmin'));
 const PostEditor = lazy(() => import('./pages/admin/PostEditor'));
 const CategoriesAdmin = lazy(() => import('./pages/admin/CategoriesAdmin'));
+const CustomFormsAdmin = lazy(() => import('./pages/admin/CustomFormsAdmin'));
+const CustomFormSubmissionsAdmin = lazy(() => import('./pages/admin/CustomFormSubmissionsAdmin'));
 const MediaAdmin = lazy(() => import('./pages/admin/MediaAdmin'));
 const DonationsAdmin = lazy(() => import('./pages/admin/DonationsAdmin'));
 const AidRequestsAdmin = lazy(() => import('./pages/admin/AidRequestsAdmin'));
@@ -109,6 +112,9 @@ export default function App() {
               <Route path="/bantuan" element={<Navigate to="/ajukan-bantuan" replace />} />
               <Route path="/bantuan/:slug" element={<AidRequest />} />
 
+              {/* Standalone Formulir Kustom Publik */}
+              <Route path="/form/:slug" element={<CustomFormView />} />
+
 
               {/* Login */}
               <Route
@@ -136,6 +142,8 @@ export default function App() {
                 <Route path="posts/new" element={<PostEditor />} />
                 <Route path="posts/:id/edit" element={<PostEditor />} />
                 <Route path="categories" element={<CategoriesAdmin />} />
+                <Route path="custom-forms" element={<CustomFormsAdmin />} />
+                <Route path="custom-forms/:id/submissions" element={<CustomFormSubmissionsAdmin />} />
                 <Route path="testimonials" element={<TestimonialsAdmin />} />
                 <Route path="media" element={<MediaAdmin />} />
                 <Route path="donations" element={<DonationsAdmin />} />

@@ -8,7 +8,7 @@ import * as settingsController from '../controllers/settings.controller.js';
 const router = Router();
 
 const updateSchema = validate({
-  body: z.record(z.string()),
+  body: z.record(z.any()),
 });
 
 router.get('/', settingsController.getAll);

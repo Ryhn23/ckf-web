@@ -467,43 +467,47 @@ async function seed() {
   }
   console.log(`- Kategori: ${CATEGORIES.length} kategori`);
 
-  // Posts: jangan timpa postingan jika sudah ada
-  for (const p of POSTS) {
-    const slug = slugify(p.title);
-    const existingPost = await prisma.post.findUnique({ where: { slug } });
-    if (!existingPost) {
-      const coverImage = await ensureCover(slug, p.title, p.cover);
-      const publishedAt = daysAgoDate(p.daysAgo);
-      const html = p.content
-        .map((line) => {
-          const [kind, ...rest] = line.split(':');
-          const text = rest.join(':');
-          if (kind === 'h2') return `<h2>${text}</h2>`;
-          if (kind === 'ul') return `<li>${text}</li>`;
-          return `<p>${text}</p>`;
-        })
-        .join('\n');
-      const wrapped = wrapLists(html);
+  // Posts: dinonaktifkan sesuai arahan pengguna agar artikel tidak terbuat ulang otomatis
+  if (process.env.SEED_POSTS === 'true') {
+    for (const p of POSTS) {
+      const slug = slugify(p.title);
+      const existingPost = await prisma.post.findUnique({ where: { slug } });
+      if (!existingPost) {
+        const coverImage = await ensureCover(slug, p.title, p.cover);
+        const publishedAt = daysAgoDate(p.daysAgo);
+        const html = p.content
+          .map((line) => {
+            const [kind, ...rest] = line.split(':');
+            const text = rest.join(':');
+            if (kind === 'h2') return `<h2>${text}</h2>`;
+            if (kind === 'ul') return `<li>${text}</li>`;
+            return `<p>${text}</p>`;
+          })
+          .join('\n');
+        const wrapped = wrapLists(html);
 
-      await prisma.post.create({
-        data: {
-          title: p.title,
-          slug,
-          excerpt: p.excerpt,
-          content: wrapped,
-          coverImage,
-          status: 'PUBLISHED',
-          isFeatured: p.featured,
-          publishedAt,
-          views: p.views,
-          tags: p.tags,
-          categoryId: categoryMap[p.category].id,
-          authorId: admin.id,
-        },
-      });
+        await prisma.post.create({
+          data: {
+            title: p.title,
+            slug,
+            excerpt: p.excerpt,
+            content: wrapped,
+            coverImage,
+            status: 'PUBLISHED',
+            isFeatured: p.featured,
+            publishedAt,
+            views: p.views,
+            tags: p.tags,
+            categoryId: categoryMap[p.category].id,
+            authorId: admin.id,
+          },
+        });
+      }
     }
+    console.log(`- Post: ${POSTS.length} post (${POSTS.filter((p) => p.featured).length} featured)`);
+  } else {
+    console.log('- Post: auto-seed artikel dinonaktifkan');
   }
-  console.log(`- Post: ${POSTS.length} post (${POSTS.filter((p) => p.featured).length} featured)`);
 
   // Testimonials: jangan timpa testimoni jika sudah ada
   for (const t of TESTIMONIALS) {

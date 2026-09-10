@@ -154,23 +154,6 @@ export default function PostEditor() {
     }
   }
 
-  if (!isNew && loadingPost) return <Spinner label="Memuat artikel…" />;
-  if (!isNew && !postData?.data)
-    return (
-      <EmptyState
-        icon="fa-file-circle-exclamation"
-        title="Artikel tidak ditemukan"
-        action={<Link to="/admin/posts" className="admin-btn-primary">Kembali ke daftar</Link>}
-      />
-    );
-
-  const coverPreview = coverFile ? URL.createObjectURL(coverFile) : existingCover;
-
-  // Hitung jumlah kata dan perkiraan waktu baca
-  const textContent = form.content.replace(/<[^>]*>/g, ' ').trim();
-  const wordCount = textContent ? textContent.split(/\s+/).filter(Boolean).length : 0;
-  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
-
   const quillRef = useRef(null);
 
   const handleImageUpload = useCallback(() => {
@@ -219,6 +202,23 @@ export default function PostEditor() {
     }),
     [handleImageUpload],
   );
+
+  const coverPreview = coverFile ? URL.createObjectURL(coverFile) : existingCover;
+
+  // Hitung jumlah kata dan perkiraan waktu baca
+  const textContent = (form.content || '').replace(/<[^>]*>/g, ' ').trim();
+  const wordCount = textContent ? textContent.split(/\s+/).filter(Boolean).length : 0;
+  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+  if (!isNew && loadingPost) return <Spinner label="Memuat artikel…" />;
+  if (!isNew && !postData?.data)
+    return (
+      <EmptyState
+        icon="fa-file-circle-exclamation"
+        title="Artikel tidak ditemukan"
+        action={<Link to="/admin/posts" className="admin-btn-primary">Kembali ke daftar</Link>}
+      />
+    );
 
   return (
     <div className="w-full space-y-6">

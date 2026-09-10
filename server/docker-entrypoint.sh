@@ -31,8 +31,34 @@ check();
 echo "==> Menyiapkan skema database..."
 npx prisma db push --skip-generate
 
-echo "==> Menjalankan seeding data awal..."
-node src/seed/seed.js
+if [ "$AUTO_SEED" = "true" ]; then
+  echo "==> Menjalankan seeding data awal (AUTO_SEED=true)..."
+  node src/seed/seed.js
+else
+  echo "==> Memastikan akun admin tersedia..."
+  node -e '
+    import prisma from "./src/config/prisma.js";
+    import bcrypt from "bcryptjs";
+    import env from "./src/config/env.js";
+    async function check() {
+      const email = env.adminEmail || "admin@ckf.or.id";
+      const existing = await prisma.user.findUnique({ where: { email } });
+      if (!existing) {
+        const passwordHash = await bcrypt.hash(env.adminPassword || "admin123", 10);
+        await prisma.user.create({
+          data: {
+            name: "Administrator",
+            email,
+            passwordHash,
+            role: "SUPERADMIN",
+          },
+        });
+        console.log("==> Akun admin default dibuat:", email);
+      }
+    }
+    check().catch(console.error).finally(() => prisma.$disconnect());
+  '
+fi
 
 echo "==> Memulai aplikasi backend..."
 exec "$@"

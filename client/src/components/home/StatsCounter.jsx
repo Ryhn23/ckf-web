@@ -26,32 +26,32 @@ export default function StatsCounter() {
     {
       icon: ['fa-solid', 'fa-briefcase'],
       target: num(settings.stat_programs, 350),
-      format: (v) => `${v}+`,
+      format: (v) => `${v.toLocaleString('id-ID')}+`,
       label: settings.stat_programs_label || 'Program Dikerjakan',
     },
     {
       icon: ['fa-solid', 'fa-people-group'],
       target: num(settings.stat_beneficiaries, 12000),
-      format: (v) => v.toLocaleString('id-ID'),
+      format: (v) => `${v.toLocaleString('id-ID')}+`,
       label: settings.stat_beneficiaries_label || 'Penerima Manfaat',
     },
     {
       icon: ['fa-solid', 'fa-users'],
       target: num(settings.stat_volunteers, 800),
-      format: (v) => `${v}+`,
+      format: (v) => `${v.toLocaleString('id-ID')}+`,
       label: settings.stat_volunteers_label || 'Relawan Aktif',
     },
     {
       icon: ['fa-solid', 'fa-calendar-check'],
       target: num(settings.stat_years, 15),
-      format: (v) => `${v}`,
+      format: (v) => `${v.toLocaleString('id-ID')}+`,
       label: settings.stat_years_label || 'Tahun Berkhidmat',
     },
   ];
 
   return (
-    <section className="bg-teal-800">
-      <div className="container-page grid grid-cols-2 gap-8 py-12 lg:grid-cols-4">
+    <section className="relative z-10 border-t border-teal-700/60 bg-teal-800 shadow-inner">
+      <div className="container-page grid grid-cols-2 gap-8 py-14 sm:py-16 md:py-20 lg:grid-cols-4">
         {STATS.map((stat) => (
           <StatItem key={stat.label} stat={stat} />
         ))}

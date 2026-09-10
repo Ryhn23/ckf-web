@@ -88,7 +88,7 @@ export default function HeroCarousel() {
               <div className="absolute inset-0 bg-gradient-to-r from-teal-950/90 via-teal-900/70 to-teal-900/30" />
 
               {/* Konten */}
-              <div className="container-page relative flex min-h-[420px] items-center py-16 md:min-h-[520px]">
+              <div className="container-page relative flex min-h-[520px] sm:min-h-[580px] md:min-h-[640px] lg:min-h-[700px] items-center py-20 pb-28 sm:py-24 sm:pb-32 md:py-28 md:pb-36 lg:py-32 lg:pb-40">
                 <div className="max-w-2xl">
                   {(slide.category || slide.badge) && (
                     <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-amber-300 ring-1 ring-white/20 backdrop-blur">
@@ -139,6 +139,9 @@ export default function HeroCarousel() {
 
       {/* Style pagination & navigation swiper */}
       <style>{`
+        .hero-swiper .swiper-pagination {
+          bottom: 22px !important;
+        }
         .hero-swiper .swiper-pagination-bullet {
           background: rgba(255, 255, 255, 0.5);
           opacity: 1;

@@ -60,46 +60,43 @@ export default function Testimonials() {
           </div>
         ) : (
           <Swiper
-          modules={[Autoplay, Pagination]}
-          autoplay={{ delay: 4500, disableOnInteraction: false }}
-          pagination={{ clickable: true }}
-          spaceBetween={24}
-          slidesPerView={1}
-          breakpoints={{
-            768: { slidesPerView: 2 },
-            1100: { slidesPerView: 3 },
-          }}
-        >
-          {testimonials.map((t, idx) => (
-            <SwiperSlide key={t.id || t.name || idx} className="h-auto">
-              <figure className="card flex h-full flex-col p-6">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-500">
-                  <FontAwesomeIcon icon={['fa-solid', 'fa-quote-left']} />
-                </span>
-                <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
-                  “{t.quote}”
-                </blockquote>
-                <figcaption className="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
-                  {t.avatar ? (
-                    <img
-                      src={t.avatar}
-                      alt={t.name}
-                      className="h-10 w-10 rounded-full object-cover"
-                    />
-                  ) : (
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white">
-                      {t.name.charAt(0)}
-                    </span>
-                  )}
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900">{t.name}</p>
-                    <p className="text-xs text-slate-500">{t.role}</p>
-                  </div>
-                </figcaption>
-              </figure>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+            modules={[Autoplay, Pagination]}
+            autoplay={{ delay: 4500, disableOnInteraction: false }}
+            pagination={{ clickable: true }}
+            spaceBetween={24}
+            slidesPerView={1}
+            breakpoints={{
+              768: { slidesPerView: 2 },
+              1100: { slidesPerView: 3 },
+            }}
+          >
+            {testimonials.map((t, idx) => (
+              <SwiperSlide key={t.id || t.name || idx} className="h-auto">
+                <figure className="card flex h-full flex-col p-6">
+                  <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">
+                    “{t.quote}”
+                  </blockquote>
+                  <figcaption className="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
+                    {t.avatar ? (
+                      <img
+                        src={t.avatar}
+                        alt={t.name}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white">
+                        {t.name.charAt(0)}
+                      </span>
+                    )}
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">{t.name}</p>
+                      <p className="text-xs text-slate-500">{t.role}</p>
+                    </div>
+                  </figcaption>
+                </figure>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         )}
       </div>
     </section>

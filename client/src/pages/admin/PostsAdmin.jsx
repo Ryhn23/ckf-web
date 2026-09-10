@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
-import { getPosts, deletePost } from '../../api/posts';
+import { getAdminPosts, deletePost } from '../../api/posts';
 import { getDashboardStats } from '../../api/stats';
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
@@ -22,7 +22,7 @@ export default function PostsAdmin() {
   const stats = statsData?.data || {};
 
   const { data, loading, error, refetch } = useFetch(
-    () => getPosts({ page, limit: PAGE_SIZE, status: status || undefined, search: search || undefined }),
+    () => getAdminPosts({ page, limit: PAGE_SIZE, status: status || undefined, search: search || undefined }),
     [page, status, search],
   );
 

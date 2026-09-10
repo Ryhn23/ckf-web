@@ -1,7 +1,11 @@
 import client from './client';
 
-/** GET /api/posts → { data: Post[], meta } */
+/** GET /api/posts → { data: Post[], meta } (Hanya mengembalikan artikel PUBLISHED untuk publik) */
 export const getPosts = (params) => client.get('/posts', { params }).then((r) => r.data);
+
+/** GET /api/posts?admin=true → { data: Post[], meta } (Khusus panel admin untuk melihat DRAFT & PUBLISHED) */
+export const getAdminPosts = (params) =>
+  client.get('/posts', { params: { ...params, admin: 'true' } }).then((r) => r.data);
 
 /** GET /api/posts/featured → { data: Post[] } */
 export const getFeaturedPosts = () => client.get('/posts/featured').then((r) => r.data);

@@ -40,7 +40,9 @@ async function processCover(req) {
 
 /** GET /api/posts */
 export const list = asyncHandler(async (req, res) => {
-  const result = await postService.listPosts({ ...req.query, admin: !!req.user });
+  // Hanya aktifkan mode admin jika user terotentikasi dan secara eksplisit mengirimkan admin=true
+  const isAdminRequest = !!req.user && req.query.admin === 'true';
+  const result = await postService.listPosts({ ...req.query, admin: isAdminRequest });
   res.json(result);
 });
 

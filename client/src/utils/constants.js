@@ -3,7 +3,7 @@ export const NAV_ITEMS = [
   { label: 'Beranda', path: '/' },
   { label: 'Tentang', path: '/tentang' },
   { label: 'Program', path: '/program' },
-  { label: 'Blog', path: '/blog' },
+  { label: 'Artikel', path: '/blog' },
   { label: 'Galeri', path: '/galeri' },
   { label: 'Donasi', path: '/donasi' },
   { label: 'Kontak', path: '/kontak' },

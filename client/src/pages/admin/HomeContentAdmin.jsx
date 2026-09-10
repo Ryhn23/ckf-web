@@ -678,26 +678,6 @@ export default function HomeContentAdmin() {
                 className="input"
               />
             </div>
-            <div>
-              <label htmlFor="home_about_card_title" className="label">Judul Kartu Sorotan</label>
-              <input
-                id="home_about_card_title"
-                value={form.home_about_card_title || ''}
-                onChange={(e) => handleChange('home_about_card_title', e.target.value)}
-                className="input"
-                placeholder="Sejak 2017"
-              />
-            </div>
-            <div>
-              <label htmlFor="home_about_card_subtitle" className="label">Subjudul Kartu Sorotan</label>
-              <input
-                id="home_about_card_subtitle"
-                value={form.home_about_card_subtitle || ''}
-                onChange={(e) => handleChange('home_about_card_subtitle', e.target.value)}
-                className="input"
-                placeholder="Dedikasi untuk kemanusiaan"
-              />
-            </div>
             <div className="sm:col-span-2">
               <label htmlFor="home_about_checklist" className="label">
                 Poin Keunggulan / Komitmen (Satu baris per poin)

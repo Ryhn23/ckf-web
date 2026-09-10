@@ -18,8 +18,6 @@ export default function AboutSection() {
     ? settings.home_about_checklist.split('\n').map((s) => s.trim()).filter(Boolean)
     : DEFAULT_CHECKLIST;
 
-  const cardTitle = settings.home_about_card_title || `Sejak ${sinceYear}`;
-  const cardSubtitle = settings.home_about_card_subtitle || 'Dedikasi untuk kemanusiaan';
   const badge = settings.home_about_badge || 'Profil Lembaga';
   const title = settings.home_about_title || 'Dedikasi Berkelanjutan untuk Kemaslahatan Masyarakat';
   const btnText = settings.home_about_btn_text || 'Profil Lengkap Lembaga';
@@ -40,16 +38,6 @@ export default function AboutSection() {
             ) : (
               <FontAwesomeIcon icon={['fa-solid', 'fa-hand-holding-heart']} className="text-8xl text-white/40" />
             )}
-          </div>
-          {/* Kartu mengambang */}
-          <div className="absolute -bottom-6 left-6 flex items-center gap-3 rounded-2xl bg-white p-4 shadow-card">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-lg text-amber-600">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-seedling']} />
-            </span>
-            <div>
-              <p className="font-heading text-lg font-bold text-slate-900">{cardTitle}</p>
-              <p className="text-xs text-slate-500">{cardSubtitle}</p>
-            </div>
           </div>
         </div>
 

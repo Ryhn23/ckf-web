@@ -86,8 +86,8 @@ export default function BlogDetail() {
       <Seo title={post.title} description={post.excerpt} />
       <article>
       {/* Header */}
-      <header className="bg-gradient-to-br from-teal-800 via-teal-900 to-slate-900 py-12">
-        <div className="container-page max-w-4xl">
+      <header className="bg-gradient-to-br from-teal-800 via-teal-900 to-slate-900 py-12 md:py-14">
+        <div className="container-page max-w-5xl lg:max-w-6xl">
           <nav aria-label="breadcrumb" className="mb-6 flex items-center gap-2 text-xs font-medium text-teal-200">
             <Link to="/" className="hover:text-amber-400">Beranda</Link>
             <span>/</span>
@@ -108,15 +108,9 @@ export default function BlogDetail() {
               {post.category.name}
             </span>
           )}
-          <h1 className="font-heading text-3xl font-bold leading-tight text-white md:text-4xl">{post.title}</h1>
+          <h1 className="font-heading text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl">{post.title}</h1>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-teal-100">
-            <span className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-xs font-bold text-white">
-                {(post.author?.name || 'A').charAt(0)}
-              </span>
-              {post.author?.name || 'Admin'}
-            </span>
             <span className="flex items-center gap-1.5">
               <FontAwesomeIcon icon={['fa-solid', 'fa-calendar']} />
               {formatDate(post.publishedAt || post.createdAt)}
@@ -125,39 +119,37 @@ export default function BlogDetail() {
               <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} />
               {readMinutes} menit baca
             </span>
+            {post.views > 0 && (
+              <span className="flex items-center gap-1.5">
+                <FontAwesomeIcon icon={['fa-solid', 'fa-eye']} />
+                {post.views.toLocaleString('id-ID')} tayangan
+              </span>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Cover */}
+      {/* Cover Image - Menyesuaikan aspek rasio dinamis */}
       {post.coverImage && (
-        <div className="container-page -mb-8 pt-8">
-          <img src={post.coverImage} alt={post.title} className="max-h-[420px] w-full rounded-2xl object-cover shadow-card" />
+        <div className="container-page max-w-5xl lg:max-w-6xl pt-8">
+          <div className="overflow-hidden rounded-2xl sm:rounded-3xl bg-slate-100/80 shadow-sm border border-slate-200/80 flex items-center justify-center">
+            <img
+              src={post.coverImage}
+              alt={post.title}
+              className="w-full h-auto max-h-[700px] object-contain rounded-2xl sm:rounded-3xl"
+            />
+          </div>
         </div>
       )}
 
-      {/* Konten */}
-      <div className={`container-page max-w-4xl ${post.coverImage ? 'py-10' : 'pt-10'} pb-16`}>
-        <div className="prose-post card p-6 md:p-8" dangerouslySetInnerHTML={{ __html: post.content }} />
+      {/* Konten - Area teks dibuat lebih lebar */}
+      <div className={`container-page max-w-5xl lg:max-w-6xl ${post.coverImage ? 'py-8 sm:py-10' : 'pt-10'} pb-16`}>
+        <div className="prose-post card p-6 sm:p-8 md:p-10 lg:p-12 shadow-sm" dangerouslySetInnerHTML={{ __html: post.content }} />
 
         {/* Share */}
-        <div className="mt-8">
+        <div className="mt-8 border-t border-slate-200/70 pt-6">
           <ShareButtons title={post.title} url={`${window.location.origin}/blog/${post.slug}`} />
         </div>
-
-        {/* Penulis */}
-        {post.author && (
-          <div className="card mt-10 flex items-center gap-4 p-6">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-teal-700 text-xl font-bold text-white">
-              {post.author.name.charAt(0)}
-            </span>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-teal-700">Ditulis oleh</p>
-              <p className="font-heading text-lg font-bold text-slate-900">{post.author.name}</p>
-              {post.author.role && <p className="text-sm text-slate-500">{post.author.role}</p>}
-            </div>
-          </div>
-        )}
 
         {/* Artikel terkait */}
         {related.length > 0 && (

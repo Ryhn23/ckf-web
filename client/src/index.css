@@ -140,7 +140,7 @@
   @apply mb-4 border-l-4 border-teal-600 bg-teal-50/60 px-4 py-3 italic text-slate-600;
 }
 .prose-post img {
-  @apply my-4 w-full rounded-xl object-cover;
+  @apply my-6 max-w-full h-auto rounded-xl mx-auto block shadow-xs;
 }
 .prose-post pre {
   @apply mb-4 overflow-x-auto rounded-xl bg-slate-900 p-4 text-sm text-slate-100;

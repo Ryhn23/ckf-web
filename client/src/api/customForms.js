@@ -48,6 +48,10 @@ export const updateCustomFormSubmission = (submissionId, payload) =>
 export const deleteCustomFormSubmission = (submissionId) =>
   client.delete(`/custom-forms/submissions/${submissionId}`).then((r) => r.data);
 
+/** DELETE /api/custom-forms/:id/submissions (admin) → Kosongkan semua respon */
+export const clearCustomFormSubmissions = (id) =>
+  client.delete(`/custom-forms/${id}/submissions`).then((r) => r.data);
+
 /** GET /api/custom-forms/:id/export (admin) → download .xlsx file */
 export const exportCustomFormSubmissions = async (id, customFileName) => {
   const response = await client.get(`/custom-forms/${id}/export`, {

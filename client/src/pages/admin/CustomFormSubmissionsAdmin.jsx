@@ -6,6 +6,7 @@ import {
   getCustomFormSubmissions,
   updateCustomFormSubmission,
   deleteCustomFormSubmission,
+  clearCustomFormSubmissions,
   exportCustomFormSubmissions,
 } from '../../api/customForms';
 import { errMsg } from '../../api/client';
@@ -128,9 +129,12 @@ export default function CustomFormSubmissionsAdmin() {
     }
   }
 
-  // Delete submission
+  // Delete single submission
   async function handleDeleteSubmission(subId) {
-    const conf = window.confirm('Apakah Anda yakin ingin menghapus data respon formulir ini?');
+    const conf = window.confirm(
+      `Apakah Anda yakin ingin menghapus data respon dengan ID "${subId}"?\n\n` +
+      `Catatan: Tindakan ini HANYA menghapus 1 data respon peserta ini saja. Formulir utama "${form?.title || ''}" akan tetap aman dan aktif.`,
+    );
     if (!conf) return;
 
     try {
@@ -139,6 +143,25 @@ export default function CustomFormSubmissionsAdmin() {
       fetchSubmissions();
     } catch (err) {
       alert(errMsg(err, 'Gagal menghapus respon'));
+    }
+  }
+
+  // Clear all submissions for this form without deleting the form
+  async function handleClearAllSubmissions() {
+    if (!form || submissions.length === 0) return;
+    const totalCount = statusCounts.TOTAL || meta.total || submissions.length;
+    const conf = window.confirm(
+      `PERINGATAN: Apakah Anda yakin ingin mengosongkan / menghapus SEMUA respon (${totalCount} data) untuk formulir "${form.title}"?\n\n` +
+      `CATATAN PENTING:\nFormulir utama akan TETAP AMAN dan AKTIF. Hanya data respon peserta yang akan dihapus permanen.`,
+    );
+    if (!conf) return;
+
+    try {
+      await clearCustomFormSubmissions(formId);
+      fetchSubmissions();
+      alert('Semua data respon formulir berhasil dikosongkan.');
+    } catch (err) {
+      alert(errMsg(err, 'Gagal mengosongkan respon'));
     }
   }
 
@@ -192,6 +215,19 @@ export default function CustomFormSubmissionsAdmin() {
                 <span>Buka Form</span>
               </a>
             </>
+          )}
+
+          {/* CLEAR ALL SUBMISSIONS BUTTON */}
+          {submissions.length > 0 && (
+            <button
+              type="button"
+              onClick={handleClearAllSubmissions}
+              className="admin-btn-secondary text-xs flex items-center gap-1.5 text-rose-600 hover:text-rose-700 hover:border-rose-300"
+              title="Kosongkan seluruh respon peserta tanpa menghapus formulir utama"
+            >
+              <FontAwesomeIcon icon={['fa-solid', 'fa-trash-can']} />
+              <span>Kosongkan Respon</span>
+            </button>
           )}
 
           {/* EXCEL EXPORT BUTTON */}
@@ -466,7 +502,7 @@ export default function CustomFormSubmissionsAdmin() {
                             type="button"
                             onClick={() => handleDeleteSubmission(sub.id)}
                             className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs"
-                            title="Hapus Respon"
+                            title={`Hapus Respon Peserta (ID: ${sub.id}) - Formulir utama tetap aman`}
                           >
                             <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
                           </button>

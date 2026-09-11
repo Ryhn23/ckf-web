@@ -301,7 +301,9 @@ export default function CustomFormsAdmin() {
   // Delete form
   async function handleDeleteForm(form) {
     const conf = window.confirm(
-      `Apakah Anda yakin ingin menghapus formulir "${form.title}"?\nSemua data respon yang sudah masuk juga akan ikut terhapus permanen!`,
+      `PERHATIAN: Apakah Anda yakin ingin menghapus FORMULIR UTAMA "${form.title}"?\n\n` +
+      `Seluruh formulir, link publik, dan seluruh data respon di dalamnya akan DIHAPUS PERMANEN!\n\n` +
+      `CATATAN PENTING:\nJika Anda HANYA ingin menghapus data respon responden tanpa menghapus formulir ini, silakan klik "Batal", lalu klik tombol "Respon Masuk" untuk mengelola/menghapus respon di sana.`,
     );
     if (!conf) return;
 
@@ -573,7 +575,7 @@ export default function CustomFormsAdmin() {
                           <Link
                             to={`/admin/custom-forms/${form.id}/submissions`}
                             className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
-                            title="Respon Masuk"
+                            title="Respon Masuk (Lihat & Kelola Respon Peserta)"
                           >
                             <FontAwesomeIcon icon={['fa-solid', 'fa-inbox']} />
                           </Link>
@@ -589,7 +591,7 @@ export default function CustomFormsAdmin() {
                             type="button"
                             onClick={() => handleDeleteForm(form)}
                             className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs"
-                            title="Hapus Formulir"
+                            title="Hapus Formulir Utama (Permanen)"
                           >
                             <FontAwesomeIcon icon={['fa-solid', 'fa-trash']} />
                           </button>

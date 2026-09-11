@@ -122,6 +122,15 @@ export const deleteSubmission = asyncHandler(async (req, res) => {
 });
 
 /**
+ * DELETE /api/custom-forms/:id/submissions (admin)
+ * Clear all submissions of a form without deleting the form
+ */
+export const clearAllSubmissions = asyncHandler(async (req, res) => {
+  const result = await customFormService.clearAllSubmissions(req.params.id);
+  res.json(result);
+});
+
+/**
  * GET /api/custom-forms/:id/export (admin)
  * Streams formatted .xlsx Excel file
  */

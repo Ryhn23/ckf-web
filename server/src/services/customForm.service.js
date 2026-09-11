@@ -618,6 +618,45 @@ export const customFormService = {
   },
 
   /**
+   * Clear / delete all submissions of a form without deleting the form itself
+   */
+  async clearAllSubmissions(formId) {
+    const form = await prisma.customForm.findUnique({
+      where: { id: formId },
+      include: { submissions: true },
+    });
+
+    if (!form) {
+      throw ApiError.notFound('Formulir kustom tidak ditemukan');
+    }
+
+    // Clean up uploaded files in submissions
+    try {
+      for (const sub of form.submissions) {
+        if (sub.data && typeof sub.data === 'object') {
+          for (const val of Object.values(sub.data)) {
+            if (typeof val === 'string' && val.startsWith('/uploads/')) {
+              removeUploadFile(val);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error cleaning up submission files:', err);
+    }
+
+    const result = await prisma.customFormSubmission.deleteMany({
+      where: { formId },
+    });
+
+    return {
+      success: true,
+      count: result.count,
+      message: `Berhasil mengosongkan ${result.count} data respon`,
+    };
+  },
+
+  /**
    * Export all submissions to Excel (.xlsx) using ExcelJS
    */
   async exportSubmissionsToExcel(formId, baseUrl = '') {

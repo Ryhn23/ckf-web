@@ -13,6 +13,19 @@ router.get('/p/:slug', customFormController.getPublicForm);
 router.post('/p/:slug/submit', uploadMedia.any(), customFormController.submitPublicForm);
 
 /**
+ * Admin Routes - Submissions & Excel Export
+ * Must be registered BEFORE generic /:id routes
+ */
+router.get('/submissions/:submissionId', authMiddleware, requireAdmin, customFormController.getSubmissionById);
+router.patch('/submissions/:submissionId', authMiddleware, requireAdmin, customFormController.updateSubmission);
+router.delete('/submissions/:submissionId', authMiddleware, requireAdmin, customFormController.deleteSubmission);
+
+router.get('/:id/submissions', authMiddleware, requireAdmin, customFormController.listSubmissions);
+router.delete('/:id/submissions', authMiddleware, requireAdmin, customFormController.clearAllSubmissions);
+router.delete('/:id/submissions/:submissionId', authMiddleware, requireAdmin, customFormController.deleteSubmission);
+router.get('/:id/export', authMiddleware, requireAdmin, customFormController.exportSubmissions);
+
+/**
  * Admin Routes - Form Management
  */
 router.get('/', authMiddleware, requireAdmin, customFormController.listForms);
@@ -21,14 +34,5 @@ router.get('/:id', authMiddleware, requireAdmin, customFormController.getFormByI
 router.put('/:id', authMiddleware, requireAdmin, customFormController.updateForm);
 router.patch('/:id/status', authMiddleware, requireAdmin, customFormController.toggleFormStatus);
 router.delete('/:id', authMiddleware, requireAdmin, customFormController.deleteForm);
-
-/**
- * Admin Routes - Submissions & Excel Export
- */
-router.get('/:id/submissions', authMiddleware, requireAdmin, customFormController.listSubmissions);
-router.get('/submissions/:submissionId', authMiddleware, requireAdmin, customFormController.getSubmissionById);
-router.patch('/submissions/:submissionId', authMiddleware, requireAdmin, customFormController.updateSubmission);
-router.delete('/submissions/:submissionId', authMiddleware, requireAdmin, customFormController.deleteSubmission);
-router.get('/:id/export', authMiddleware, requireAdmin, customFormController.exportSubmissions);
 
 export default router;

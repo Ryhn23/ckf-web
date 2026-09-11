@@ -179,6 +179,7 @@ model CustomForm {
   slug           String                 @unique
   description    String?
   coverImage     String?
+  formCode       String?                // Custom prefix ID pendaftaran, misal "CKF-SAFIR"
   fields         Json                   // [{ id, label, type, required, placeholder, helpText, options }]
   isActive       Boolean                @default(true)
   successMessage String?                @default("Terima kasih, formulir Anda telah berhasil dikirim.")

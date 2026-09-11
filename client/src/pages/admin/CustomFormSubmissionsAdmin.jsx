@@ -24,6 +24,7 @@ export default function CustomFormSubmissionsAdmin() {
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('');
   const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -64,7 +65,13 @@ export default function CustomFormSubmissionsAdmin() {
 
   useEffect(() => {
     fetchSubmissions();
-  }, [formId, page, statusFilter]);
+  }, [formId, page, statusFilter, search]);
+
+  function handleSearchSubmit(e) {
+    e?.preventDefault();
+    setSearch(searchInput);
+    setPage(1);
+  }
 
   // Handle Export to Excel
   async function handleExport() {
@@ -278,9 +285,9 @@ export default function CustomFormSubmissionsAdmin() {
         </div>
       </div>
 
-      {/* Filter Bar */}
+      {/* Filter & Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-semibold text-slate-500">Filter Status:</span>
           <div className="flex items-center gap-1.5">
             {[
@@ -305,14 +312,40 @@ export default function CustomFormSubmissionsAdmin() {
           </div>
         </div>
 
-        <button
-          onClick={fetchSubmissions}
-          className="admin-btn-ghost px-3 py-1.5 text-xs text-slate-500 hover:text-slate-800 self-end"
-          title="Muat ulang"
-        >
-          <FontAwesomeIcon icon={['fa-solid', 'fa-arrows-rotate']} className="mr-1" />
-          <span>Refresh</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <form onSubmit={handleSearchSubmit} className="relative flex-1 sm:w-64">
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Cari ID Pendaftaran..."
+              className="admin-input py-1.5 pl-8 pr-7 text-xs w-full font-mono placeholder:font-sans"
+            />
+            <FontAwesomeIcon
+              icon={['fa-solid', 'fa-magnifying-glass']}
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"
+            />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={() => { setSearchInput(''); setSearch(''); setPage(1); }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 text-xs"
+                title="Hapus pencarian"
+              >
+                <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
+              </button>
+            )}
+          </form>
+
+          <button
+            onClick={fetchSubmissions}
+            className="admin-btn-ghost px-3 py-1.5 text-xs text-slate-500 hover:text-slate-800"
+            title="Muat ulang"
+          >
+            <FontAwesomeIcon icon={['fa-solid', 'fa-arrows-rotate']} className="mr-1" />
+            <span>Refresh</span>
+          </button>
+        </div>
       </div>
 
       {/* Submissions Table */}
@@ -333,7 +366,8 @@ export default function CustomFormSubmissionsAdmin() {
               <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200/80">
                 <tr>
                   <th className="admin-th w-12 text-center">No</th>
-                  <th className="admin-th">Tanggal Masuk</th>
+                  <th className="admin-th whitespace-nowrap">ID Pendaftaran</th>
+                  <th className="admin-th whitespace-nowrap">Tanggal Masuk</th>
                   {/* Dynamic first 3 field headers */}
                   {fields.slice(0, 3).map((f) => (
                     <th key={f.id} className="admin-th">
@@ -361,11 +395,18 @@ export default function CustomFormSubmissionsAdmin() {
                       </td>
 
                       <td className="admin-td whitespace-nowrap">
+                        <span
+                          className="font-mono text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200/90 px-2.5 py-1 rounded-md tracking-wider inline-flex items-center gap-1.5 shadow-2xs select-all transition-colors cursor-copy"
+                          title="Klik/seleksi untuk menyalin ID Pendaftaran"
+                        >
+                          <FontAwesomeIcon icon={['fa-solid', 'fa-id-card']} className="text-[11px] text-slate-400" />
+                          {sub.id}
+                        </span>
+                      </td>
+
+                      <td className="admin-td whitespace-nowrap">
                         <div className="text-xs font-medium text-slate-900">
                           {formatDate(sub.createdAt)}
-                        </div>
-                        <div className="text-[10px] text-slate-400 font-mono mt-0.5">
-                          ID: {sub.id.substring(0, 8)}…
                         </div>
                       </td>
 
@@ -483,9 +524,14 @@ export default function CustomFormSubmissionsAdmin() {
                     <FontAwesomeIcon icon={['fa-solid', 'fa-file-lines']} className="text-slate-600" />
                     <span>Rincian Respon Responden</span>
                   </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Dikirim pada: {formatDate(selectedSub.createdAt)} • ID: {selectedSub.id}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                    <span className="font-mono text-xs font-bold text-slate-800 bg-white border border-slate-200/90 px-2 py-0.5 rounded shadow-2xs select-all">
+                      ID Pendaftaran: {selectedSub.id}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      • Dikirim pada: {formatDate(selectedSub.createdAt)}
+                    </span>
+                  </div>
                 </div>
                 <button
                   onClick={() => setDetailModalOpen(false)}

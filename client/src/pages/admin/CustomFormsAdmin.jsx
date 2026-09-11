@@ -66,6 +66,7 @@ export default function CustomFormsAdmin() {
   const [formSlugEdited, setFormSlugEdited] = useState(false);
   const [formDescription, setFormDescription] = useState('');
   const [formCoverImage, setFormCoverImage] = useState('');
+  const [formCode, setFormCode] = useState('');
   const [formIsActive, setFormIsActive] = useState(true);
   const [formSuccessMessage, setFormSuccessMessage] = useState('Terima kasih, formulir Anda telah berhasil dikirim.');
   const [formFields, setFormFields] = useState([]);
@@ -113,6 +114,7 @@ export default function CustomFormsAdmin() {
     setFormSlugEdited(false);
     setFormDescription('');
     setFormCoverImage('');
+    setFormCode('');
     setFormIsActive(true);
     setFormSuccessMessage('Terima kasih, formulir Anda telah berhasil dikirim.');
     // Start with 2 default helpful fields
@@ -149,6 +151,7 @@ export default function CustomFormsAdmin() {
     setFormSlugEdited(true);
     setFormDescription(form.description || '');
     setFormCoverImage(form.coverImage || '');
+    setFormCode(form.formCode || '');
     setFormIsActive(Boolean(form.isActive));
     setFormSuccessMessage(form.successMessage || 'Terima kasih, formulir Anda telah berhasil dikirim.');
     setFormFields(
@@ -239,14 +242,14 @@ export default function CustomFormsAdmin() {
     }
 
     if (formFields.length === 0) {
-      setBuilderError('Minimal harus ada 1 field pertanyaan pada formulir');
+      setBuilderError('Formulir harus memiliki minimal satu pertanyaan/field');
       setBuilderTab('fields');
       return;
     }
 
     // Validate fields have labels
     for (let i = 0; i < formFields.length; i++) {
-      if (!formFields[i].label.trim()) {
+      if (!formFields[i].label || !formFields[i].label.trim()) {
         setBuilderError(`Pertanyaan ke-${i + 1} belum memiliki judul/label`);
         setBuilderTab('fields');
         return;
@@ -262,6 +265,7 @@ export default function CustomFormsAdmin() {
         slug: formSlug.trim() || slugify(formTitle),
         description: formDescription.trim() || null,
         coverImage: formCoverImage.trim() || null,
+        formCode: formCode.trim().toUpperCase() || null,
         isActive: formIsActive,
         successMessage: formSuccessMessage.trim() || 'Terima kasih, formulir Anda telah berhasil dikirim.',
         fields: formFields,
@@ -495,7 +499,13 @@ export default function CustomFormsAdmin() {
                             {form.description}
                           </div>
                         )}
-                        <div className="flex items-center gap-2 mt-2">
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                          {form.formCode && (
+                            <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold bg-slate-100 text-slate-800 px-2 py-0.5 rounded border border-slate-200 shadow-2xs" title="Prefix ID Pendaftaran">
+                              <FontAwesomeIcon icon={['fa-solid', 'fa-id-card']} className="text-[9px] text-slate-400" />
+                              <span>{form.formCode}</span>
+                            </span>
+                          )}
                           <span className="inline-flex items-center gap-1.5 text-xs font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200/70">
                             <FontAwesomeIcon icon={['fa-solid', 'fa-link']} className="text-[10px] text-slate-400" />
                             {shareUrl}
@@ -814,17 +824,38 @@ export default function CustomFormsAdmin() {
                       )}
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">
-                        Pesan Sukses Setelah Pengiriman
-                      </label>
-                      <input
-                        type="text"
-                        value={formSuccessMessage}
-                        onChange={(e) => setFormSuccessMessage(e.target.value)}
-                        placeholder="Terima kasih, formulir Anda telah berhasil dikirim."
-                        className="admin-input w-full text-xs"
-                      />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Kode / ID Formulir (Prefix ID Pendaftaran)
+                        </label>
+                        <input
+                          type="text"
+                          value={formCode}
+                          onChange={(e) => setFormCode(e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, ''))}
+                          placeholder="Contoh: CKF-SAFIR"
+                          className="admin-input w-full font-mono text-xs uppercase"
+                        />
+                        <p className="text-[11px] text-slate-400 mt-1">
+                          Responden akan memiliki ID: <code className="text-slate-700 font-bold font-mono">{(formCode || 'CKF-SAFIR').toUpperCase().replace(/[-_]$/, '')}-XXXXXXXX</code> (8 karakter huruf & angka acak).
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Pesan Sukses Setelah Pengiriman
+                        </label>
+                        <input
+                          type="text"
+                          value={formSuccessMessage}
+                          onChange={(e) => setFormSuccessMessage(e.target.value)}
+                          placeholder="Terima kasih, formulir Anda telah berhasil dikirim."
+                          className="admin-input w-full text-xs"
+                        />
+                        <p className="text-[11px] text-slate-400 mt-1">
+                          Pesan yang tampil setelah responden berhasil mengirimkan data.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}

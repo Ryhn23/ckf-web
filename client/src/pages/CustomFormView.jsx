@@ -293,8 +293,16 @@ export default function CustomFormView() {
             </div>
 
             {submissionResult?.submissionId && (
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl max-w-xs mx-auto text-xs text-slate-500 font-mono">
-                Kode Referensi: <span className="font-bold text-slate-800">{submissionResult.submissionId}</span>
+              <div className="p-4 bg-slate-50 border border-slate-200/90 rounded-2xl max-w-sm mx-auto text-center space-y-1.5 shadow-2xs">
+                <span className="block text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+                  ID Pendaftaran Anda
+                </span>
+                <div className="font-mono text-base font-extrabold text-slate-900 bg-white border border-slate-200/80 px-4 py-2 rounded-xl tracking-wider select-all shadow-inner">
+                  {submissionResult.submissionId}
+                </div>
+                <p className="text-[11px] text-slate-400">
+                  Simpan atau catat ID ini sebagai bukti pendaftaran Anda.
+                </p>
               </div>
             )}
 

@@ -47,8 +47,36 @@ function formatDate(date) {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit',
   });
+}
+
+/**
+ * Generate unique submission ID based on custom formCode / prefix
+ * e.g., if formCode is "CKF-SAFIR", returns "CKF-SAFIR-A1B2C3D4"
+ */
+async function generateSubmissionId(formCode) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const prefix = formCode && formCode.trim() ? formCode.trim().toUpperCase() : 'CKF';
+  const separator = prefix.endsWith('-') || prefix.endsWith('_') ? '' : '-';
+
+  for (let attempt = 0; attempt < 10; attempt++) {
+    let random8 = '';
+    for (let i = 0; i < 8; i++) {
+      random8 += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const candidateId = `${prefix}${separator}${random8}`;
+    const existing = await prisma.customFormSubmission.findUnique({
+      where: { id: candidateId },
+      select: { id: true },
+    });
+    if (!existing) {
+      return candidateId;
+    }
+  }
+
+  // Fallback if collision persists
+  const randFallback = Math.random().toString(36).substring(2, 10).toUpperCase();
+  return `${prefix}${separator}${randFallback}`;
 }
 
 export const customFormService = {
@@ -146,6 +174,7 @@ export const customFormService = {
         slug: true,
         description: true,
         coverImage: true,
+        formCode: true,
         fields: true,
         isActive: true,
         successMessage: true,
@@ -163,7 +192,7 @@ export const customFormService = {
   /**
    * Create a new custom form
    */
-  async createForm({ title, slug, description, coverImage, fields = [], isActive = true, successMessage }) {
+  async createForm({ title, slug, description, coverImage, formCode, fields = [], isActive = true, successMessage }) {
     if (!title || !title.trim()) {
       throw ApiError.badRequest('Judul formulir wajib diisi');
     }
@@ -193,6 +222,7 @@ export const customFormService = {
         slug: finalSlug,
         description: description?.trim() || null,
         coverImage: coverImage?.trim() || null,
+        formCode: formCode?.trim().toUpperCase() || null,
         fields: normalizedFields,
         isActive: Boolean(isActive),
         successMessage: successMessage?.trim() || 'Terima kasih, formulir Anda telah berhasil dikirim.',
@@ -210,7 +240,7 @@ export const customFormService = {
   /**
    * Update existing custom form
    */
-  async updateForm(id, { title, slug, description, coverImage, fields, isActive, successMessage }) {
+  async updateForm(id, { title, slug, description, coverImage, formCode, fields, isActive, successMessage }) {
     const existing = await prisma.customForm.findUnique({ where: { id } });
     if (!existing) {
       throw ApiError.notFound('Formulir kustom tidak ditemukan');
@@ -233,6 +263,10 @@ export const customFormService = {
 
     if (coverImage !== undefined) {
       updateData.coverImage = coverImage?.trim() || null;
+    }
+
+    if (formCode !== undefined) {
+      updateData.formCode = formCode?.trim().toUpperCase() || null;
     }
 
     if (fields !== undefined && Array.isArray(fields)) {
@@ -409,9 +443,13 @@ export const customFormService = {
       }
     }
 
+    // Generate custom submission ID based on formCode prefix (e.g. CKF-SAFIR-A1B2C3D4)
+    const submissionId = await generateSubmissionId(form.formCode);
+
     // Save submission
     const submission = await prisma.customFormSubmission.create({
       data: {
+        id: submissionId,
         formId: form.id,
         data: submissionData,
         status: 'BARU',
@@ -445,6 +483,12 @@ export const customFormService = {
     const where = { formId };
     if (status && status.trim()) {
       where.status = status.trim();
+    }
+    if (search && search.trim()) {
+      where.OR = [
+        { id: { contains: search.trim(), mode: 'insensitive' } },
+        { adminNotes: { contains: search.trim(), mode: 'insensitive' } },
+      ];
     }
 
     const [total, submissions, counts] = await Promise.all([
@@ -635,7 +679,7 @@ export const customFormService = {
     // 2. Define Table Columns
     const columns = [
       { header: 'No', key: 'no', width: 8 },
-      { header: 'ID Respon', key: 'id', width: 22 },
+      { header: 'ID Pendaftaran', key: 'id', width: 24 },
       { header: 'Waktu Pengiriman (WIB)', key: 'createdAt', width: 24 },
       { header: 'Status', key: 'status', width: 14 },
     ];

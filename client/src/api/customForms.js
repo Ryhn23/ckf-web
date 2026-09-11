@@ -30,11 +30,7 @@ export const getPublicCustomForm = (slug) =>
 
 /** POST /api/custom-forms/p/:slug/submit (publik multipart) */
 export const submitPublicCustomForm = (slug, formData) =>
-  client
-    .post(`/custom-forms/p/${slug}/submit`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-    .then((r) => r.data);
+  client.post(`/custom-forms/p/${slug}/submit`, formData).then((r) => r.data);
 
 /** GET /api/custom-forms/:id/submissions (admin) */
 export const getCustomFormSubmissions = (id, params) =>

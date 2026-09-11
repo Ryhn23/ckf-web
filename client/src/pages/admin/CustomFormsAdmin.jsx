@@ -716,8 +716,8 @@ export default function CustomFormsAdmin() {
                         <label className="block text-xs font-semibold text-slate-700 mb-1">
                           Link Kustom / Slug (URL Publik)
                         </label>
-                        <div className="flex items-center">
-                          <span className="bg-slate-100 text-slate-500 border border-r-0 border-slate-300 rounded-l-lg px-2.5 py-2 text-xs font-mono">
+                        <div className="flex items-stretch">
+                          <span className="bg-slate-100 text-slate-500 border border-r-0 border-slate-300 rounded-l-xl px-3 text-xs font-mono flex items-center select-none">
                             /form/
                           </span>
                           <input
@@ -728,7 +728,7 @@ export default function CustomFormsAdmin() {
                               setFormSlugEdited(true);
                             }}
                             placeholder="pendaftaran-relawan"
-                            className="admin-input rounded-l-none w-full font-mono text-xs"
+                            className="admin-input !rounded-l-none w-full font-mono text-xs"
                           />
                         </div>
                         <p className="text-[11px] text-slate-400 mt-1">

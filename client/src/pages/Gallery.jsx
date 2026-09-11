@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../hooks/useFetch';
-import { getMedia } from '../api/media';
+import { getPublicGallery } from '../api/media';
 import PageHeader from '../components/layout/PageHeader';
 import Spinner from '../components/ui/Spinner';
 import EmptyState from '../components/ui/EmptyState';
@@ -82,7 +82,7 @@ function Lightbox({ items, index, onClose, onPrev, onNext }) {
 }
 
 export default function Gallery() {
-  const { data, loading } = useFetch(() => getMedia({ limit: 24 }), []);
+  const { data, loading } = useFetch(() => getPublicGallery({ limit: 24 }), []);
   const [tab, setTab] = useState('all');
   const [lightboxIndex, setLightboxIndex] = useState(null);
 

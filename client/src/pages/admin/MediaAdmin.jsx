@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useFetch from '../../hooks/useFetch';
-import { getMedia, uploadMedia, deleteMedia } from '../../api/media';
+import { getMedia, uploadGalleryMedia, deleteMedia } from '../../api/media';
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
@@ -47,12 +47,12 @@ export default function MediaAdmin() {
     setUploading(true);
     setProgress(0);
     try {
-      await uploadMedia(file, (evt) => {
+      await uploadGalleryMedia(file, (evt) => {
         setProgress(evt.total ? Math.round((evt.loaded / evt.total) * 100) : 0);
       });
       refetch();
     } catch (err) {
-      setError(errMsg(err, 'Gagal mengunggah file'));
+      setError(errMsg(err, 'Gagal mengunggah foto galeri'));
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = '';
@@ -60,7 +60,7 @@ export default function MediaAdmin() {
   }
 
   async function handleDelete(item) {
-    if (!window.confirm(`Hapus media "${item.originalName}"?`)) return;
+    if (!window.confirm(`Hapus foto galeri "${item.originalName}"?`)) return;
     setDeletingId(item.id);
     try {
       await deleteMedia(item.id);
@@ -73,8 +73,8 @@ export default function MediaAdmin() {
     }
   }
 
-  if (loading) return <Spinner label="Memuat media…" />;
-  if (fetchError) return <EmptyState icon="fa-triangle-exclamation" title="Gagal memuat media" description={errMsg(fetchError)} />;
+  if (loading) return <Spinner label="Memuat foto galeri…" />;
+  if (fetchError) return <EmptyState icon="fa-triangle-exclamation" title="Gagal memuat galeri" description={errMsg(fetchError)} />;
 
   return (
     <div className="space-y-6">
@@ -85,7 +85,7 @@ export default function MediaAdmin() {
             Galeri Media
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Upload dan kelola file gambar atau dokumen.
+            Upload dan kelola foto dokumentasi kegiatan untuk galeri website.
           </p>
         </div>
       </div>
@@ -102,7 +102,7 @@ export default function MediaAdmin() {
           <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
             {meta.total !== undefined ? meta.total : media.length}
           </p>
-          <p className="text-[11px] text-slate-400">Total berkas tersimpan</p>
+          <p className="text-[11px] text-slate-400">Total foto dalam galeri</p>
         </div>
 
         <div className="admin-card p-4 transition-all hover:border-slate-300">
@@ -110,25 +110,25 @@ export default function MediaAdmin() {
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
               <FontAwesomeIcon icon={['fa-solid', 'fa-image']} className="text-xs" />
             </span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gambar</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Format</span>
           </div>
           <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
-            {media.filter((m) => m.mimeType?.startsWith('image/')).length}
+            WebP
           </p>
-          <p className="text-[11px] text-slate-400">Foto & ilustrasi</p>
+          <p className="text-[11px] text-slate-400">Kompresi otomatis optimal</p>
         </div>
 
         <div className="admin-card p-4 transition-all hover:border-slate-300">
           <div className="flex items-center justify-between">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-file']} className="text-xs" />
+              <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-xs" />
             </span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Dokumen</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status</span>
           </div>
           <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
-            {media.filter((m) => !m.mimeType?.startsWith('image/')).length}
+            Publik
           </p>
-          <p className="text-[11px] text-slate-400">PDF & dokumen berkas</p>
+          <p className="text-[11px] text-slate-400">Tampil di menu galeri situs</p>
         </div>
       </div>
 
@@ -146,12 +146,12 @@ export default function MediaAdmin() {
             </span>
             <div>
               <p className="text-xs font-semibold text-slate-800">
-                {uploading ? `Mengunggah… ${progress}%` : 'Pilih file untuk diunggah'}
+                {uploading ? `Mengunggah foto… ${progress}%` : 'Pilih foto galeri untuk diunggah'}
               </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">Format: JPG, PNG, GIF, WebP, PDF (maks 2 MB)</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">Format: JPG, JPEG, PNG, GIF, WebP (maks 10 MB)</p>
             </div>
           </label>
-          <input ref={fileRef} id="file" type="file" accept="image/*,application/pdf" className="hidden" onChange={handleUpload} />
+          <input ref={fileRef} id="file" type="file" accept="image/*" className="hidden" onChange={handleUpload} />
         </div>
         {uploading && (
           <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100">
@@ -168,7 +168,7 @@ export default function MediaAdmin() {
 
       {/* Grid media */}
       {media.length === 0 ? (
-        <EmptyState icon="fa-images" title="Belum Ada Berkas Media" description="Unggah berkas dokumentasi atau materi pendukung melalui area di atas." />
+        <EmptyState icon="fa-images" title="Belum Ada Foto Galeri" description="Unggah dokumentasi foto kegiatan yayasan melalui area di atas." />
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">

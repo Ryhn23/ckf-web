@@ -69,9 +69,12 @@ model Media {
   originalName String
   size         Int
   mimeType     String
+  isGallery    Boolean  @default(false)
   uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
   uploadedById String?
   createdAt    DateTime @default(now())
+
+  @@index([isGallery, createdAt(sort: Desc)])
 }
 
 enum DonationStatus {

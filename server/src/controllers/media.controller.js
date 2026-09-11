@@ -13,6 +13,12 @@ export const upload = asyncHandler(async (req, res) => {
   const file = req.file;
   if (!file) throw ApiError.badRequest('File wajib dilampirkan');
 
+  const isGallery = req.body.isGallery === 'true' || req.query.isGallery === 'true';
+
+  if (isGallery && !file.mimetype.startsWith('image/')) {
+    throw ApiError.badRequest('Hanya file gambar yang dapat ditambahkan ke galeri');
+  }
+
   const { url, mimeType } = await processMediaFile(file.path, file.mimetype);
   const media = await prisma.media.create({
     data: {
@@ -20,7 +26,8 @@ export const upload = asyncHandler(async (req, res) => {
       originalName: file.originalname,
       size: fs.statSync(path.join(UPLOAD_DIR, path.basename(url))).size,
       mimeType,
-      uploadedById: req.user.id,
+      isGallery,
+      uploadedById: req.user?.id || null,
     },
   });
 
@@ -32,9 +39,15 @@ export const list = asyncHandler(async (req, res) => {
   const page = Math.max(parseInt(req.query.page) || 1, 1);
   const limit = Math.min(Math.max(parseInt(req.query.limit) || 12, 1), 50);
 
+  const where = {
+    isGallery: true,
+    mimeType: { startsWith: 'image/' },
+  };
+
   const [total, data] = await Promise.all([
-    prisma.media.count(),
+    prisma.media.count({ where }),
     prisma.media.findMany({
+      where,
       orderBy: { createdAt: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
@@ -50,16 +63,28 @@ export const listPublic = asyncHandler(async (req, res) => {
   const page = Math.max(parseInt(req.query.page) || 1, 1);
   const limit = Math.min(Math.max(parseInt(req.query.limit) || 24, 1), 50);
 
+  const where = {
+    isGallery: true,
+    mimeType: { startsWith: 'image/' },
+  };
+
   const [total, data] = await Promise.all([
-    prisma.media.count(),
+    prisma.media.count({ where }),
     prisma.media.findMany({
+      where,
       orderBy: { createdAt: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
     }),
   ]);
 
-  res.json({ data, meta: { page, limit, total, totalPages: Math.ceil(total / limit) } });
+  const formattedData = data.map((m) => ({
+    ...m,
+    title: m.originalName ? m.originalName.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') : 'Dokumentasi Kegiatan',
+    type: 'photo',
+  }));
+
+  res.json({ data: formattedData, meta: { page, limit, total, totalPages: Math.ceil(total / limit) } });
 });
 
 /** DELETE /api/media/:id (admin) */

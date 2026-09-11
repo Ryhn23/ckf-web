@@ -40,7 +40,7 @@ export async function dashboard() {
     prisma.donation.aggregate({ where: { status: 'PROCESSED' }, _sum: { amount: true } }).then((r) => r._sum.amount || 0),
     prisma.donation.count({ where: { status: 'PENDING' } }),
     prisma.contactMessage.count({ where: { isRead: false } }),
-    prisma.media.count(),
+    prisma.media.count({ where: { isGallery: true } }),
     prisma.testimonial.count(),
     prisma.aidRequest.count(),
     prisma.aidRequest.count({ where: { status: 'PENDING' } }),

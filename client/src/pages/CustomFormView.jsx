@@ -264,11 +264,24 @@ export default function CustomFormView() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-3xl shadow-xl border border-slate-200/80 p-8 text-center space-y-6"
+            className="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden text-center"
           >
-            <div className="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center mx-auto text-2xl shadow-sm">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
-            </div>
+            {form.coverImage && (
+              <div
+                className="w-full aspect-[2/1] overflow-hidden bg-slate-100 border-b border-slate-100"
+                style={{ aspectRatio: '2 / 1' }}
+              >
+                <img
+                  src={form.coverImage}
+                  alt={form.title}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+            )}
+            <div className="p-8 space-y-6">
+              <div className="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center mx-auto text-2xl shadow-sm">
+                <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
+              </div>
 
             <div className="space-y-2">
               <h2 className="font-heading text-2xl font-bold text-slate-900">
@@ -302,17 +315,21 @@ export default function CustomFormView() {
                 Kembali ke Beranda
               </Link>
             </div>
+            </div>
           </motion.div>
         ) : (
           /* MAIN FORM CARD */
           <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200/80 overflow-hidden">
-            {/* Banner Cover if provided */}
+            {/* Banner Cover if provided - Rasio baku landscape 2:1 di bagian atas */}
             {form.coverImage && (
-              <div className="w-full h-44 sm:h-56 overflow-hidden bg-slate-900">
+              <div
+                className="w-full aspect-[2/1] overflow-hidden bg-slate-100 border-b border-slate-100"
+                style={{ aspectRatio: '2 / 1' }}
+              >
                 <img
                   src={form.coverImage}
                   alt={form.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-center"
                 />
               </div>
             )}

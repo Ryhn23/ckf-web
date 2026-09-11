@@ -786,17 +786,30 @@ export default function CustomFormsAdmin() {
                           className="hidden"
                         />
                       </div>
+                      <p className="text-[11px] text-slate-400 mt-1">
+                        Format banner landscape rasio baku 2:1 (rekomendasi: 1200×600 px).
+                      </p>
                       {formCoverImage && (
-                        <div className="mt-2 relative w-full h-28 rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
-                          <img src={formCoverImage} alt="Cover Preview" className="w-full h-full object-cover" />
+                        <div
+                          className="mt-2.5 relative w-full max-w-sm aspect-[2/1] rounded-xl overflow-hidden border border-slate-200 bg-slate-100"
+                          style={{ aspectRatio: '2 / 1' }}
+                        >
+                          <img
+                            src={formCoverImage}
+                            alt="Cover Preview"
+                            className="w-full h-full object-cover object-center"
+                          />
                           <button
                             type="button"
                             onClick={() => setFormCoverImage('')}
-                            className="absolute top-2 right-2 bg-slate-900/70 text-white rounded-full p-1 text-xs hover:bg-slate-900"
+                            className="absolute top-2 right-2 bg-slate-900/70 text-white rounded-full p-1.5 text-xs hover:bg-slate-900 transition-colors shadow"
                             title="Hapus banner"
                           >
                             <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
                           </button>
+                          <span className="absolute bottom-2 left-2 bg-slate-900/70 text-white text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur-xs">
+                            Rasio 2:1
+                          </span>
                         </div>
                       )}
                     </div>

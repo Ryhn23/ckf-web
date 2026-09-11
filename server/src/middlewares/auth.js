@@ -11,7 +11,8 @@ export const TOKEN_COOKIE = 'ckf_token';
  */
 export async function authMiddleware(req, res, next) {
   try {
-    const token = req.cookies?.[TOKEN_COOKIE];
+    const token =
+      req.cookies?.[TOKEN_COOKIE] || req.headers.authorization?.replace(/^Bearer\s+/i, '');
     if (!token) throw ApiError.unauthorized('Sesi tidak ditemukan, silakan login');
 
     const payload = jwt.verify(token, env.jwtSecret);
@@ -34,7 +35,8 @@ export async function authMiddleware(req, res, next) {
  * lanjut anonim jika tidak (untuk route publik yang punya privilege admin).
  */
 export async function optionalAuth(req, res, next) {
-  const token = req.cookies?.[TOKEN_COOKIE];
+  const token =
+    req.cookies?.[TOKEN_COOKIE] || req.headers.authorization?.replace(/^Bearer\s+/i, '');
   if (!token) return next();
   try {
     const payload = jwt.verify(token, env.jwtSecret);

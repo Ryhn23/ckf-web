@@ -251,6 +251,18 @@ export default function PostEditor() {
           <Link to="/admin/posts" className="admin-btn-secondary !py-2 !px-4 text-xs sm:text-sm">
             Batal
           </Link>
+          {!isNew && form.slug && (
+            <a
+              href={`/blog/${form.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="admin-btn-secondary !py-2 !px-4 text-xs sm:text-sm inline-flex items-center gap-1.5"
+              title="Pratinjau Artikel di Tab Baru"
+            >
+              <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} className="text-xs" />
+              <span className="hidden sm:inline">Pratinjau</span>
+            </a>
+          )}
           <button
             type="button"
             disabled={submitting || !categoriesReady}

@@ -214,6 +214,15 @@ export default function PostsAdmin() {
                     <td className="admin-td">
                       <div className="flex justify-end gap-1">
                         <Link
+                          to={`/blog/${post.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-teal-700 transition shadow-2xs"
+                          title="Lihat / Pratinjau Artikel"
+                        >
+                          <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} />
+                        </Link>
+                        <Link
                           to={`/admin/posts/${post.id}/edit`}
                           className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
                           title="Edit Artikel"

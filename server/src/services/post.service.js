@@ -122,7 +122,7 @@ export async function listPosts({ page = 1, limit = 9, category, tag, search, st
     prisma.post.findMany({
       where,
       select: PUBLIC_SELECT,
-      orderBy: admin && status === 'DRAFT' ? { createdAt: 'desc' } : { publishedAt: 'desc' },
+      orderBy: admin ? { createdAt: 'desc' } : { publishedAt: 'desc' },
       skip: (safePage - 1) * safeLimit,
       take: safeLimit,
     }),
@@ -149,14 +149,19 @@ export async function featuredPosts(limit = 10) {
   });
 }
 
-/** Detail post publik + increment views. */
-export async function getPostBySlug(slug) {
+/** Detail post publik + increment views. Admin dapat melihat draft jika login. */
+export async function getPostBySlug(slug, user = null) {
   const post = await prisma.post.findUnique({ where: { slug } });
-  if (!post || post.status !== 'PUBLISHED') throw ApiError.notFound('Post tidak ditemukan');
+  const isAdmin = !!user && user.role === 'ADMIN';
+  if (!post || (post.status !== 'PUBLISHED' && !isAdmin)) {
+    throw ApiError.notFound('Post tidak ditemukan');
+  }
 
   const [full, related] = await Promise.all([
     (async () => {
-      await prisma.post.update({ where: { id: post.id }, data: { views: { increment: 1 } } });
+      if (post.status === 'PUBLISHED') {
+        await prisma.post.update({ where: { id: post.id }, data: { views: { increment: 1 } } });
+      }
       return prisma.post.findUnique({
         where: { id: post.id },
         include: { category: true, author: true },

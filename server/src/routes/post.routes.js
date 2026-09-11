@@ -22,6 +22,7 @@ const listSchema = validate({
     search: z.string().max(100).optional(),
     status: z.enum(['DRAFT', 'PUBLISHED']).optional(),
     isFeatured: boolField.optional(),
+    admin: boolField.optional(),
   }),
 });
 
@@ -60,7 +61,7 @@ router.get('/by-id/:id', authMiddleware, requireAdmin, postController.getById);
 // Publik
 router.get('/', optionalAuth, listSchema, postController.list);
 router.get('/featured', postController.featured);
-router.get('/:slug', postController.getBySlug);
+router.get('/:slug', optionalAuth, postController.getBySlug);
 
 router.post('/', authMiddleware, requireAdmin, upload.single('cover'), createSchema, postController.create);
 router.put('/:id', authMiddleware, requireAdmin, upload.single('cover'), updateSchema, postController.update);

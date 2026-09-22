@@ -120,62 +120,27 @@ export async function generateSubmissionPdf(submission, fields, formTitle, formI
 
   // ── PAGE HEADER (drawn on current page) ──────────────────────────────────
   function drawPageHeader() {
-    // Full-width dark header band
+    // Compact dark header band — just enough for the title
+    const HEADER_H = 26;
     doc.setFillColor(...C_HEADER_BG);
-    doc.rect(0, 0, PW, 46, 'F');
+    doc.rect(0, 0, PW, HEADER_H, 'F');
 
     // Accent left stripe
     doc.setFillColor(...C_ACCENT);
-    doc.rect(0, 0, 4, 46, 'F');
+    doc.rect(0, 0, 4, HEADER_H, 'F');
 
-    // Organisation label
+    // Form title — vertically centred in the band
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.5);
-    doc.setTextColor(148, 163, 184);
-    doc.text('KOMUNITAS KELUARGA FASIH', ML, 12);
-
-    // Document type pill
-    const statusText = submission.status || 'BARU';
-    const statusColors = {
-      BARU:     [59, 130, 246],
-      DIPROSES: [245, 158, 11],
-      SELESAI:  [16, 185, 129],
-    };
-    const [sr, sg, sb] = statusColors[statusText] || C_MUTED;
-    doc.setFillColor(sr, sg, sb);
-    const pill = doc.getTextWidth(statusText) + 6;
-    doc.roundedRect(PW - MR - pill, 8, pill, 6, 1.5, 1.5, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7);
+    doc.setFontSize(14);
     doc.setTextColor(...C_WHITE);
-    doc.text(statusText, PW - MR - pill / 2, 12.3, { align: 'center' });
+    const titleLines = doc.splitTextToSize(formTitle || 'Formulir', CW);
+    // Centre text vertically: top padding = (HEADER_H - lines*lineH) / 2
+    const lineH = 6;
+    const titleBlockH = titleLines.length * lineH;
+    const titleY = (HEADER_H - titleBlockH) / 2 + lineH - 1;
+    doc.text(titleLines, ML, titleY);
 
-    // Form title
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.setTextColor(...C_WHITE);
-    const titleLines = doc.splitTextToSize(formTitle || 'Formulir', CW - 20);
-    doc.text(titleLines, ML, 22);
-    const titleH = titleLines.length * 7;
-
-    // Subtitle
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(148, 163, 184);
-    doc.text('Dokumen Respon Formulir', ML, 22 + titleH);
-
-    // Date top-right
-    const createdDate = submission.createdAt
-      ? new Date(submission.createdAt).toLocaleDateString('id-ID', {
-          day: '2-digit', month: 'long', year: 'numeric',
-        })
-      : '-';
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(7.5);
-    doc.setTextColor(148, 163, 184);
-    doc.text(`Dikirim: ${createdDate}`, PW - MR, 12, { align: 'right' });
-
-    y = 52;
+    y = HEADER_H + 4;
   }
 
   // ── META STRIP (ID + border) ──────────────────────────────────────────────

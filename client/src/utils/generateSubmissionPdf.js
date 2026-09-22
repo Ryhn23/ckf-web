@@ -1,14 +1,12 @@
 /**
  * generateSubmissionPdf.js
- * Generates a professional PDF for a custom form submission using jsPDF.
- * Handles text fields, array values, and image fields (via base64 fetch).
+ * Generates a compact, registration-form-style PDF for a custom form submission.
+ * Text fields are laid out in a dense two-column label/value table.
+ * Image fields appear as a contained thumbnail section below the data table.
  */
 import { jsPDF } from 'jspdf';
 
-/**
- * Fetches an image URL and converts it to a base64 data URL.
- * Returns null if fetching fails.
- */
+/** Fetch a remote image URL and return a base64 data-URL string, or null on failure. */
 async function fetchImageAsBase64(url) {
   try {
     const response = await fetch(url, { mode: 'cors' });
@@ -26,282 +24,420 @@ async function fetchImageAsBase64(url) {
 }
 
 /**
- * Wraps long text to fit within maxWidth and returns an array of lines.
- * Uses jsPDF's built-in splitTextToSize.
+ * Read an image's natural width/height from a base64 data URL.
+ * Returns { w, h } in pixels, or null on failure.
  */
-function wrapText(doc, text, maxWidth) {
-  return doc.splitTextToSize(String(text || '-'), maxWidth);
+function getImageDimensions(dataUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+    img.onerror = () => resolve(null);
+    img.src = dataUrl;
+  });
 }
 
 /**
- * Main function: generates and downloads a PDF for a single submission.
+ * Generates and downloads a PDF for a single form submission.
  *
- * @param {Object} submission  - The submission object (id, data, createdAt, status)
- * @param {Array}  fields      - The form's field definitions (id, label, type)
- * @param {string} formTitle   - Title of the parent form
- * @param {string} formId      - ID / prefix of the form (e.g. "CKF-SAFIR")
+ * @param {Object} submission  - Submission object { id, data, createdAt, status, adminNotes }
+ * @param {Array}  fields      - Form field definitions [{ id, label, type }, …]
+ * @param {string} formTitle   - Human-readable form title
+ * @param {string} formId      - Form ID prefix (unused visually, kept for filename)
  */
 export async function generateSubmissionPdf(submission, fields, formTitle, formId) {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-  // ─── Color palette ────────────────────────────────────────────────────────
-  const COLOR_PRIMARY    = [30, 41, 59];   // slate-800
-  const COLOR_ACCENT     = [99, 102, 241]; // indigo-500
-  const COLOR_MUTED      = [100, 116, 139]; // slate-500
-  const COLOR_LABEL      = [71, 85, 105];  // slate-600
-  const COLOR_VALUE      = [15, 23, 42];   // slate-900
-  const COLOR_DIVIDER    = [226, 232, 240]; // slate-200
-  const COLOR_HEADER_BG  = [30, 41, 59];   // slate-800
-  const COLOR_SECTION_BG = [248, 250, 252]; // slate-50
+  // ── Constants ────────────────────────────────────────────────────────────
+  const PW = 210;
+  const PH = 297;
+  const ML = 15;   // left margin
+  const MR = 15;   // right margin
+  const CW = PW - ML - MR;  // content width = 180 mm
 
-  const PAGE_W = 210;
-  const PAGE_H = 297;
-  const MARGIN = 18;
-  const CONTENT_W = PAGE_W - MARGIN * 2;
-  let y = 0;
+  // Colours (RGB)
+  const C_HEADER_BG  = [22, 30, 46];   // very dark navy
+  const C_ACCENT     = [79, 70, 229];   // indigo-600
+  const C_RULE       = [203, 213, 225]; // slate-300
+  const C_LABEL_BG   = [241, 245, 249]; // slate-100
+  const C_LABEL_TXT  = [71, 85, 105];   // slate-600
+  const C_VALUE_TXT  = [15, 23, 42];    // slate-900
+  const C_MUTED      = [100, 116, 139]; // slate-500
+  const C_WHITE      = [255, 255, 255];
+  const C_FOOTER_BG  = [22, 30, 46];
 
-  // ─── Helper: ensure space, add new page if needed ─────────────────────────
-  function ensureSpace(needed) {
-    if (y + needed > PAGE_H - 20) {
-      doc.addPage();
-      y = MARGIN;
-    }
+  // Table column widths for label|value rows
+  const COL_LABEL = 55;   // mm – left column (label)
+  const COL_VALUE = CW - COL_LABEL; // right column (value)
+  const ROW_MIN   = 7;    // minimum row height mm
+  const ROW_PAD   = 2;    // internal vertical padding mm
+
+  let y = 0; // current Y cursor
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  function newPage() {
+    doc.addPage();
+    y = ML;
   }
 
-  // ─── HEADER BLOCK ──────────────────────────────────────────────────────────
-  // Dark header background
-  doc.setFillColor(...COLOR_HEADER_BG);
-  doc.rect(0, 0, PAGE_W, 52, 'F');
+  function ensureSpace(needed) {
+    if (y + needed > PH - 18) newPage();
+  }
 
-  // Accent bar on left
-  doc.setFillColor(...COLOR_ACCENT);
-  doc.rect(0, 0, 5, 52, 'F');
+  // Draw a single label|value row
+  function drawRow(label, valueLines, rowH, isAlt) {
+    ensureSpace(rowH);
 
-  // Organization name
+    // Label cell background
+    doc.setFillColor(...C_LABEL_BG);
+    doc.rect(ML, y, COL_LABEL, rowH, 'F');
+
+    // Label text
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(...C_LABEL_TXT);
+    const labelWrapped = doc.splitTextToSize(label, COL_LABEL - 4);
+    doc.text(labelWrapped, ML + 3, y + ROW_PAD + 3.5);
+
+    // Value cell background (alternating very light tint)
+    if (isAlt) {
+      doc.setFillColor(248, 250, 252);
+      doc.rect(ML + COL_LABEL, y, COL_VALUE, rowH, 'F');
+    }
+
+    // Value text
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...C_VALUE_TXT);
+    doc.text(valueLines, ML + COL_LABEL + 3, y + ROW_PAD + 3.5);
+
+    // Bottom border line
+    doc.setDrawColor(...C_RULE);
+    doc.setLineWidth(0.25);
+    doc.line(ML, y + rowH, ML + CW, y + rowH);
+
+    y += rowH;
+  }
+
+  // ── PAGE HEADER (drawn on current page) ──────────────────────────────────
+  function drawPageHeader() {
+    // Full-width dark header band
+    doc.setFillColor(...C_HEADER_BG);
+    doc.rect(0, 0, PW, 46, 'F');
+
+    // Accent left stripe
+    doc.setFillColor(...C_ACCENT);
+    doc.rect(0, 0, 4, 46, 'F');
+
+    // Organisation label
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(148, 163, 184);
+    doc.text('KOMUNITAS KELUARGA FASIH', ML, 12);
+
+    // Document type pill
+    const statusText = submission.status || 'BARU';
+    const statusColors = {
+      BARU:     [59, 130, 246],
+      DIPROSES: [245, 158, 11],
+      SELESAI:  [16, 185, 129],
+    };
+    const [sr, sg, sb] = statusColors[statusText] || C_MUTED;
+    doc.setFillColor(sr, sg, sb);
+    const pill = doc.getTextWidth(statusText) + 6;
+    doc.roundedRect(PW - MR - pill, 8, pill, 6, 1.5, 1.5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(...C_WHITE);
+    doc.text(statusText, PW - MR - pill / 2, 12.3, { align: 'center' });
+
+    // Form title
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(...C_WHITE);
+    const titleLines = doc.splitTextToSize(formTitle || 'Formulir', CW - 20);
+    doc.text(titleLines, ML, 22);
+    const titleH = titleLines.length * 7;
+
+    // Subtitle
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(148, 163, 184);
+    doc.text('Dokumen Respon Formulir', ML, 22 + titleH);
+
+    // Date top-right
+    const createdDate = submission.createdAt
+      ? new Date(submission.createdAt).toLocaleDateString('id-ID', {
+          day: '2-digit', month: 'long', year: 'numeric',
+        })
+      : '-';
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(148, 163, 184);
+    doc.text(`Dikirim: ${createdDate}`, PW - MR, 12, { align: 'right' });
+
+    y = 52;
+  }
+
+  // ── META STRIP (ID + border) ──────────────────────────────────────────────
+  function drawMeta() {
+    // Outer border for the whole table
+    doc.setDrawColor(...C_RULE);
+    doc.setLineWidth(0.4);
+    // We'll draw the border after all rows; just mark start Y
+    return y;
+  }
+
+  function drawMetaRow() {
+    const metaH = 10;
+    ensureSpace(metaH);
+
+    // ID label cell
+    doc.setFillColor(...C_ACCENT);
+    doc.rect(ML, y, COL_LABEL, metaH, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(...C_WHITE);
+    doc.text('ID PENDAFTARAN', ML + 3, y + 4);
+
+    // ID value cell
+    doc.setFillColor(236, 240, 255);
+    doc.rect(ML + COL_LABEL, y, COL_VALUE, metaH, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(...C_ACCENT);
+    doc.text(submission.id || '-', ML + COL_LABEL + 3, y + 6.5);
+
+    doc.setDrawColor(...C_RULE);
+    doc.setLineWidth(0.25);
+    doc.line(ML, y + metaH, ML + CW, y + metaH);
+
+    y += metaH;
+  }
+
+  // ── BUILD PDF ────────────────────────────────────────────────────────────
+
+  // Header
+  drawPageHeader();
+
+  // Thin space
+  y += 2;
+
+  // Outer border left/right/top for the table
+  const tableStartY = y;
+
+  // Meta row (ID)
+  drawMetaRow();
+
+  // Section header row for data
+  const secH = 6.5;
+  ensureSpace(secH);
+  doc.setFillColor(...C_HEADER_BG);
+  doc.rect(ML, y, CW, secH, 'F');
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(148, 163, 184); // slate-400
-  doc.text('KOMUNITAS KELUARGA FASIH', MARGIN, 16);
-
-  // Form title
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(18);
-  doc.setTextColor(255, 255, 255);
-  const titleLines = doc.splitTextToSize(formTitle || 'Formulir', CONTENT_W);
-  doc.text(titleLines, MARGIN, 26);
-  const titleH = titleLines.length * 7;
-
-  // Subtitle: Document type
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
+  doc.setFontSize(7);
   doc.setTextColor(148, 163, 184);
-  doc.text('Dokumen Respon Formulir', MARGIN, 26 + titleH);
+  doc.text('DATA JAWABAN FORMULIR', ML + 3, y + 4.3);
+  y += secH;
 
-  // Top-right: date
-  const createdDate = submission.createdAt
-    ? new Date(submission.createdAt).toLocaleDateString('id-ID', {
-        day: '2-digit', month: 'long', year: 'numeric',
-      })
-    : '-';
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(148, 163, 184);
-  doc.text(`Dikirim: ${createdDate}`, PAGE_W - MARGIN, 16, { align: 'right' });
+  // Separate image fields from text fields for deferred rendering
+  const imageFieldEntries = [];
+  let rowIndex = 0;
 
-  y = 58;
-
-  // ─── META INFO (ID Pendaftaran & Status) ───────────────────────────────────
-  doc.setFillColor(...COLOR_SECTION_BG);
-  doc.roundedRect(MARGIN, y, CONTENT_W, 22, 3, 3, 'F');
-  doc.setDrawColor(...COLOR_DIVIDER);
-  doc.roundedRect(MARGIN, y, CONTENT_W, 22, 3, 3, 'S');
-
-  // ID Pendaftaran
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7.5);
-  doc.setTextColor(...COLOR_MUTED);
-  doc.text('ID PENDAFTARAN', MARGIN + 4, y + 7);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.setTextColor(...COLOR_VALUE);
-  doc.text(submission.id || '-', MARGIN + 4, y + 15);
-
-  // Status badge (right side)
-  const statusText = submission.status || 'BARU';
-  const statusColors = {
-    BARU: [59, 130, 246],
-    DIPROSES: [245, 158, 11],
-    SELESAI: [16, 185, 129],
-  };
-  const [sr, sg, sb] = statusColors[statusText] || [100, 116, 139];
-  doc.setFillColor(sr, sg, sb);
-  const badgeW = 28;
-  doc.roundedRect(PAGE_W - MARGIN - badgeW - 4, y + 6, badgeW, 10, 2, 2, 'F');
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.setTextColor(255, 255, 255);
-  doc.text(statusText, PAGE_W - MARGIN - badgeW / 2 - 4, y + 12.5, { align: 'center' });
-
-  y += 28;
-
-  // ─── SECTION TITLE: Data Jawaban ──────────────────────────────────────────
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(...COLOR_ACCENT);
-  doc.text('DATA JAWABAN FORMULIR', MARGIN, y);
-  doc.setDrawColor(...COLOR_ACCENT);
-  doc.setLineWidth(0.5);
-  doc.line(MARGIN, y + 1.5, MARGIN + 60, y + 1.5);
-  y += 7;
-
-  // ─── FIELDS LOOP ──────────────────────────────────────────────────────────
-  for (let i = 0; i < fields.length; i++) {
-    const field = fields[i];
+  for (const field of fields) {
     const val = submission.data?.[field.id];
     const isImage = field.type === 'image' || field.type === 'file';
 
     if (isImage) {
-      // ── IMAGE FIELD ───────────────────────────────────────────────────────
-      const estimatedH = 12 + 65; // label + image block
-      ensureSpace(estimatedH);
-
-      // Label
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(...COLOR_LABEL);
-      doc.text(`${i + 1}. ${field.label}`, MARGIN, y);
-      y += 5;
-
-      if (val) {
-        // Show image URL hint
-        doc.setFont('helvetica', 'italic');
-        doc.setFontSize(7);
-        doc.setTextColor(...COLOR_MUTED);
-        const urlLines = doc.splitTextToSize(`URL: ${val}`, CONTENT_W);
-        doc.text(urlLines, MARGIN + 2, y);
-        y += urlLines.length * 4 + 2;
-
-        // Try to embed image
-        const b64 = await fetchImageAsBase64(val);
-        if (b64) {
-          const imgMaxW = CONTENT_W * 0.55;
-          const imgH = imgMaxW * 0.6; // approximate 3:5 aspect
-          ensureSpace(imgH + 6);
-          try {
-            doc.addImage(b64, 'JPEG', MARGIN + 2, y, imgMaxW, imgH, undefined, 'FAST');
-            y += imgH + 4;
-          } catch {
-            // If addImage fails, just show URL
-            doc.setFont('helvetica', 'italic');
-            doc.setFontSize(7.5);
-            doc.setTextColor(200, 50, 50);
-            doc.text('(Gagal memuat gambar – silakan lihat URL di atas)', MARGIN + 2, y);
-            y += 6;
-          }
-        } else {
-          doc.setFont('helvetica', 'italic');
-          doc.setFontSize(7.5);
-          doc.setTextColor(200, 50, 50);
-          doc.text('(Gambar tidak dapat diunduh – lihat URL di atas)', MARGIN + 2, y);
-          y += 6;
-        }
-      } else {
-        doc.setFont('helvetica', 'italic');
-        doc.setFontSize(8);
-        doc.setTextColor(...COLOR_MUTED);
-        doc.text('Tidak ada berkas diunggah', MARGIN + 2, y);
-        y += 5;
-      }
-
-      y += 4;
-    } else {
-      // ── TEXT / ARRAY FIELD ────────────────────────────────────────────────
-      let displayVal = '-';
-      if (Array.isArray(val)) {
-        displayVal = val.length > 0 ? val.join(', ') : '-';
-      } else if (val !== null && val !== undefined && val !== '') {
-        displayVal = String(val);
-      }
-
-      const labelLine = `${i + 1}. ${field.label}`;
-      const valueLines = wrapText(doc, displayVal, CONTENT_W - 4);
-      const blockH = 7 + valueLines.length * 4.5 + 6;
-
-      ensureSpace(blockH);
-
-      // Light background
-      doc.setFillColor(...COLOR_SECTION_BG);
-      doc.roundedRect(MARGIN, y - 1, CONTENT_W, blockH - 2, 2, 2, 'F');
-
-      // Label
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(...COLOR_LABEL);
-      doc.text(labelLine, MARGIN + 3, y + 5);
-      y += 8;
-
-      // Value
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(...COLOR_VALUE);
-      doc.text(valueLines, MARGIN + 3, y);
-      y += valueLines.length * 4.5 + 4;
-
-      // Divider between fields
-      doc.setDrawColor(...COLOR_DIVIDER);
-      doc.setLineWidth(0.3);
-      doc.line(MARGIN, y, MARGIN + CONTENT_W, y);
-      y += 4;
+      // Collect for later rendering (after all text rows)
+      imageFieldEntries.push({ field, val });
+      continue;
     }
+
+    // Build display value
+    let displayVal = '-';
+    if (Array.isArray(val)) {
+      displayVal = val.length > 0 ? val.join(', ') : '-';
+    } else if (val !== null && val !== undefined && val !== '') {
+      displayVal = String(val);
+    }
+
+    // Calculate how many lines the value needs
+    const valueLines = doc.splitTextToSize(displayVal, COL_VALUE - 6);
+    // Row height: at least ROW_MIN, grows with text
+    const rowH = Math.max(ROW_MIN, valueLines.length * 4.2 + ROW_PAD * 2 + 1);
+
+    drawRow(field.label, valueLines, rowH, rowIndex % 2 === 1);
+    rowIndex++;
   }
 
-  // ─── ADMIN NOTES (if any) ─────────────────────────────────────────────────
-  if (submission.adminNotes) {
-    ensureSpace(30);
-    y += 4;
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(...COLOR_ACCENT);
-    doc.text('CATATAN ADMIN', MARGIN, y);
-    doc.setDrawColor(...COLOR_ACCENT);
-    doc.setLineWidth(0.5);
-    doc.line(MARGIN, y + 1.5, MARGIN + 42, y + 1.5);
-    y += 7;
+  // Right border of table
+  const tableEndY = y;
+  doc.setDrawColor(...C_RULE);
+  doc.setLineWidth(0.4);
+  doc.rect(ML, tableStartY, CW, tableEndY - tableStartY, 'S');
 
-    doc.setFillColor(254, 249, 195); // yellow-100
-    const noteLines = wrapText(doc, submission.adminNotes, CONTENT_W - 8);
-    const noteH = noteLines.length * 5 + 8;
-    doc.roundedRect(MARGIN, y - 2, CONTENT_W, noteH, 3, 3, 'F');
+  // Vertical divider between label/value columns
+  doc.setLineWidth(0.3);
+  doc.line(ML + COL_LABEL, tableStartY, ML + COL_LABEL, tableEndY);
+
+  // ── ADMIN NOTES ───────────────────────────────────────────────────────────
+  if (submission.adminNotes) {
+    y += 5;
+    ensureSpace(20);
+
+    doc.setFillColor(254, 252, 232); // yellow-50
+    doc.setDrawColor(253, 224, 71);  // yellow-300
+    doc.setLineWidth(0.4);
+    const noteLines = doc.splitTextToSize(submission.adminNotes, CW - 10);
+    const noteH = noteLines.length * 4.5 + 8;
+    doc.roundedRect(ML, y, CW, noteH, 2, 2, 'FD');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(120, 100, 0);
+    doc.text('CATATAN ADMIN', ML + 4, y + 5);
+
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.5);
-    doc.setTextColor(92, 78, 0); // amber-900
-    doc.text(noteLines, MARGIN + 4, y + 4);
+    doc.setFontSize(8);
+    doc.setTextColor(92, 78, 0);
+    doc.text(noteLines, ML + 4, y + 10);
     y += noteH + 4;
   }
 
-  // ─── FOOTER ───────────────────────────────────────────────────────────────
+  // ── IMAGE FIELDS ──────────────────────────────────────────────────────────
+  if (imageFieldEntries.length > 0) {
+    y += 5;
+    ensureSpace(12);
+
+    // Section header
+    doc.setFillColor(...C_HEADER_BG);
+    doc.rect(ML, y, CW, 6.5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(148, 163, 184);
+    doc.text('BERKAS / LAMPIRAN FOTO', ML + 3, y + 4.3);
+    y += 6.5;
+
+    // Render each image in a row: label + thumbnail side by side
+    for (const { field, val } of imageFieldEntries) {
+      if (!val) {
+        // No file uploaded — show a small note row
+        const noFileH = 9;
+        ensureSpace(noFileH);
+        doc.setFillColor(...C_LABEL_BG);
+        doc.rect(ML, y, COL_LABEL, noFileH, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7.5);
+        doc.setTextColor(...C_LABEL_TXT);
+        doc.text(doc.splitTextToSize(field.label, COL_LABEL - 4), ML + 3, y + 3.5);
+
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(8);
+        doc.setTextColor(...C_MUTED);
+        doc.text('Tidak ada berkas diunggah', ML + COL_LABEL + 3, y + 3.5);
+
+        doc.setDrawColor(...C_RULE);
+        doc.setLineWidth(0.25);
+        doc.line(ML, y + noFileH, ML + CW, y + noFileH);
+        doc.setLineWidth(0.4);
+        doc.rect(ML, y, CW, noFileH, 'S');
+        doc.setLineWidth(0.3);
+        doc.line(ML + COL_LABEL, y, ML + COL_LABEL, y + noFileH);
+        y += noFileH;
+        continue;
+      }
+
+      // Try to fetch the image
+      const b64 = await fetchImageAsBase64(val);
+      const dims = b64 ? await getImageDimensions(b64) : null;
+
+      // Max image dimensions inside the cell (right column minus padding)
+      const imgMaxW = COL_VALUE - 8; // leave padding
+      const imgMaxH = 45; // cap height to keep rows compact
+
+      let imgW = imgMaxW;
+      let imgH = imgMaxH;
+
+      if (dims && dims.w > 0 && dims.h > 0) {
+        const aspectRatio = dims.w / dims.h;
+        imgH = imgW / aspectRatio;
+        if (imgH > imgMaxH) {
+          imgH = imgMaxH;
+          imgW = imgH * aspectRatio;
+        }
+      }
+
+      const rowH = Math.max(imgH + 6, 20);
+      ensureSpace(rowH + 2);
+
+      // Label cell
+      doc.setFillColor(...C_LABEL_BG);
+      doc.rect(ML, y, COL_LABEL, rowH, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(...C_LABEL_TXT);
+      const labelWrapped = doc.splitTextToSize(field.label, COL_LABEL - 4);
+      doc.text(labelWrapped, ML + 3, y + 4);
+
+      // Value cell — render image
+      if (b64) {
+        try {
+          const imgX = ML + COL_LABEL + 3;
+          const imgY = y + 3;
+          // Subtle image border
+          doc.setDrawColor(...C_RULE);
+          doc.setLineWidth(0.3);
+          doc.rect(imgX - 0.5, imgY - 0.5, imgW + 1, imgH + 1, 'S');
+          doc.addImage(b64, undefined, imgX, imgY, imgW, imgH, undefined, 'FAST');
+        } catch {
+          // fallback: URL text
+          doc.setFont('helvetica', 'italic');
+          doc.setFontSize(7.5);
+          doc.setTextColor(180, 50, 50);
+          doc.text('(Gagal memuat gambar)', ML + COL_LABEL + 3, y + 6);
+        }
+      } else {
+        // Could not fetch — show URL
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(7);
+        doc.setTextColor(...C_MUTED);
+        const urlLines = doc.splitTextToSize(`URL: ${val}`, COL_VALUE - 6);
+        doc.text(urlLines, ML + COL_LABEL + 3, y + 4.5);
+      }
+
+      // Row borders
+      doc.setDrawColor(...C_RULE);
+      doc.setLineWidth(0.25);
+      doc.line(ML, y + rowH, ML + CW, y + rowH);
+      doc.setLineWidth(0.4);
+      doc.rect(ML, y, CW, rowH, 'S');
+      doc.setLineWidth(0.3);
+      doc.line(ML + COL_LABEL, y, ML + COL_LABEL, y + rowH);
+
+      y += rowH;
+    }
+  }
+
+  // ── FOOTER on every page ──────────────────────────────────────────────────
   const totalPages = doc.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
-
-    // Footer bar
-    doc.setFillColor(...COLOR_HEADER_BG);
-    doc.rect(0, PAGE_H - 14, PAGE_W, 14, 'F');
+    doc.setFillColor(...C_FOOTER_BG);
+    doc.rect(0, PH - 12, PW, 12, 'F');
 
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(7);
-    doc.setTextColor(148, 163, 184);
+    doc.setFontSize(6.5);
+    doc.setTextColor(100, 116, 139);
     doc.text(
-      `Dokumen ini digenerate otomatis dari sistem CKF-Web • ${formTitle || 'Formulir'}`,
-      MARGIN,
-      PAGE_H - 6,
+      `Dokumen digenerate otomatis dari CKF-Web  •  ${formTitle || 'Formulir'}`,
+      ML, PH - 4.5,
     );
-    doc.text(`Halaman ${p} / ${totalPages}`, PAGE_W - MARGIN, PAGE_H - 6, { align: 'right' });
+    doc.text(`Halaman ${p} / ${totalPages}`, PW - MR, PH - 4.5, { align: 'right' });
   }
 
-  // ─── SAVE PDF ─────────────────────────────────────────────────────────────
+  // ── SAVE ──────────────────────────────────────────────────────────────────
   const safeTitle = (formTitle || 'Formulir')
-    .replace(/[^a-zA-Z0-9\s-_]/g, '')
+    .replace(/[^a-zA-Z0-9\s\-_]/g, '')
     .replace(/\s+/g, '_')
     .substring(0, 30);
   const filename = `Respon_${safeTitle}_${submission.id || 'unknown'}.pdf`;

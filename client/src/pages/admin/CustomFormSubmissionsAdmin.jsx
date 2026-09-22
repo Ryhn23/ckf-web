@@ -14,6 +14,7 @@ import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import StatusBadge from '../../components/ui/StatusBadge';
 import { formatDate } from '../../utils/formatDate';
+import { generateSubmissionPdf } from '../../utils/generateSubmissionPdf';
 
 export default function CustomFormSubmissionsAdmin() {
   const { id: formId } = useParams();
@@ -42,6 +43,9 @@ export default function CustomFormSubmissionsAdmin() {
 
   // Image Preview Modal
   const [previewImage, setPreviewImage] = useState(null);
+
+  // PDF Download state — tracks which submission is being generated
+  const [downloadingPdfId, setDownloadingPdfId] = useState(null);
 
   async function fetchSubmissions() {
     setLoading(true);
@@ -166,6 +170,25 @@ export default function CustomFormSubmissionsAdmin() {
   }
 
   const fields = Array.isArray(form?.fields) ? form.fields : [];
+
+  // Handle PDF download for a single submission
+  async function handleDownloadPdf(sub) {
+    if (!sub || !form || downloadingPdfId) return;
+    setDownloadingPdfId(sub.id);
+    try {
+      await generateSubmissionPdf(
+        sub,
+        fields,
+        form.title || 'Formulir',
+        form.id || '',
+      );
+    } catch (err) {
+      console.error('PDF generation error:', err);
+      alert('Gagal membuat PDF. Silakan coba lagi.');
+    } finally {
+      setDownloadingPdfId(null);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -500,6 +523,18 @@ export default function CustomFormSubmissionsAdmin() {
                           </button>
                           <button
                             type="button"
+                            onClick={() => handleDownloadPdf(sub)}
+                            disabled={downloadingPdfId === sub.id}
+                            className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 transition shadow-2xs disabled:opacity-50"
+                            title="Download PDF respon ini"
+                          >
+                            <FontAwesomeIcon
+                              icon={['fa-solid', downloadingPdfId === sub.id ? 'fa-spinner' : 'fa-file-pdf']}
+                              className={downloadingPdfId === sub.id ? 'fa-spin' : ''}
+                            />
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => handleDeleteSubmission(sub.id)}
                             className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition shadow-2xs"
                             title={`Hapus Respon Peserta (ID: ${sub.id}) - Formulir utama tetap aman`}
@@ -704,6 +739,21 @@ export default function CustomFormSubmissionsAdmin() {
                 </button>
 
                 <div className="flex items-center gap-2">
+                  {/* PDF Download button */}
+                  <button
+                    type="button"
+                    onClick={() => handleDownloadPdf(selectedSub)}
+                    disabled={downloadingPdfId === selectedSub.id}
+                    className="admin-btn-secondary text-xs flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 hover:border-indigo-300 disabled:opacity-50"
+                    title="Download PDF respon ini"
+                  >
+                    <FontAwesomeIcon
+                      icon={['fa-solid', downloadingPdfId === selectedSub.id ? 'fa-spinner' : 'fa-file-pdf']}
+                      className={downloadingPdfId === selectedSub.id ? 'fa-spin' : ''}
+                    />
+                    <span>{downloadingPdfId === selectedSub.id ? 'Membuat PDF…' : 'Download PDF'}</span>
+                  </button>
+
                   <button
                     type="button"
                     onClick={() => setDetailModalOpen(false)}

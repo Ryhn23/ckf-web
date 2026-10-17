@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, NavLink, Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -260,7 +260,43 @@ export default function AdminLayout() {
     }
   });
 
+  const drawerRef = useRef(null);
   const breadcrumbs = getBreadcrumbs(location.pathname);
+
+  // Auto-hide sidebar mobile saat rute atau menu berpindah
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  // Kunci scroll body saat sidebar mobile terbuka
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
+
+  // Tutup sidebar mobile otomatis ketika klik / tap di luar area drawer
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    function handlePointerDownOutside(e) {
+      if (drawerRef.current && !drawerRef.current.contains(e.target)) {
+        setMobileOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handlePointerDownOutside);
+    document.addEventListener('touchstart', handlePointerDownOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDownOutside);
+      document.removeEventListener('touchstart', handlePointerDownOutside);
+    };
+  }, [mobileOpen]);
 
   const toggleSidebar = () => {
     setSidebarOpen((prev) => {
@@ -279,10 +315,6 @@ export default function AdminLayout() {
     await logout();
     navigate('/login', { replace: true });
   }
-
-  const sidebar = (
-    <SidebarContent onNavigate={() => setMobileOpen(false)} />
-  );
 
   return (
     <div className="min-h-screen bg-slate-50/70">
@@ -325,29 +357,37 @@ export default function AdminLayout() {
             <FontAwesomeIcon icon={['fa-solid', 'fa-chevron-left']} className="w-3.5" />
           </button>
         </div>
-        {sidebar}
+        <SidebarContent />
       </aside>
 
       {/* Sidebar mobile */}
       <AnimatePresence>
         {mobileOpen && (
-          <div className="fixed inset-0 z-40 lg:hidden">
+          <div className="fixed inset-0 z-50 lg:hidden">
             <motion.div
               key="mobile-sidebar-backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              role="button"
+              tabIndex={-1}
+              aria-label="Tutup menu navigasi"
+              className="absolute inset-0 bg-slate-950/60 backdrop-blur-xs cursor-pointer select-none"
               onClick={() => setMobileOpen(false)}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                setMobileOpen(false);
+              }}
             />
             <motion.aside
+              ref={drawerRef}
               key="mobile-sidebar-drawer"
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-              className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white shadow-2xl"
+              className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-white shadow-2xl z-10"
             >
               <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
                 <Link to="/admin" className="flex items-center gap-2.5 select-none" onClick={() => setMobileOpen(false)}>
@@ -371,13 +411,13 @@ export default function AdminLayout() {
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                  className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition"
                   aria-label="Tutup menu"
                 >
                   <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
                 </button>
               </div>
-              {sidebar}
+              <SidebarContent onNavigate={() => setMobileOpen(false)} />
             </motion.aside>
           </div>
         )}

@@ -95,6 +95,7 @@ import {
   faQrcode,
   faCamera,
   faIdCard,
+  faKeyboard,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faFacebookF,
@@ -212,6 +213,7 @@ library.add(
   faQrcode,
   faCamera,
   faIdCard,
+  faKeyboard,
   faFacebookF,
   faInstagram,
   faLinkedin,

@@ -328,9 +328,6 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                   transition={{ duration: 2.2, repeat: Infinity, ease: 'linear' }}
                 />
               </div>
-              <p className="mt-4 text-[11px] font-medium text-white/90 bg-black/60 backdrop-blur-xl px-3.5 py-1.5 rounded-full border border-white/15 tracking-wide shadow-lg">
-                Arahkan QR Code ke dalam kotak
-              </p>
             </div>
           )}
 
@@ -489,11 +486,10 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
             <button
               type="button"
               onClick={() => setShowManualInput(!showManualInput)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-2 ${
-                showManualInput
+              className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-2 ${showManualInput
                   ? 'bg-white text-slate-900 shadow-md'
                   : 'text-white hover:bg-white/10 active:scale-95'
-              }`}
+                }`}
             >
               <FontAwesomeIcon icon={['fa-solid', 'fa-keyboard']} className="text-xs" />
               <span>Input Manual</span>
@@ -504,11 +500,10 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
             <button
               type="button"
               onClick={() => setContinuousMode(!continuousMode)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-2 ${
-                continuousMode
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-2 ${continuousMode
                   ? 'text-white bg-white/15'
                   : 'text-slate-400 hover:text-white'
-              }`}
+                }`}
               title="Scan otomatis tanpa harus menutup scanner"
             >
               <span className={`w-1.5 h-1.5 rounded-full ${continuousMode ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`} />

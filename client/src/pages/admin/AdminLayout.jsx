@@ -360,68 +360,66 @@ export default function AdminLayout() {
         <SidebarContent />
       </aside>
 
-      {/* Sidebar mobile */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            <motion.div
-              key="mobile-sidebar-backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
-              role="button"
-              tabIndex={-1}
-              aria-label="Tutup menu navigasi"
-              className="absolute inset-0 bg-slate-950/60 backdrop-blur-xs cursor-pointer select-none"
+      {/* Sidebar mobile (pure CSS transition, bulletproof on all mobile browsers) */}
+      <div
+        className={`fixed inset-0 z-50 lg:hidden transition-all duration-300 ease-in-out ${
+          mobileOpen ? 'visible pointer-events-auto' : 'invisible pointer-events-none'
+        }`}
+      >
+        {/* Backdrop (klik / tap di luar drawer untuk menutup) */}
+        <div
+          role="button"
+          tabIndex={-1}
+          aria-label="Tutup navigasi"
+          onClick={() => setMobileOpen(false)}
+          className={`absolute inset-0 bg-slate-950/60 backdrop-blur-xs cursor-pointer transition-opacity duration-300 ease-in-out ${
+            mobileOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+
+        {/* Drawer panel */}
+        <aside
+          ref={drawerRef}
+          aria-label="Menu navigasi mobile"
+          className={`absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-white shadow-2xl z-10 transform transition-transform duration-300 ease-in-out ${
+            mobileOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+            <Link
+              to="/admin"
+              className="flex items-center gap-2.5 select-none"
               onClick={() => setMobileOpen(false)}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                setMobileOpen(false);
-              }}
-            />
-            <motion.aside
-              ref={drawerRef}
-              key="mobile-sidebar-drawer"
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-              className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-white shadow-2xl z-10"
             >
-              <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-                <Link to="/admin" className="flex items-center gap-2.5 select-none" onClick={() => setMobileOpen(false)}>
-                  <img
-                    src="/logo.png"
-                    alt="Logo Cinta Kasih Fatimah"
-                    className="h-10 w-auto object-contain"
-                  />
-                  <div className="flex flex-col justify-center leading-none text-slate-900">
-                    <span className="font-heading text-[10px] font-extrabold uppercase tracking-wider text-slate-900">
-                      CINTA KASIH
-                    </span>
-                    <span className="font-heading text-[14px] font-black uppercase tracking-wide mt-0.5 text-black">
-                      FATIMAH
-                    </span>
-                    <span className="font-sans text-[7.5px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-900">
-                      FOUNDATION
-                    </span>
-                  </div>
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition"
-                  aria-label="Tutup menu"
-                >
-                  <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
-                </button>
+              <img
+                src="/logo.png"
+                alt="Logo Cinta Kasih Fatimah"
+                className="h-10 w-auto object-contain"
+              />
+              <div className="flex flex-col justify-center leading-none text-slate-900">
+                <span className="font-heading text-[10px] font-extrabold uppercase tracking-wider text-slate-900">
+                  CINTA KASIH
+                </span>
+                <span className="font-heading text-[14px] font-black uppercase tracking-wide mt-0.5 text-black">
+                  FATIMAH
+                </span>
+                <span className="font-sans text-[7.5px] font-bold uppercase tracking-[0.2em] mt-0.5 text-slate-900">
+                  FOUNDATION
+                </span>
               </div>
-              <SidebarContent onNavigate={() => setMobileOpen(false)} />
-            </motion.aside>
+            </Link>
+            <button
+              type="button"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition"
+              aria-label="Tutup menu"
+            >
+              <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
+            </button>
           </div>
-        )}
-      </AnimatePresence>
+          <SidebarContent onNavigate={() => setMobileOpen(false)} />
+        </aside>
+      </div>
 
       {/* Konten */}
       <div className={`transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:pl-64' : 'lg:pl-0'}`}>
@@ -429,7 +427,7 @@ export default function AdminLayout() {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => setMobileOpen(true)}
+              onClick={() => setMobileOpen((prev) => !prev)}
               className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
               aria-label="Buka Navigasi"
             >

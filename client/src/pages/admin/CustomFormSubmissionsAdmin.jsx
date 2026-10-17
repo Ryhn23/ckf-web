@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,6 +16,75 @@ import StatusBadge from '../../components/ui/StatusBadge';
 import { formatDate } from '../../utils/formatDate';
 import { generateSubmissionPdf } from '../../utils/generateSubmissionPdf';
 import { downloadQrCodeImage } from '../../utils/generateQrCode';
+
+function isImageUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  return (
+    /\.(jpg|jpeg|png|webp|gif|svg|avif)($|\?)/i.test(url) ||
+    url.startsWith('/uploads/') ||
+    url.startsWith('data:image/')
+  );
+}
+
+function getSubmissionImages(sub, fields = []) {
+  if (!sub || !sub.data) return [];
+  const images = [];
+
+  // 1. Check all form fields of type image / file
+  (fields || []).forEach((field) => {
+    const isImageOrFile = field.type === 'image' || field.type === 'file';
+    const val = sub.data[field.id];
+
+    if (!val) return;
+
+    if (Array.isArray(val)) {
+      val.forEach((item, idx) => {
+        if (typeof item === 'string' && (isImageOrFile || isImageUrl(item))) {
+          images.push({
+            url: item,
+            label: field.label + (val.length > 1 ? ` (${idx + 1})` : ''),
+            fieldName: field.label,
+            fieldId: field.id,
+          });
+        }
+      });
+    } else if (typeof val === 'string') {
+      if (isImageOrFile || isImageUrl(val)) {
+        images.push({
+          url: val,
+          label: field.label,
+          fieldName: field.label,
+          fieldId: field.id,
+        });
+      }
+    }
+  });
+
+  // 2. Fallback check any other field with image URL in sub.data not matched above
+  Object.entries(sub.data).forEach(([key, val]) => {
+    if (images.some((img) => img.fieldId === key)) return;
+    if (typeof val === 'string' && isImageUrl(val)) {
+      const matchedField = (fields || []).find((f) => f.id === key);
+      images.push({
+        url: val,
+        label: matchedField?.label || key,
+        fieldName: matchedField?.label || key,
+        fieldId: key,
+      });
+    }
+  });
+
+  return images;
+}
+
+function getRespondentName(sub, fields = []) {
+  if (!sub || !sub.data) return 'Responden';
+  const nameField = (fields || []).find((f) => /nama/i.test(f.label)) || fields[0];
+  if (nameField && sub.data[nameField.id]) {
+    return String(sub.data[nameField.id]);
+  }
+  return `ID: ${sub.id}`;
+}
 
 export default function CustomFormSubmissionsAdmin() {
   const { id: formId } = useParams();
@@ -42,8 +111,9 @@ export default function CustomFormSubmissionsAdmin() {
   const [detailNotes, setDetailNotes] = useState('');
   const [savingDetail, setSavingDetail] = useState(false);
 
-  // Image Preview Modal
-  const [previewImage, setPreviewImage] = useState(null);
+  // Lightbox Modal State
+  // { submission, respondentName, submissionId, items: [{ url, label, fieldName, fieldId }], index: number }
+  const [lightbox, setLightbox] = useState(null);
 
   // PDF & QR Download state — tracks which submission is being downloaded
   const [downloadingPdfId, setDownloadingPdfId] = useState(null);
@@ -172,6 +242,98 @@ export default function CustomFormSubmissionsAdmin() {
   }
 
   const fields = Array.isArray(form?.fields) ? form.fields : [];
+
+  // Submissions on current page that have at least one image
+  const respondentsWithImages = useMemo(() => {
+    return submissions
+      .map((s) => ({ sub: s, images: getSubmissionImages(s, fields) }))
+      .filter((item) => item.images.length > 0);
+  }, [submissions, fields]);
+
+  // Open Lightbox for a specific submission and image index
+  function handleOpenLightbox(sub, initialImgIndex = 0) {
+    if (!sub) return;
+    const items = getSubmissionImages(sub, fields);
+    if (!items || items.length === 0) return;
+
+    const safeIndex = Math.max(0, Math.min(initialImgIndex, items.length - 1));
+
+    setLightbox({
+      submission: sub,
+      respondentName: getRespondentName(sub, fields),
+      submissionId: sub.id,
+      items,
+      index: safeIndex,
+    });
+  }
+
+  // Previous image of current respondent (or jump to previous respondent if 1 image)
+  function handleLightboxPrev() {
+    if (!lightbox || !lightbox.items || lightbox.items.length === 0) return;
+    if (lightbox.items.length > 1) {
+      setLightbox((prev) => ({
+        ...prev,
+        index: prev.index > 0 ? prev.index - 1 : prev.items.length - 1,
+      }));
+    } else {
+      handleJumpRespondent(-1);
+    }
+  }
+
+  // Next image of current respondent (or jump to next respondent if 1 image)
+  function handleLightboxNext() {
+    if (!lightbox || !lightbox.items || lightbox.items.length === 0) return;
+    if (lightbox.items.length > 1) {
+      setLightbox((prev) => ({
+        ...prev,
+        index: (prev.index + 1) % prev.items.length,
+      }));
+    } else {
+      handleJumpRespondent(1);
+    }
+  }
+
+  // Jump to next or previous respondent
+  function handleJumpRespondent(direction) {
+    if (!lightbox || respondentsWithImages.length <= 1) return;
+    const currentIdx = respondentsWithImages.findIndex(
+      (r) => r.sub.id === lightbox.submission?.id,
+    );
+    if (currentIdx === -1) return;
+
+    let targetIdx = currentIdx + direction;
+    if (targetIdx < 0) targetIdx = respondentsWithImages.length - 1;
+    if (targetIdx >= respondentsWithImages.length) targetIdx = 0;
+
+    const targetRespondent = respondentsWithImages[targetIdx];
+    if (targetRespondent) {
+      handleOpenLightbox(targetRespondent.sub, 0);
+    }
+  }
+
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    if (!lightbox) return;
+
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        setLightbox(null);
+      } else if (e.key === 'ArrowLeft') {
+        handleLightboxPrev();
+      } else if (e.key === 'ArrowRight') {
+        handleLightboxNext();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [lightbox, respondentsWithImages]);
 
   // Handle PDF download for a single submission
   async function handleDownloadPdf(sub) {
@@ -463,9 +625,8 @@ export default function CustomFormSubmissionsAdmin() {
                   const subData = sub.data || {};
                   const rowNum = (meta.page - 1) * meta.limit + index + 1;
 
-                  // Find if there is any image upload
-                  const imageField = fields.find((f) => f.type === 'image' || f.type === 'file');
-                  const imageUrl = imageField ? subData[imageField.id] : null;
+                  // Collect all image uploads for this respondent
+                  const subImages = getSubmissionImages(sub, fields);
 
                   return (
                     <tr key={sub.id} className="hover:bg-slate-50/50 transition-colors">
@@ -510,15 +671,24 @@ export default function CustomFormSubmissionsAdmin() {
 
                       {/* Image / Attachment preview */}
                       <td className="admin-td text-center">
-                        {imageUrl ? (
+                        {subImages.length > 0 ? (
                           <button
                             type="button"
-                            onClick={() => setPreviewImage(imageUrl)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
-                            title="Lihat foto lampiran"
+                            onClick={() => handleOpenLightbox(sub, 0)}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs group"
+                            title={
+                              subImages.length > 1
+                                ? `Lihat ${subImages.length} foto lampiran peserta ini`
+                                : 'Lihat foto lampiran'
+                            }
                           >
-                            <FontAwesomeIcon icon={['fa-solid', 'fa-image']} className="text-xs text-slate-500" />
-                            <span>Lihat Foto</span>
+                            <FontAwesomeIcon
+                              icon={['fa-solid', subImages.length > 1 ? 'fa-images' : 'fa-image']}
+                              className="text-xs text-slate-500 group-hover:text-slate-800"
+                            />
+                            <span>
+                              {subImages.length > 1 ? `Lihat Foto (${subImages.length})` : 'Lihat Foto'}
+                            </span>
                           </button>
                         ) : (
                           <span className="text-xs text-slate-400">-</span>
@@ -674,8 +844,12 @@ export default function CustomFormSubmissionsAdmin() {
                                 <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                                   <button
                                     type="button"
-                                    onClick={() => setPreviewImage(val)}
-                                    className="px-3 py-1.5 bg-white text-slate-900 rounded-lg text-xs font-semibold shadow"
+                                    onClick={() => {
+                                      const allSubImages = getSubmissionImages(selectedSub, fields);
+                                      const foundIdx = allSubImages.findIndex((img) => img.url === val);
+                                      handleOpenLightbox(selectedSub, foundIdx >= 0 ? foundIdx : 0);
+                                    }}
+                                    className="px-3 py-1.5 bg-white text-slate-900 rounded-lg text-xs font-semibold shadow hover:bg-slate-100 transition"
                                   >
                                     Perbesar Foto
                                   </button>
@@ -827,36 +1001,196 @@ export default function CustomFormSubmissionsAdmin() {
         )}
       </AnimatePresence>
 
-      {/* PHOTO PREVIEW LIGHTBOX */}
+      {/* PHOTO PREVIEW LIGHTBOX GALLERY */}
       <AnimatePresence>
-        {previewImage && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
-            onClick={() => setPreviewImage(null)}
-          >
+        {lightbox && lightbox.items && lightbox.items.length > 0 && (() => {
+          const currentImg = lightbox.items[lightbox.index] || lightbox.items[0];
+          const hasMultiplePhotos = lightbox.items.length > 1;
+          const currentRespondentOrder = respondentsWithImages.findIndex(
+            (r) => r.sub.id === lightbox.submission?.id,
+          );
+          const hasPrevRespondent = currentRespondentOrder > 0;
+          const hasNextRespondent =
+            currentRespondentOrder !== -1 &&
+            currentRespondentOrder < respondentsWithImages.length - 1;
+
+          return (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="relative max-w-4xl max-h-[85vh] rounded-2xl overflow-hidden shadow-2xl bg-black border border-slate-800"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex flex-col justify-between bg-slate-950/95 backdrop-blur-md p-3 sm:p-5 select-none"
+              onClick={() => setLightbox(null)}
             >
-              <img
-                src={previewImage}
-                alt="Preview Lampiran"
-                className="max-w-full max-h-[80vh] object-contain mx-auto"
-              />
-              <button
-                type="button"
-                onClick={() => setPreviewImage(null)}
-                className="absolute top-3 right-3 bg-slate-900/80 text-white rounded-full p-2 hover:bg-slate-800 transition-colors"
-                title="Tutup"
+              {/* Top Navigation Bar */}
+              <div
+                className="flex items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3 text-white shadow-xl max-w-5xl w-full mx-auto"
+                onClick={(e) => e.stopPropagation()}
               >
-                <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} className="text-base" />
-              </button>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 text-white flex items-center justify-center text-xs shadow-xs flex-shrink-0">
+                    <FontAwesomeIcon icon={['fa-solid', hasMultiplePhotos ? 'fa-images' : 'fa-image']} />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">
+                        {lightbox.respondentName}
+                      </h4>
+                      <span className="font-mono text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700 hidden sm:inline">
+                        ID: {lightbox.submissionId}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+                      <span className="text-slate-200 font-medium truncate max-w-[200px] sm:max-w-xs">{currentImg.label}</span>
+                      {hasMultiplePhotos && (
+                        <span>• Foto {lightbox.index + 1} dari {lightbox.items.length}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Center / Respondent Jump Controls (if multiple respondents have photos) */}
+                {respondentsWithImages.length > 1 && (
+                  <div className="hidden md:flex items-center gap-1.5 bg-slate-800/80 border border-slate-700/80 rounded-xl px-2 py-1 text-xs">
+                    <button
+                      type="button"
+                      disabled={!hasPrevRespondent}
+                      onClick={() => handleJumpRespondent(-1)}
+                      className="px-2 py-0.5 text-slate-400 hover:text-white disabled:opacity-30 disabled:hover:text-slate-400 transition rounded"
+                      title="Lihat foto responden sebelumnya"
+                    >
+                      <FontAwesomeIcon icon={['fa-solid', 'fa-chevron-left']} className="mr-1 text-[10px]" />
+                      <span>Responden Sblm</span>
+                    </button>
+                    <span className="text-[10px] font-mono text-slate-400 px-1 border-x border-slate-700">
+                      {currentRespondentOrder + 1} / {respondentsWithImages.length}
+                    </span>
+                    <button
+                      type="button"
+                      disabled={!hasNextRespondent}
+                      onClick={() => handleJumpRespondent(1)}
+                      className="px-2 py-0.5 text-slate-400 hover:text-white disabled:opacity-30 disabled:hover:text-slate-400 transition rounded"
+                      title="Lihat foto responden berikutnya"
+                    >
+                      <span>Responden Brkt</span>
+                      <FontAwesomeIcon icon={['fa-solid', 'fa-chevron-right']} className="ml-1 text-[10px]" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Right Action Icons */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <a
+                    href={currentImg.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition border border-slate-700 text-xs shadow-xs"
+                    title="Buka gambar di tab baru"
+                  >
+                    <FontAwesomeIcon icon={['fa-solid', 'fa-arrow-up-right-from-square']} />
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setLightbox(null)}
+                    className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition border border-slate-700 text-xs shadow-xs"
+                    title="Tutup (Esc)"
+                  >
+                    <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Main Image Viewport with Floating Prev / Next Controls */}
+              <div
+                className="relative flex-1 flex items-center justify-center my-3 max-w-5xl w-full mx-auto overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Floating Prev Button */}
+                {(hasMultiplePhotos || respondentsWithImages.length > 1) && (
+                  <button
+                    type="button"
+                    onClick={handleLightboxPrev}
+                    className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center transition-all border border-slate-700/80 shadow-2xl z-20 group hover:scale-105"
+                    title="Foto Sebelumnya (Panah Kiri ←)"
+                  >
+                    <FontAwesomeIcon
+                      icon={['fa-solid', 'fa-chevron-left']}
+                      className="text-sm sm:text-base group-hover:-translate-x-0.5 transition-transform"
+                    />
+                  </button>
+                )}
+
+                {/* Active Image */}
+                <motion.img
+                  key={currentImg.url + lightbox.index}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.15 }}
+                  src={currentImg.url}
+                  alt={currentImg.label}
+                  className="max-h-[60vh] sm:max-h-[68vh] max-w-full object-contain rounded-2xl shadow-2xl border border-slate-800 bg-black/60 select-none"
+                />
+
+                {/* Floating Next Button */}
+                {(hasMultiplePhotos || respondentsWithImages.length > 1) && (
+                  <button
+                    type="button"
+                    onClick={handleLightboxNext}
+                    className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-slate-900/85 hover:bg-slate-800 text-white flex items-center justify-center transition-all border border-slate-700/80 shadow-2xl z-20 group hover:scale-105"
+                    title="Foto Berikutnya (Panah Kanan →)"
+                  >
+                    <FontAwesomeIcon
+                      icon={['fa-solid', 'fa-chevron-right']}
+                      className="text-sm sm:text-base group-hover:translate-x-0.5 transition-transform"
+                    />
+                  </button>
+                )}
+              </div>
+
+              {/* Bottom Thumbnail Strip & Controls */}
+              <div
+                className="max-w-5xl w-full mx-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {hasMultiplePhotos ? (
+                  <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 shadow-xl flex flex-col items-center gap-2">
+                    {/* Thumbnails Row */}
+                    <div className="flex items-center gap-2 overflow-x-auto max-w-full py-0.5 px-1 scrollbar-thin">
+                      {lightbox.items.map((item, idx) => (
+                        <button
+                          key={item.url + idx}
+                          type="button"
+                          onClick={() => setLightbox((prev) => ({ ...prev, index: idx }))}
+                          className={`relative flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden border-2 transition-all ${
+                            idx === lightbox.index
+                              ? 'border-white ring-2 ring-white/50 scale-105 shadow-md'
+                              : 'border-slate-700 opacity-60 hover:opacity-100 hover:border-slate-500'
+                          }`}
+                          title={item.label}
+                        >
+                          <img src={item.url} alt={item.label} className="w-full h-full object-cover" />
+                          <span className="absolute bottom-0 inset-x-0 bg-slate-950/80 text-[9px] text-white font-mono truncate px-1 text-center">
+                            #{idx + 1}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[11px] text-slate-400 text-center">
+                      <span className="font-semibold text-slate-200">{currentImg.label}</span> • Gunakan tombol panah <kbd className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-300 font-mono text-[10px]">←</kbd> <kbd className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-300 font-mono text-[10px]">→</kbd> di keyboard untuk berpindah foto, <kbd className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-300 font-mono text-[10px]">Esc</kbd> untuk menutup
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-center py-1">
+                    <p className="text-xs text-slate-400">
+                      <span className="font-semibold text-slate-200">{currentImg.label}</span> • Tekan <kbd className="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-300 font-mono text-[10px]">Esc</kbd> untuk menutup
+                    </p>
+                  </div>
+                )}
+              </div>
             </motion.div>
-          </div>
-        )}
+          );
+        })()}
       </AnimatePresence>
     </div>
   );

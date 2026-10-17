@@ -29,6 +29,8 @@ const PostEditor = lazy(() => import('./pages/admin/PostEditor'));
 const CategoriesAdmin = lazy(() => import('./pages/admin/CategoriesAdmin'));
 const CustomFormsAdmin = lazy(() => import('./pages/admin/CustomFormsAdmin'));
 const CustomFormSubmissionsAdmin = lazy(() => import('./pages/admin/CustomFormSubmissionsAdmin'));
+const RegistrationAdmin = lazy(() => import('./pages/admin/RegistrationAdmin'));
+const RegistrationEventDetailAdmin = lazy(() => import('./pages/admin/RegistrationEventDetailAdmin'));
 const MediaAdmin = lazy(() => import('./pages/admin/MediaAdmin'));
 const DonationsAdmin = lazy(() => import('./pages/admin/DonationsAdmin'));
 const AidRequestsAdmin = lazy(() => import('./pages/admin/AidRequestsAdmin'));
@@ -144,6 +146,8 @@ export default function App() {
                 <Route path="categories" element={<CategoriesAdmin />} />
                 <Route path="custom-forms" element={<CustomFormsAdmin />} />
                 <Route path="custom-forms/:id/submissions" element={<CustomFormSubmissionsAdmin />} />
+                <Route path="registrations" element={<RegistrationAdmin />} />
+                <Route path="registrations/:id" element={<RegistrationEventDetailAdmin />} />
                 <Route path="testimonials" element={<TestimonialsAdmin />} />
                 <Route path="media" element={<MediaAdmin />} />
                 <Route path="donations" element={<DonationsAdmin />} />

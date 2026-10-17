@@ -7,6 +7,7 @@ import { getPublicCustomForm, submitPublicCustomForm } from '../api/customForms'
 import { errMsg } from '../api/client';
 import { useSettings } from '../context/SettingsContext';
 import Spinner from '../components/ui/Spinner';
+import { generateQrCodeDataUrl, downloadQrCodeImage } from '../utils/generateQrCode';
 
 export default function CustomFormView() {
   const { slug } = useParams();
@@ -26,6 +27,17 @@ export default function CustomFormView() {
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submissionResult, setSubmissionResult] = useState(null);
+  const [qrDataUrl, setQrDataUrl] = useState('');
+
+  useEffect(() => {
+    if (submissionResult?.submissionId) {
+      generateQrCodeDataUrl(submissionResult.submissionId, { width: 300, margin: 2 })
+        .then((url) => setQrDataUrl(url))
+        .catch((err) => console.error('QR gen err:', err));
+    } else {
+      setQrDataUrl('');
+    }
+  }, [submissionResult?.submissionId]);
 
   useEffect(() => {
     async function loadForm() {
@@ -293,16 +305,49 @@ export default function CustomFormView() {
             </div>
 
             {submissionResult?.submissionId && (
-              <div className="p-4 bg-slate-50 border border-slate-200/90 rounded-2xl max-w-sm mx-auto text-center space-y-1.5 shadow-2xs">
-                <span className="block text-[11px] uppercase tracking-wider font-semibold text-slate-500">
-                  ID Pendaftaran Anda
-                </span>
-                <div className="font-mono text-base font-extrabold text-slate-900 bg-white border border-slate-200/80 px-4 py-2 rounded-xl tracking-wider select-all shadow-inner">
-                  {submissionResult.submissionId}
+              <div className="p-5 bg-slate-50 border border-slate-200/90 rounded-2xl max-w-sm mx-auto text-center space-y-3.5 shadow-2xs">
+                <div>
+                  <span className="block text-[11px] uppercase tracking-wider font-bold text-slate-500">
+                    ID Pendaftaran Anda
+                  </span>
+                  <div className="font-mono text-base font-extrabold text-slate-900 bg-white border border-slate-200/80 px-4 py-2 mt-1.5 rounded-xl tracking-wider select-all shadow-inner">
+                    {submissionResult.submissionId}
+                  </div>
                 </div>
-                <p className="text-[11px] text-slate-400">
-                  Simpan atau catat ID ini sebagai bukti pendaftaran Anda.
-                </p>
+
+                {/* QR Code Canvas/Image */}
+                {qrDataUrl && (
+                  <div className="bg-white p-3.5 rounded-xl border border-slate-200/80 inline-block shadow-2xs">
+                    <img
+                      src={qrDataUrl}
+                      alt={`QR Code ${submissionResult.submissionId}`}
+                      className="w-44 h-44 object-contain mx-auto"
+                    />
+                    <div className="mt-2 text-[10px] text-slate-400 font-mono tracking-wider">
+                      SCAN UNTUK PRESENSI
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      downloadQrCodeImage(
+                        submissionResult.submissionId,
+                        `QR_${submissionResult.submissionId}.png`,
+                        submissionResult.submissionId
+                      )
+                    }
+                    className="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors"
+                  >
+                    <FontAwesomeIcon icon={['fa-solid', 'fa-qrcode']} />
+                    <span>Unduh QR Code (PNG)</span>
+                  </button>
+                  <p className="text-[11px] text-slate-400 mt-2">
+                    Simpan QR Code atau ID ini untuk verifikasi kehadiran pada saat acara berlangsung.
+                  </p>
+                </div>
               </div>
             )}
 

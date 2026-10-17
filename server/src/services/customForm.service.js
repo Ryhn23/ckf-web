@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import ExcelJS from 'exceljs';
+import QRCode from 'qrcode';
 import prisma from '../config/prisma.js';
 import env from '../config/env.js';
 import ApiError from '../utils/ApiError.js';
@@ -719,6 +720,7 @@ export const customFormService = {
     const columns = [
       { header: 'No', key: 'no', width: 8 },
       { header: 'ID Pendaftaran', key: 'id', width: 24 },
+      { header: 'QR Code', key: 'qrcode', width: 14 },
       { header: 'Waktu Pengiriman (WIB)', key: 'createdAt', width: 24 },
       { header: 'Status', key: 'status', width: 14 },
     ];
@@ -758,13 +760,15 @@ export const customFormService = {
     });
 
     // 3. Add Data Rows
-    submissions.forEach((sub, index) => {
+    for (let index = 0; index < submissions.length; index++) {
+      const sub = submissions[index];
       const rowNumber = index + 1;
       const subData = sub.data || {};
 
       const rowValues = [
         rowNumber,
         sub.id,
+        '', // QR Code image placeholder in column 3 (C)
         formatDate(sub.createdAt),
         sub.status,
       ];
@@ -795,14 +799,37 @@ export const customFormService = {
       rowValues.push(sub.adminNotes || '-');
 
       const dataRow = sheet.addRow(rowValues);
-      dataRow.height = 24;
+      dataRow.height = 54;
+      const sheetRowIndex = dataRow.number;
+
+      // Generate & Embed QR Code image into Cell C (Column index 2)
+      try {
+        const qrBuffer = await QRCode.toBuffer(String(sub.id), {
+          type: 'png',
+          width: 90,
+          margin: 1,
+          color: { dark: '#0f172a', light: '#ffffff' },
+        });
+
+        const imageId = workbook.addImage({
+          buffer: qrBuffer,
+          extension: 'png',
+        });
+
+        sheet.addImage(imageId, {
+          tl: { col: 2 + 0.15, row: sheetRowIndex - 1 + 0.08 },
+          ext: { width: 62, height: 62 },
+        });
+      } catch (qrErr) {
+        console.error('Failed to embed QR code in excel for', sub.id, qrErr);
+      }
 
       const isEven = index % 2 === 0;
       dataRow.eachCell((cell, colNumber) => {
         cell.font = { name: 'Calibri', size: 10 };
         cell.alignment = {
           vertical: 'middle',
-          horizontal: colNumber <= 4 ? 'center' : 'left',
+          horizontal: colNumber <= 5 ? 'center' : 'left',
           wrapText: true,
         };
 
@@ -825,7 +852,7 @@ export const customFormService = {
           cell.font = { name: 'Calibri', size: 10, color: { argb: '2563EB' }, underline: true };
         }
       });
-    });
+    }
 
     // Auto-fit column widths
     columns.forEach((col, idx) => {

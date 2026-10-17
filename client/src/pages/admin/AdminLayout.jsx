@@ -35,6 +35,7 @@ const MENU_STRUCTURE = [
       { to: '/admin/posts', label: 'Artikel Berita', icon: 'fa-file' },
       { to: '/admin/categories', label: 'Kategori Program', icon: 'fa-tags' },
       { to: '/admin/custom-forms', label: 'Formulir Kustom', icon: 'fa-clipboard-list' },
+      { to: '/admin/registrations', label: 'Registrasi', icon: 'fa-calendar-check' },
     ],
   },
   {

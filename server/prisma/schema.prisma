@@ -189,6 +189,7 @@ model CustomForm {
   createdAt      DateTime               @default(now())
   updatedAt      DateTime               @updatedAt
   submissions    CustomFormSubmission[]
+  registrationEvents RegistrationEvent[]
 
   @@index([slug])
   @@index([isActive])
@@ -196,16 +197,57 @@ model CustomForm {
 }
 
 model CustomFormSubmission {
-  id          String      @id @default(cuid())
+  id          String            @id @default(cuid())
   formId      String
-  form        CustomForm  @relation(fields: [formId], references: [id], onDelete: Cascade)
-  data        Json        // Key-value pairs: { [fieldId]: value or uploadedUrl }
-  status      String      @default("BARU") // BARU, DIPROSES, SELESAI
+  form        CustomForm        @relation(fields: [formId], references: [id], onDelete: Cascade)
+  data        Json              // Key-value pairs: { [fieldId]: value or uploadedUrl }
+  status      String            @default("BARU") // BARU, DIPROSES, SELESAI
   adminNotes  String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  attendances EventAttendance[]
 
   @@index([formId, createdAt(sort: Desc)])
   @@index([status])
+}
+
+model RegistrationEvent {
+  id           String            @id @default(cuid())
+  title        String
+  description  String?
+  eventDate    DateTime?
+  location     String?
+  linkedFormId String?
+  linkedForm   CustomForm?       @relation(fields: [linkedFormId], references: [id], onDelete: SetNull)
+  isActive     Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  attendances  EventAttendance[]
+
+  @@index([createdAt(sort: Desc)])
+  @@index([isActive])
+  @@index([linkedFormId])
+}
+
+model EventAttendance {
+  id             String                @id @default(cuid())
+  eventId        String
+  event          RegistrationEvent     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  registrationId String                // ID Pendaftaran (misal CKF-SAFIR-A1B2C3D4 atau manual)
+  name           String                // Nama Peserta
+  phone          String?               // No HP / WhatsApp
+  email          String?               // Email
+  institution    String?               // Asal Lembaga / Instansi / Domisili
+  submissionId   String?               // Relasi ke CustomFormSubmission jika scan dari formulir
+  submission     CustomFormSubmission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+  checkInTime    DateTime              @default(now())
+  checkInMethod  String                @default("QR_SCAN") // "QR_SCAN" | "MANUAL"
+  notes          String?               // Catatan tambahan
+  formData       Json?                 // Snapshot data respons jika dari formulir
+
+  @@unique([eventId, registrationId])
+  @@index([eventId, checkInTime(sort: Desc)])
+  @@index([registrationId])
+  @@index([submissionId])
 }
 

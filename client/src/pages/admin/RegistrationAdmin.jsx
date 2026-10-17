@@ -173,133 +173,130 @@ export default function RegistrationAdmin() {
 
   return (
     <div className="space-y-6">
-      {/* Top Header & Breadcrumb */}
+      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
-          <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
-            <Link to="/admin" className="hover:text-slate-800 transition-colors">
-              Admin
-            </Link>
-            <span>/</span>
-            <span className="font-semibold text-slate-700">Registrasi Acara</span>
-          </div>
-          <h1 className="font-heading text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            Registrasi & Presensi Acara
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900">
+            Registrasi
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="mt-1 text-sm text-slate-500">
             Kelola acara, scan QR Code kehadiran peserta dari formulir kustom, dan ekspor kehadiran ke Excel.
           </p>
         </div>
-
         <button
           onClick={handleOpenCreate}
-          className="admin-btn-primary flex items-center gap-2 text-xs px-4 py-2.5 shadow-sm"
+          className="admin-btn-primary flex items-center gap-2"
         >
           <FontAwesomeIcon icon={['fa-solid', 'fa-plus']} />
           <span>Buat Acara Baru</span>
         </button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="admin-card p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm shadow-xs">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-calendar-check']} />
+      {/* Metric Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div
+          onClick={() => { setStatusFilter(''); setPage(1); }}
+          className="admin-card p-4 cursor-pointer transition-all hover:border-slate-300"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-calendar-check']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
           </div>
-          <div>
-            <div className="text-xs text-slate-500 font-medium">Total Acara</div>
-            <div className="text-lg font-bold text-slate-900 font-mono">{stats.totalEvents}</div>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.totalEvents}
+          </p>
+          <p className="text-[11px] text-slate-400">Total acara dibuat</p>
         </div>
 
-        <div className="admin-card p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm shadow-xs">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} />
+        <div
+          onClick={() => { setStatusFilter('true'); setPage(1); }}
+          className="admin-card p-4 cursor-pointer transition-all hover:border-slate-300"
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-circle-check']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Aktif</span>
           </div>
-          <div>
-            <div className="text-xs text-slate-500 font-medium">Acara Aktif</div>
-            <div className="text-lg font-bold text-emerald-600 font-mono">{stats.activeEvents}</div>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.activeEvents}
+          </p>
+          <p className="text-[11px] text-slate-400">Acara aktif presensi</p>
         </div>
 
-        <div className="admin-card p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm shadow-xs">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-users']} />
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-users']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Presensi</span>
           </div>
-          <div>
-            <div className="text-xs text-slate-500 font-medium">Total Kehadiran</div>
-            <div className="text-lg font-bold text-indigo-600 font-mono">{stats.totalAttendances}</div>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.totalAttendances}
+          </p>
+          <p className="text-[11px] text-slate-400">Total peserta hadir</p>
         </div>
 
-        <div className="admin-card p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm shadow-xs">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} />
+        <div className="admin-card p-4 transition-all hover:border-slate-300">
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-clock']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hari Ini</span>
           </div>
-          <div>
-            <div className="text-xs text-slate-500 font-medium">Hadir Hari Ini</div>
-            <div className="text-lg font-bold text-amber-600 font-mono">{stats.attendancesToday}</div>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.attendancesToday}
+          </p>
+          <p className="text-[11px] text-slate-400">Presensi hari ini</p>
         </div>
       </div>
 
-      {/* Filter & Search Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50/60 p-3 rounded-2xl border border-slate-200/80">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-500">Status Acara:</span>
-          <div className="flex items-center gap-1.5">
-            {[
-              { label: 'Semua', val: '' },
-              { label: 'Aktif', val: 'true' },
-              { label: 'Nonaktif', val: 'false' },
-            ].map((st) => (
-              <button
-                key={st.val}
-                type="button"
-                onClick={() => { setStatusFilter(st.val); setPage(1); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                  statusFilter === st.val
-                    ? 'bg-slate-900 text-white shadow-sm'
-                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                {st.label}
-              </button>
-            ))}
-          </div>
+      {/* Filter Segmented Controls & Search Bar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+        <div className="flex flex-wrap gap-2">
+          {[
+            ['', 'Semua Status'],
+            ['true', 'Aktif'],
+            ['false', 'Nonaktif'],
+          ].map(([val, label]) => (
+            <button
+              key={val}
+              type="button"
+              onClick={() => { setStatusFilter(val); setPage(1); }}
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                statusFilter === val
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         <div className="flex items-center gap-2">
-          <form onSubmit={handleSearchSubmit} className="relative flex-1 sm:w-64">
+          <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-64">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari nama acara / lokasi..."
-              className="admin-input py-1.5 pl-8 pr-7 text-xs w-full placeholder:font-sans"
+              placeholder="Cari acara atau lokasi…"
+              className="admin-input pl-8 pr-4 py-1.5 w-full text-xs"
             />
             <FontAwesomeIcon
               icon={['fa-solid', 'fa-magnifying-glass']}
               className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"
             />
-            {search && (
-              <button
-                type="button"
-                onClick={() => { setSearch(''); setPage(1); fetchEvents(); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 text-xs"
-              >
-                <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
-              </button>
-            )}
           </form>
 
           <button
-            onClick={fetchEvents}
-            className="admin-btn-ghost px-3 py-1.5 text-xs text-slate-500 hover:text-slate-800"
+            onClick={() => { setSearch(''); setStatusFilter(''); setPage(1); fetchEvents(); }}
+            className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
             title="Muat ulang"
           >
-            <FontAwesomeIcon icon={['fa-solid', 'fa-arrows-rotate']} className="mr-1" />
-            <span>Refresh</span>
+            <FontAwesomeIcon icon={['fa-solid', 'fa-arrows-rotate']} />
           </button>
         </div>
       </div>
@@ -314,18 +311,14 @@ export default function RegistrationAdmin() {
           icon="fa-calendar-check"
           title="Belum ada acara registrasi"
           description="Buat acara baru untuk mulai mendata dan memindai kehadiran peserta menggunakan QR Code."
-          action={
-            <button onClick={handleOpenCreate} className="admin-btn-primary text-xs px-4 py-2">
-              <FontAwesomeIcon icon={['fa-solid', 'fa-plus']} className="mr-1.5" />
-              <span>Buat Acara Pertama</span>
-            </button>
-          }
+          actionLabel="Buat Acara Baru"
+          onAction={handleOpenCreate}
         />
       ) : (
         <div className="admin-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-slate-600">
-              <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200/80">
+              <thead>
                 <tr>
                   <th className="admin-th w-12 text-center">No</th>
                   <th className="admin-th">Nama Acara & Jadwal</th>
@@ -335,13 +328,13 @@ export default function RegistrationAdmin() {
                   <th className="admin-th text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200/60">
+              <tbody className="divide-y divide-slate-100">
                 {events.map((ev, index) => {
                   const rowNum = (meta.page - 1) * meta.limit + index + 1;
                   const attendanceCount = ev._count?.attendances || 0;
 
                   return (
-                    <tr key={ev.id} className="hover:bg-slate-50/50 transition-colors">
+                    <tr key={ev.id} className="transition hover:bg-slate-50/70">
                       <td className="admin-td text-center text-xs font-mono text-slate-400">
                         {rowNum}
                       </td>
@@ -369,8 +362,8 @@ export default function RegistrationAdmin() {
 
                       <td className="admin-td">
                         {ev.linkedForm ? (
-                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-medium">
-                            <FontAwesomeIcon icon={['fa-solid', 'fa-clipboard-list']} className="text-[11px]" />
+                          <div className="inline-flex items-center gap-1.5 text-xs font-mono bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md border border-slate-200/80">
+                            <FontAwesomeIcon icon={['fa-solid', 'fa-clipboard-list']} className="text-[10px] text-slate-400" />
                             <span className="max-w-[200px] truncate">{ev.linkedForm.title}</span>
                           </div>
                         ) : (
@@ -379,40 +372,29 @@ export default function RegistrationAdmin() {
                       </td>
 
                       <td className="admin-td text-center">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-800 text-xs font-mono font-bold">
-                          <FontAwesomeIcon icon={['fa-solid', 'fa-users']} className="text-[11px] text-slate-500" />
+                        <Link
+                          to={`/admin/registrations/${ev.id}`}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
+                        >
+                          <FontAwesomeIcon icon={['fa-solid', 'fa-users']} className="text-slate-400 text-xs" />
                           <span>{attendanceCount} Hadir</span>
-                        </div>
+                        </Link>
                       </td>
 
                       <td className="admin-td text-center">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
-                            ev.isActive
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-slate-100 text-slate-500 border border-slate-200'
-                          }`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full ${ev.isActive ? 'bg-emerald-500' : 'bg-slate-400'}`}
-                          />
-                          {ev.isActive ? 'Aktif' : 'Nonaktif'}
-                        </span>
+                        <StatusBadge status={ev.isActive ? 'AKTIF' : 'NONAKTIF'} />
                       </td>
 
                       <td className="admin-td text-right whitespace-nowrap">
-                        <div className="flex items-center justify-end gap-1.5">
-                          {/* Manage Attendance / Scanner Button */}
+                        <div className="flex items-center justify-end gap-1">
                           <Link
                             to={`/admin/registrations/${ev.id}`}
-                            className="admin-btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5 shadow-2xs"
-                            title="Buka Scanner QR & Kelola Presensi"
+                            className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
+                            title="Presensi & Scan QR"
                           >
                             <FontAwesomeIcon icon={['fa-solid', 'fa-qrcode']} />
-                            <span>Presensi</span>
                           </Link>
 
-                          {/* Edit Event Button */}
                           <button
                             type="button"
                             onClick={() => handleOpenEdit(ev)}
@@ -422,7 +404,6 @@ export default function RegistrationAdmin() {
                             <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} />
                           </button>
 
-                          {/* Delete Event Button */}
                           <button
                             type="button"
                             onClick={() => handleDeleteEvent(ev.id, ev.title)}

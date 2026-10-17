@@ -224,7 +224,7 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
         {/* Modal Header */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 bg-slate-900/90">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-sm shadow-xs">
+            <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 text-white flex items-center justify-center text-sm shadow-xs">
               <FontAwesomeIcon icon={['fa-solid', 'fa-qrcode']} />
             </div>
             <div>
@@ -253,21 +253,21 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
           {/* Target Scan Overlay Frame */}
           {scannerStatus === 'scanning' && (
             <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center">
-              <div className="relative w-56 h-56 sm:w-64 sm:h-64 border-2 border-emerald-400/70 rounded-2xl shadow-[0_0_0_9999px_rgba(0,0,0,0.55)]">
+              <div className="relative w-56 h-56 sm:w-64 sm:h-64 border-2 border-white/60 rounded-2xl shadow-[0_0_0_9999px_rgba(0,0,0,0.6)]">
                 {/* Corner Accents */}
-                <span className="absolute -top-1 -left-1 w-5 h-5 border-t-4 border-l-4 border-emerald-400 rounded-tl-lg" />
-                <span className="absolute -top-1 -right-1 w-5 h-5 border-t-4 border-r-4 border-emerald-400 rounded-tr-lg" />
-                <span className="absolute -bottom-1 -left-1 w-5 h-5 border-b-4 border-l-4 border-emerald-400 rounded-bl-lg" />
-                <span className="absolute -bottom-1 -right-1 w-5 h-5 border-b-4 border-r-4 border-emerald-400 rounded-br-lg" />
+                <span className="absolute -top-1 -left-1 w-5 h-5 border-t-4 border-l-4 border-white rounded-tl-lg" />
+                <span className="absolute -top-1 -right-1 w-5 h-5 border-t-4 border-r-4 border-white rounded-tr-lg" />
+                <span className="absolute -bottom-1 -left-1 w-5 h-5 border-b-4 border-l-4 border-white rounded-bl-lg" />
+                <span className="absolute -bottom-1 -right-1 w-5 h-5 border-b-4 border-r-4 border-white rounded-br-lg" />
 
                 {/* Animated Laser Scanning Line */}
                 <motion.div
-                  className="w-full h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_12px_#34d399]"
+                  className="w-full h-0.5 bg-gradient-to-r from-transparent via-white to-transparent shadow-[0_0_12px_rgba(255,255,255,0.8)]"
                   animate={{ y: [10, 230, 10] }}
                   transition={{ duration: 2.2, repeat: Infinity, ease: 'linear' }}
                 />
               </div>
-              <p className="mt-4 text-xs font-medium text-slate-300 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-700 backdrop-blur-xs tracking-wide">
+              <p className="mt-4 text-xs font-medium text-slate-300 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-700 backdrop-blur-xs tracking-wide">
                 Arahkan kamera ke QR Code pendaftaran
               </p>
             </div>
@@ -286,8 +286,8 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
           {/* Processing State */}
           {scannerStatus === 'processing' && (
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center space-y-3">
-              <div className="w-12 h-12 rounded-full border-3 border-emerald-400 border-t-transparent animate-spin" />
-              <p className="text-xs font-semibold text-emerald-400 tracking-wider uppercase">
+              <div className="w-12 h-12 rounded-full border-3 border-white border-t-transparent animate-spin" />
+              <p className="text-xs font-semibold text-slate-200 tracking-wider uppercase">
                 Memverifikasi data kehadiran...
               </p>
             </div>
@@ -300,18 +300,18 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute inset-3 bg-slate-900/95 border border-emerald-500/50 rounded-2xl p-5 flex flex-col items-center justify-center text-center shadow-2xl z-20"
+                className="absolute inset-3 bg-slate-900/98 border border-slate-700 rounded-2xl p-5 flex flex-col items-center justify-center text-center shadow-2xl z-20"
               >
-                <div className="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-2xl border border-emerald-500/40 mb-3 shadow-lg">
+                <div className="w-14 h-14 bg-white/10 text-white rounded-full flex items-center justify-center text-2xl border border-white/20 mb-3 shadow-lg">
                   <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
                 </div>
-                <span className="text-[10px] font-bold tracking-widest text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 mb-1">
+                <span className="text-[10px] font-bold tracking-widest text-slate-300 uppercase bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20 mb-1">
                   PRESENSI BERHASIL
                 </span>
                 <h4 className="text-base font-bold text-white mt-1">
                   {lastScannedResult?.data?.attendance?.name || 'Peserta Hadir'}
                 </h4>
-                <div className="font-mono text-xs text-slate-400 bg-slate-800/80 px-3 py-1 rounded-md border border-slate-700/80 my-2 select-all">
+                <div className="font-mono text-xs text-slate-300 bg-slate-800 px-3 py-1 rounded-md border border-slate-700 my-2 select-all">
                   {lastScannedResult.code}
                 </div>
                 {lastScannedResult?.data?.sourceForm && (
@@ -322,7 +322,7 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                 <button
                   type="button"
                   onClick={resumeScanning}
-                  className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition shadow-sm flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-4 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center gap-2"
                 >
                   <FontAwesomeIcon icon={['fa-solid', 'fa-qrcode']} />
                   <span>Scan Peserta Berikutnya</span>
@@ -338,12 +338,12 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute inset-3 bg-slate-900/95 border border-rose-500/50 rounded-2xl p-5 flex flex-col items-center justify-center text-center shadow-2xl z-20"
+                className="absolute inset-3 bg-slate-900/98 border border-slate-700/80 rounded-2xl p-5 flex flex-col items-center justify-center text-center shadow-2xl z-20"
               >
-                <div className="w-14 h-14 bg-rose-500/20 text-rose-400 rounded-full flex items-center justify-center text-2xl border border-rose-500/40 mb-3 shadow-lg">
+                <div className="w-14 h-14 bg-slate-800 text-slate-300 rounded-full flex items-center justify-center text-2xl border border-slate-700 mb-3 shadow-lg">
                   <FontAwesomeIcon icon={['fa-solid', 'fa-triangle-exclamation']} />
                 </div>
-                <span className="text-[10px] font-bold tracking-widest text-rose-400 uppercase bg-rose-500/10 px-2.5 py-0.5 rounded-full border border-rose-500/20 mb-1">
+                <span className="text-[10px] font-bold tracking-widest text-slate-300 uppercase bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-700 mb-1">
                   GAGAL PRESENSI
                 </span>
                 <p className="text-xs text-slate-300 max-w-xs mt-2 leading-relaxed">
@@ -353,14 +353,14 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                   <button
                     type="button"
                     onClick={resumeScanning}
-                    className="flex-1 py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition"
+                    className="flex-1 py-2 px-3 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-xs font-semibold transition"
                   >
                     Ulangi Scan
                   </button>
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex-1 py-2 px-3 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-semibold transition"
+                    className="flex-1 py-2 px-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold transition border border-slate-700"
                   >
                     Tutup
                   </button>
@@ -380,7 +380,7 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                 value={manualCode}
                 onChange={(e) => setManualCode(e.target.value.toUpperCase())}
                 placeholder="Atau ketik ID Pendaftaran..."
-                className="w-full bg-slate-800/90 border border-slate-700 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 font-mono focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-800/90 border border-slate-700 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 font-mono focus:outline-none focus:border-white"
               />
               <FontAwesomeIcon
                 icon={['fa-solid', 'fa-id-card']}
@@ -390,7 +390,7 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
             <button
               type="submit"
               disabled={!manualCode.trim()}
-              className="py-2 px-4 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white text-xs font-semibold rounded-xl transition shadow-xs whitespace-nowrap"
+              className="py-2 px-4 bg-white hover:bg-slate-100 disabled:opacity-40 text-slate-900 text-xs font-semibold rounded-xl transition shadow-xs whitespace-nowrap"
             >
               Hadirkan
             </button>
@@ -413,7 +413,7 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                 type="checkbox"
                 checked={continuousMode}
                 onChange={(e) => setContinuousMode(e.target.checked)}
-                className="rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-0 text-xs"
+                className="rounded border-slate-700 bg-slate-800 text-white focus:ring-0 text-xs"
               />
               <span className="text-[11px]">Scan Berkelanjutan</span>
             </label>

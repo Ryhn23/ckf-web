@@ -227,8 +227,8 @@ export default function RegistrationEventDetailAdmin() {
               </span>
             )}
             {event?.linkedForm && (
-              <span className="flex items-center gap-1 text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md font-medium">
-                <FontAwesomeIcon icon={['fa-solid', 'fa-clipboard-list']} />
+              <span className="flex items-center gap-1 text-slate-600 bg-slate-100 border border-slate-200/80 px-2 py-0.5 rounded-md font-medium text-xs">
+                <FontAwesomeIcon icon={['fa-solid', 'fa-clipboard-list']} className="text-slate-400" />
                 <span>Form: {event.linkedForm.title}</span>
               </span>
             )}
@@ -237,13 +237,13 @@ export default function RegistrationEventDetailAdmin() {
 
         {/* Action Buttons: Scan, Manual, Export */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Prominent Mobile-First Camera QR Scanner Button */}
+          {/* Mobile-First Camera QR Scanner Button */}
           <button
             type="button"
             onClick={() => setScannerOpen(true)}
-            className="admin-btn-primary bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-4 py-2.5 flex items-center gap-2 shadow-sm font-semibold"
+            className="admin-btn-primary text-xs flex items-center gap-2"
           >
-            <FontAwesomeIcon icon={['fa-solid', 'fa-camera']} className="text-sm" />
+            <FontAwesomeIcon icon={['fa-solid', 'fa-camera']} />
             <span>Scan QR Code (Kamera)</span>
           </button>
 
@@ -255,7 +255,7 @@ export default function RegistrationEventDetailAdmin() {
               setManualSuccessMsg('');
               setManualModalOpen(true);
             }}
-            className="admin-btn-secondary text-xs px-3.5 py-2.5 flex items-center gap-1.5 shadow-2xs"
+            className="admin-btn-secondary text-xs flex items-center gap-1.5"
           >
             <FontAwesomeIcon icon={['fa-solid', 'fa-user-plus']} />
             <span>Input Manual</span>
@@ -266,7 +266,7 @@ export default function RegistrationEventDetailAdmin() {
             type="button"
             onClick={handleExportExcel}
             disabled={exporting || attendances.length === 0}
-            className="admin-btn-secondary text-xs px-3.5 py-2.5 flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800 hover:border-emerald-300 disabled:opacity-50 shadow-2xs"
+            className="admin-btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-50"
             title="Ekspor rekap kehadiran ke format file Excel (.xlsx)"
           >
             <FontAwesomeIcon
@@ -278,96 +278,107 @@ export default function RegistrationEventDetailAdmin() {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-4">
-        <div className="admin-card p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm shadow-xs">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-users']} />
+      {/* 3 Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div
+          onClick={() => { setMethodFilter(''); setPage(1); }}
+          className={`admin-card p-4 cursor-pointer transition-all ${
+            methodFilter === '' ? 'ring-1 ring-slate-900 border-slate-900/40' : 'hover:border-slate-300'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-users']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total</span>
           </div>
-          <div>
-            <div className="text-xs text-slate-500 font-medium">Total Peserta Hadir</div>
-            <div className="text-xl font-bold text-slate-900 font-mono">{stats.total}</div>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.total}
+          </p>
+          <p className="text-[11px] text-slate-400">Total peserta hadir</p>
         </div>
 
-        <div className="admin-card p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm shadow-xs">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-qrcode']} />
+        <div
+          onClick={() => { setMethodFilter('QR_SCAN'); setPage(1); }}
+          className={`admin-card p-4 cursor-pointer transition-all ${
+            methodFilter === 'QR_SCAN' ? 'ring-1 ring-slate-900 border-slate-900/40' : 'hover:border-slate-300'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-qrcode']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Scan QR</span>
           </div>
-          <div>
-            <div className="text-xs text-slate-500 font-medium">Presensi via Scan QR</div>
-            <div className="text-xl font-bold text-emerald-600 font-mono">{stats.qrScanCount}</div>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.qrScanCount}
+          </p>
+          <p className="text-[11px] text-slate-400">Presensi via Scan QR</p>
         </div>
 
-        <div className="admin-card p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm shadow-xs">
-            <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} />
+        <div
+          onClick={() => { setMethodFilter('MANUAL'); setPage(1); }}
+          className={`admin-card p-4 cursor-pointer transition-all ${
+            methodFilter === 'MANUAL' ? 'ring-1 ring-slate-900 border-slate-900/40' : 'hover:border-slate-300'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600 border border-slate-200/80">
+              <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} className="text-xs" />
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Manual</span>
           </div>
-          <div>
-            <div className="text-xs text-slate-500 font-medium">Presensi Manual</div>
-            <div className="text-xl font-bold text-indigo-600 font-mono">{stats.manualCount}</div>
-          </div>
+          <p className="mt-2.5 font-heading text-xl font-bold text-slate-900 truncate">
+            {stats.manualCount}
+          </p>
+          <p className="text-[11px] text-slate-400">Presensi via Input Manual</p>
         </div>
       </div>
 
-      {/* Filter & Search Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50/60 p-3 rounded-2xl border border-slate-200/80">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-500">Metode:</span>
-          <div className="flex items-center gap-1.5">
-            {[
-              { label: 'Semua', val: '' },
-              { label: 'Scan QR Code', val: 'QR_SCAN' },
-              { label: 'Input Manual', val: 'MANUAL' },
-            ].map((st) => (
-              <button
-                key={st.val}
-                type="button"
-                onClick={() => { setMethodFilter(st.val); setPage(1); }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                  methodFilter === st.val
-                    ? 'bg-slate-900 text-white shadow-sm'
-                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                {st.label}
-              </button>
-            ))}
-          </div>
+      {/* Filter Segmented Controls & Search Bar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+        <div className="flex flex-wrap gap-2">
+          {[
+            ['', 'Semua'],
+            ['QR_SCAN', 'Scan QR Code'],
+            ['MANUAL', 'Input Manual'],
+          ].map(([val, label]) => (
+            <button
+              key={val}
+              type="button"
+              onClick={() => { setMethodFilter(val); setPage(1); }}
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                methodFilter === val
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         <div className="flex items-center gap-2">
-          <form onSubmit={handleSearchSubmit} className="relative flex-1 sm:w-64">
+          <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-64">
             <input
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Cari nama / ID / kontak..."
-              className="admin-input py-1.5 pl-8 pr-7 text-xs w-full placeholder:font-sans"
+              placeholder="Cari nama, ID, kontak…"
+              className="admin-input pl-8 pr-4 py-1.5 w-full text-xs"
             />
             <FontAwesomeIcon
               icon={['fa-solid', 'fa-magnifying-glass']}
               className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"
             />
-            {searchInput && (
-              <button
-                type="button"
-                onClick={() => { setSearchInput(''); setSearch(''); setPage(1); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 text-xs"
-              >
-                <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
-              </button>
-            )}
           </form>
 
           <button
             onClick={fetchAttendances}
-            className="admin-btn-ghost px-3 py-1.5 text-xs text-slate-500 hover:text-slate-800"
+            className="rounded-lg border border-slate-200 bg-white p-1.5 text-xs text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition shadow-2xs"
             title="Muat ulang"
           >
-            <FontAwesomeIcon icon={['fa-solid', 'fa-arrows-rotate']} className="mr-1" />
-            <span>Refresh</span>
+            <FontAwesomeIcon icon={['fa-solid', 'fa-arrows-rotate']} />
           </button>
         </div>
       </div>
@@ -382,21 +393,14 @@ export default function RegistrationEventDetailAdmin() {
           icon="fa-users"
           title="Belum ada kehadiran tercatat"
           description="Gunakan tombol Scan QR Code untuk memindai kartu peserta atau gunakan Input Manual untuk mencatat presensi."
-          action={
-            <button
-              onClick={() => setScannerOpen(true)}
-              className="admin-btn-primary bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-4 py-2"
-            >
-              <FontAwesomeIcon icon={['fa-solid', 'fa-camera']} className="mr-1.5" />
-              <span>Buka Scanner Kamera</span>
-            </button>
-          }
+          actionLabel="Buka Scanner Kamera"
+          onAction={() => setScannerOpen(true)}
         />
       ) : (
         <div className="admin-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-slate-600">
-              <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200/80">
+              <thead>
                 <tr>
                   <th className="admin-th w-12 text-center">No</th>
                   <th className="admin-th whitespace-nowrap">Waktu Hadir</th>
@@ -408,13 +412,13 @@ export default function RegistrationEventDetailAdmin() {
                   <th className="admin-th text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200/60">
+              <tbody className="divide-y divide-slate-100">
                 {attendances.map((att, index) => {
                   const rowNum = (meta.page - 1) * meta.limit + index + 1;
                   const sourceForm = att.submission?.form?.title;
 
                   return (
-                    <tr key={att.id} className="hover:bg-slate-50/50 transition-colors">
+                    <tr key={att.id} className="transition hover:bg-slate-50/70">
                       <td className="admin-td text-center text-xs font-mono text-slate-400">
                         {rowNum}
                       </td>
@@ -452,12 +456,12 @@ export default function RegistrationEventDetailAdmin() {
 
                       <td className="admin-td text-center whitespace-nowrap">
                         {att.checkInMethod === 'QR_SCAN' ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-medium bg-slate-900 text-white shadow-2xs">
                             <FontAwesomeIcon icon={['fa-solid', 'fa-qrcode']} className="text-[10px]" />
                             <span>Scan QR</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
                             <FontAwesomeIcon icon={['fa-solid', 'fa-pen']} className="text-[10px] text-slate-400" />
                             <span>Manual</span>
                           </span>
@@ -585,7 +589,7 @@ export default function RegistrationEventDetailAdmin() {
                   </div>
                 )}
                 {manualSuccessMsg && (
-                  <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs rounded-xl font-medium">
+                  <div className="p-3 bg-slate-100 border border-slate-200 text-slate-800 text-xs rounded-xl font-medium">
                     {manualSuccessMsg}
                   </div>
                 )}

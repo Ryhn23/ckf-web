@@ -14,6 +14,7 @@ import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import { formatDate } from '../../utils/formatDate';
 import QrScannerModal from '../../components/admin/QrScannerModal';
+import ModalPortal from '../../components/ui/ModalPortal';
 
 export default function RegistrationEventDetailAdmin() {
   const { id: eventId } = useParams();
@@ -535,9 +536,10 @@ export default function RegistrationEventDetailAdmin() {
       />
 
       {/* Modal Input Presensi Manual */}
-      <AnimatePresence>
-        {manualModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+      <ModalPortal>
+        <AnimatePresence>
+          {manualModalOpen && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -704,6 +706,7 @@ export default function RegistrationEventDetailAdmin() {
           </div>
         )}
       </AnimatePresence>
+    </ModalPortal>
     </div>
   );
 }

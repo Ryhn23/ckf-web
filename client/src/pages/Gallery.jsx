@@ -6,6 +6,7 @@ import PageHeader from '../components/layout/PageHeader';
 import Spinner from '../components/ui/Spinner';
 import EmptyState from '../components/ui/EmptyState';
 import Seo from '../components/Seo';
+import ModalPortal from '../components/ui/ModalPortal';
 
 const TABS = [
   { id: 'all', label: 'Semua' },
@@ -42,7 +43,8 @@ function Lightbox({ items, index, onClose, onPrev, onNext }) {
   if (!item) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" role="dialog" aria-modal="true">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4" role="dialog" aria-modal="true">
       <button type="button" onClick={onClose} aria-label="Tutup" className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/25">
         <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
       </button>
@@ -78,6 +80,7 @@ function Lightbox({ items, index, onClose, onPrev, onNext }) {
         </p>
       </div>
     </div>
+    </ModalPortal>
   );
 }
 

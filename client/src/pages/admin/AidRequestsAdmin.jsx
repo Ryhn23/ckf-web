@@ -16,6 +16,7 @@ import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import StatusBadge from '../../components/ui/StatusBadge';
 import { formatDate } from '../../utils/formatDate';
+import ModalPortal from '../../components/ui/ModalPortal';
 
 const PAGE_SIZE = 15;
 
@@ -868,7 +869,8 @@ export default function AidRequestsAdmin() {
 
       {/* MODAL BUAT / EDIT EVENT KHUSUS */}
       {campaignModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm animate-fade-in">
+        <ModalPortal>
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm animate-fade-in">
           <div className="admin-card w-full max-w-lg p-6 space-y-5 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="font-heading text-base font-bold text-slate-900">
@@ -1031,11 +1033,13 @@ export default function AidRequestsAdmin() {
             </form>
           </div>
         </div>
+        </ModalPortal>
       )}
 
       {/* MODAL DETAIL & EDIT STATUS PERMOHONAN */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm animate-fade-in">
+        <ModalPortal>
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm animate-fade-in">
           <div className="admin-card w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 space-y-5 shadow-2xl">
             {/* Header Modal */}
             <div className="flex items-start justify-between border-b border-slate-100 pb-3">
@@ -1178,6 +1182,7 @@ export default function AidRequestsAdmin() {
             </form>
           </div>
         </div>
+        </ModalPortal>
       )}
     </div>
   );

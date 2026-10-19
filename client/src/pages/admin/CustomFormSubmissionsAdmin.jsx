@@ -16,6 +16,7 @@ import StatusBadge from '../../components/ui/StatusBadge';
 import { formatDate } from '../../utils/formatDate';
 import { generateSubmissionPdf } from '../../utils/generateSubmissionPdf';
 import { downloadQrCodeImage } from '../../utils/generateQrCode';
+import ModalPortal from '../../components/ui/ModalPortal';
 
 function isImageUrl(url) {
   if (!url || typeof url !== 'string') return false;
@@ -780,9 +781,10 @@ export default function CustomFormSubmissionsAdmin() {
       )}
 
       {/* DETAIL INSPECTION MODAL */}
-      <AnimatePresence>
-        {detailModalOpen && selectedSub && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+      <ModalPortal>
+        <AnimatePresence>
+          {detailModalOpen && selectedSub && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -1000,28 +1002,30 @@ export default function CustomFormSubmissionsAdmin() {
           </div>
         )}
       </AnimatePresence>
+    </ModalPortal>
 
       {/* PHOTO PREVIEW LIGHTBOX GALLERY */}
-      <AnimatePresence>
-        {lightbox && lightbox.items && lightbox.items.length > 0 && (() => {
-          const currentImg = lightbox.items[lightbox.index] || lightbox.items[0];
-          const hasMultiplePhotos = lightbox.items.length > 1;
-          const currentRespondentOrder = respondentsWithImages.findIndex(
-            (r) => r.sub.id === lightbox.submission?.id,
-          );
-          const hasPrevRespondent = currentRespondentOrder > 0;
-          const hasNextRespondent =
-            currentRespondentOrder !== -1 &&
-            currentRespondentOrder < respondentsWithImages.length - 1;
+      <ModalPortal>
+        <AnimatePresence>
+          {lightbox && lightbox.items && lightbox.items.length > 0 && (() => {
+            const currentImg = lightbox.items[lightbox.index] || lightbox.items[0];
+            const hasMultiplePhotos = lightbox.items.length > 1;
+            const currentRespondentOrder = respondentsWithImages.findIndex(
+              (r) => r.sub.id === lightbox.submission?.id,
+            );
+            const hasPrevRespondent = currentRespondentOrder > 0;
+            const hasNextRespondent =
+              currentRespondentOrder !== -1 &&
+              currentRespondentOrder < respondentsWithImages.length - 1;
 
-          return (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex flex-col justify-between bg-slate-950/95 backdrop-blur-md p-3 sm:p-5 select-none"
-              onClick={() => setLightbox(null)}
-            >
+            return (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] flex flex-col justify-between bg-slate-950/95 backdrop-blur-md p-3 sm:p-5 select-none"
+                onClick={() => setLightbox(null)}
+              >
               {/* Top Navigation Bar */}
               <div
                 className="flex items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3 text-white shadow-xl max-w-5xl w-full mx-auto"
@@ -1192,6 +1196,7 @@ export default function CustomFormSubmissionsAdmin() {
           );
         })()}
       </AnimatePresence>
+    </ModalPortal>
     </div>
   );
 }

@@ -14,6 +14,7 @@ import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import StatusBadge from '../../components/ui/StatusBadge';
 import { formatDate } from '../../utils/formatDate';
+import ModalPortal from '../../components/ui/ModalPortal';
 
 export default function RegistrationAdmin() {
   const [events, setEvents] = useState([]);
@@ -449,9 +450,10 @@ export default function RegistrationAdmin() {
       )}
 
       {/* Modal Tambah / Edit Acara */}
-      <AnimatePresence>
-        {modalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+      <ModalPortal>
+        <AnimatePresence>
+          {modalOpen && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -588,6 +590,7 @@ export default function RegistrationAdmin() {
           </div>
         )}
       </AnimatePresence>
+    </ModalPortal>
     </div>
   );
 }

@@ -15,6 +15,7 @@ import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import StatusBadge from '../../components/ui/StatusBadge';
 import { formatDate } from '../../utils/formatDate';
+import ModalPortal from '../../components/ui/ModalPortal';
 
 const FIELD_TYPES = [
   { value: 'text', label: 'Teks Singkat', icon: 'fa-file-lines', desc: 'Nama, judul, dsb.' },
@@ -632,9 +633,10 @@ export default function CustomFormsAdmin() {
       )}
 
       {/* FORM BUILDER MODAL */}
-      <AnimatePresence>
-        {builderOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+      <ModalPortal>
+        <AnimatePresence>
+          {builderOpen && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -1119,6 +1121,7 @@ export default function CustomFormsAdmin() {
           </div>
         )}
       </AnimatePresence>
+    </ModalPortal>
     </div>
   );
 }

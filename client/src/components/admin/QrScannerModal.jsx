@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Html5Qrcode } from 'html5-qrcode';
 import Spinner from '../ui/Spinner';
+import ModalPortal from '../ui/ModalPortal';
 
 function playSuccessBeep() {
   try {
@@ -309,7 +310,8 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center lg:p-6 bg-black lg:bg-slate-950/85 lg:backdrop-blur-sm animate-fadeIn">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center lg:p-6 bg-black lg:bg-slate-950/85 lg:backdrop-blur-sm animate-fadeIn">
       {/* Scoped CSS for full-bleed HTML5-QRCODE camera video */}
       <style>{`
         #qr-reader-container {
@@ -658,5 +660,6 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 }

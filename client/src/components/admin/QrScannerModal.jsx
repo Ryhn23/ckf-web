@@ -35,6 +35,26 @@ function triggerHaptic() {
   }
 }
 
+function playWarningBeep() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(440, ctx.currentTime);
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.25);
+  } catch {
+    // Ignore audio errors
+  }
+}
+
 export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) {
   const [activeMode, setActiveMode] = useState('camera'); // 'camera' | 'manual'
   const [cameras, setCameras] = useState([]);
@@ -133,13 +153,25 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
 
     try {
       const result = await onScan(cleanCode, sourceMethod);
+      playSuccessBeep();
+      triggerHaptic();
+
       setLastScannedResult({
         code: cleanCode,
         success: true,
+        alreadyCheckedIn: false,
         data: result,
         sourceMethod,
       });
       setScannerStatus('success');
+
+      // Auto-focus back to manual input immediately and clear text
+      if (sourceMethod === 'MANUAL') {
+        setManualCode('');
+        setTimeout(() => {
+          manualInputRef.current?.focus();
+        }, 50);
+      }
 
       // If continuous mode ("Scan Cepat") is enabled, auto-ready for next attendee
       if (continuousMode) {
@@ -150,13 +182,46 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
         }, 1800);
       }
     } catch (err) {
+      const errorMsg =
+        err?.response?.data?.error?.message ||
+        err?.response?.data?.message ||
+        err?.message ||
+        'Gagal memproses kehadiran';
+
+      const isAlreadyCheckedIn =
+        err?.response?.status === 409 ||
+        errorMsg.toLowerCase().includes('sudah tercatat') ||
+        errorMsg.toLowerCase().includes('sudah hadir');
+
+      if (isAlreadyCheckedIn) {
+        playWarningBeep();
+      }
+
       setLastScannedResult({
         code: cleanCode,
         success: false,
-        error: err?.response?.data?.message || err?.message || 'Gagal memproses kehadiran',
+        alreadyCheckedIn: isAlreadyCheckedIn,
+        error: errorMsg,
         sourceMethod,
       });
-      setScannerStatus('error');
+      setScannerStatus(isAlreadyCheckedIn ? 'already_checked_in' : 'error');
+
+      // If manual mode, clear text and refocus immediately so next input is ready
+      if (sourceMethod === 'MANUAL') {
+        setManualCode('');
+        setTimeout(() => {
+          manualInputRef.current?.focus();
+        }, 50);
+      }
+
+      // Auto-resume after notification if already checked in and in continuous mode
+      if (isAlreadyCheckedIn && continuousMode) {
+        autoResumeTimerRef.current = setTimeout(() => {
+          if (isOpen) {
+            handleNextAttendee();
+          }
+        }, 2600);
+      }
     }
   }
 
@@ -292,13 +357,17 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
     };
   }, []);
 
-  // Global keydown shortcuts (Escape to close, Enter to continue on success)
+  // Global keydown shortcuts (Escape to close, Enter to continue on success in camera mode)
   useEffect(() => {
     function handleKeyDown(e) {
       if (!isOpen) return;
       if (e.key === 'Escape') {
         onClose();
-      } else if (e.key === 'Enter' && scannerStatus === 'success') {
+      } else if (
+        e.key === 'Enter' &&
+        (scannerStatus === 'success' || scannerStatus === 'already_checked_in') &&
+        activeMode === 'camera'
+      ) {
         e.preventDefault();
         handleNextAttendee();
       }
@@ -437,16 +506,16 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
             </div>
           )}
 
-          {/* MANUAL MODE: Dedicated Minimalist Input Station */}
-          {activeMode === 'manual' && (scannerStatus === 'idle' || scannerStatus === 'initializing') && (
+          {/* MANUAL MODE: Dedicated Minimalist Input Station (Always mounted in manual mode for persistent auto-focus) */}
+          {activeMode === 'manual' && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="relative z-10 w-full max-w-sm px-5 flex flex-col items-center text-center"
+              className="relative z-10 w-full max-w-sm px-4 flex flex-col items-center text-center"
             >
-              <div className="w-full bg-slate-950/85 backdrop-blur-2xl border border-white/20 rounded-3xl p-6 shadow-2xl">
+              <div className="w-full bg-slate-950/90 backdrop-blur-2xl border border-white/20 rounded-3xl p-5 sm:p-6 shadow-2xl">
                 <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white text-lg shadow-inner">
                   <FontAwesomeIcon icon={['fa-solid', 'fa-keyboard']} />
                 </div>
@@ -454,9 +523,102 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                 <h3 className="text-sm font-bold text-white mb-1 tracking-wide">
                   Input Presensi Manual
                 </h3>
-                <p className="text-[11px] text-slate-400 mb-5 leading-relaxed">
+                <p className="text-[11px] text-slate-400 mb-4 leading-relaxed">
                   Ketik ID Pendaftaran atau scan barcode fisik, lalu tekan <span className="text-white font-semibold">Enter</span>.
                 </p>
+
+                {/* Inline Real-Time Status Banner for Manual Mode */}
+                <AnimatePresence mode="wait">
+                  {scannerStatus === 'processing' && (
+                    <motion.div
+                      key="manual-processing"
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      className="mb-3.5 p-3 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center gap-2 text-xs text-white"
+                    >
+                      <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                      <span>Memverifikasi ID pendaftaran...</span>
+                    </motion.div>
+                  )}
+
+                  {scannerStatus === 'success' && lastScannedResult && (
+                    <motion.div
+                      key="manual-success"
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      className="mb-3.5 p-3.5 rounded-2xl bg-emerald-500/15 border border-emerald-400/40 text-left shadow-lg"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="w-5 h-5 rounded-full bg-emerald-400 text-slate-950 flex items-center justify-center text-[10px] font-bold">
+                          ✓
+                        </span>
+                        <span className="text-[10px] font-bold tracking-wider text-emerald-300 uppercase">
+                          Presensi Berhasil
+                        </span>
+                      </div>
+                      <p className="text-sm font-bold text-white truncate">
+                        {lastScannedResult?.data?.attendance?.name || 'Peserta Terdaftar'}
+                      </p>
+                      <p className="font-mono text-[11px] text-emerald-200/80 mt-0.5 truncate select-all">
+                        {lastScannedResult.code}
+                      </p>
+                      {lastScannedResult?.data?.sourceForm && (
+                        <p className="text-[10px] text-slate-400 truncate mt-1">
+                          Formulir: <span className="text-slate-200">{lastScannedResult.data.sourceForm}</span>
+                        </p>
+                      )}
+                    </motion.div>
+                  )}
+
+                  {scannerStatus === 'already_checked_in' && lastScannedResult && (
+                    <motion.div
+                      key="manual-already-checked-in"
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      className="mb-3.5 p-3.5 rounded-2xl bg-amber-500/15 border border-amber-400/40 text-left shadow-lg"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-[10px] font-bold">
+                          !
+                        </span>
+                        <span className="text-[10px] font-bold tracking-wider text-amber-300 uppercase">
+                          Sudah Hadir Sebelumnya
+                        </span>
+                      </div>
+                      <p className="text-xs text-amber-100 leading-relaxed font-medium">
+                        {lastScannedResult?.error || 'Peserta dengan ID ini sudah tercatat hadir.'}
+                      </p>
+                      <p className="font-mono text-[11px] text-amber-200/80 mt-1 truncate select-all">
+                        {lastScannedResult.code}
+                      </p>
+                    </motion.div>
+                  )}
+
+                  {scannerStatus === 'error' && (
+                    <motion.div
+                      key="manual-error"
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      className="mb-3.5 p-3.5 rounded-2xl bg-rose-500/15 border border-rose-400/40 text-left shadow-lg"
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="w-5 h-5 rounded-full bg-rose-400 text-slate-950 flex items-center justify-center text-[10px] font-bold">
+                          ✕
+                        </span>
+                        <span className="text-[10px] font-bold tracking-wider text-rose-300 uppercase">
+                          Gagal Presensi
+                        </span>
+                      </div>
+                      <p className="text-xs text-rose-100 leading-relaxed font-medium">
+                        {lastScannedResult?.error || errorMessage || 'ID tidak ditemukan atau terjadi kesalahan.'}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <form onSubmit={handleManualFormSubmit} className="space-y-3">
                   <div className="relative">
@@ -464,35 +626,45 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                       ref={manualInputRef}
                       type="text"
                       autoFocus
+                      disabled={scannerStatus === 'processing'}
                       value={manualCode}
                       onChange={(e) => setManualCode(e.target.value.toUpperCase())}
                       placeholder="Contoh: CKF-REG-..."
-                      className="w-full bg-white/10 border border-white/25 focus:border-white text-white placeholder-slate-500 text-sm font-mono tracking-wider rounded-2xl px-4 py-3 text-center focus:outline-none transition shadow-inner"
+                      className="w-full bg-white/10 border border-white/25 focus:border-white focus:ring-2 focus:ring-white/20 text-white placeholder-slate-500 text-sm font-mono tracking-wider rounded-2xl px-4 py-3 text-center focus:outline-none transition shadow-inner disabled:opacity-50"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    disabled={!manualCode.trim()}
+                    disabled={!manualCode.trim() || scannerStatus === 'processing'}
                     className="w-full py-3 px-4 bg-white hover:bg-slate-100 active:scale-98 disabled:opacity-30 disabled:pointer-events-none text-slate-900 rounded-2xl text-xs font-bold transition shadow-lg flex items-center justify-center gap-2"
                   >
-                    <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
-                    <span>Hadirkan Peserta</span>
+                    {scannerStatus === 'processing' ? (
+                      <>
+                        <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-900 border-t-transparent animate-spin" />
+                        <span>Memproses...</span>
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon icon={['fa-solid', 'fa-check']} />
+                        <span>Hadirkan Peserta</span>
+                      </>
+                    )}
                   </button>
                 </form>
 
                 {continuousMode && (
                   <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-center gap-1.5 text-[11px] text-slate-400">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Mode Scan Cepat Aktif (Auto-ready)</span>
+                    <span>Auto-fokus & auto-clear aktif</span>
                   </div>
                 )}
               </div>
             </motion.div>
           )}
 
-          {/* BOTH MODES: Processing State */}
-          {scannerStatus === 'processing' && (
+          {/* CAMERA MODE: Processing State Overlay */}
+          {activeMode === 'camera' && scannerStatus === 'processing' && (
             <div className="absolute inset-0 bg-black/85 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center space-y-3 z-20">
               <div className="w-12 h-12 rounded-full border-3 border-white border-t-transparent animate-spin" />
               <p className="text-xs font-semibold text-slate-200 tracking-wider uppercase">
@@ -501,9 +673,9 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
             </div>
           )}
 
-          {/* BOTH MODES: Success Floating Card Overlay */}
+          {/* CAMERA MODE: Success Floating Card Overlay */}
           <AnimatePresence>
-            {scannerStatus === 'success' && lastScannedResult && (
+            {activeMode === 'camera' && scannerStatus === 'success' && lastScannedResult && (
               <motion.div
                 initial={{ opacity: 0, y: 40, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -533,10 +705,8 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                   onClick={handleNextAttendee}
                   className="w-full py-2.5 px-4 bg-white hover:bg-slate-100 active:scale-98 text-slate-900 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-2"
                 >
-                  <FontAwesomeIcon icon={activeMode === 'camera' ? ['fa-solid', 'fa-qrcode'] : ['fa-solid', 'fa-keyboard']} />
-                  <span>
-                    {activeMode === 'camera' ? 'Scan Peserta Berikutnya' : 'Input Peserta Berikutnya'}
-                  </span>
+                  <FontAwesomeIcon icon={['fa-solid', 'fa-qrcode']} />
+                  <span>Scan Peserta Berikutnya</span>
                 </button>
 
                 {continuousMode && (
@@ -548,9 +718,49 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
             )}
           </AnimatePresence>
 
-          {/* BOTH MODES: Error Floating Card Overlay */}
+          {/* CAMERA MODE: Already Checked In Floating Card Overlay */}
           <AnimatePresence>
-            {scannerStatus === 'error' && (
+            {activeMode === 'camera' && scannerStatus === 'already_checked_in' && lastScannedResult && (
+              <motion.div
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 40, scale: 0.95 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="absolute inset-x-4 bottom-24 z-30 bg-slate-950/95 backdrop-blur-2xl border border-amber-500/30 rounded-3xl p-5 flex flex-col items-center text-center shadow-2xl max-w-sm mx-auto"
+              >
+                <div className="w-12 h-12 bg-amber-400/15 text-amber-300 rounded-full flex items-center justify-center text-xl border border-amber-400/30 mb-2.5 shadow-md">
+                  <FontAwesomeIcon icon={['fa-solid', 'fa-triangle-exclamation']} />
+                </div>
+                <span className="text-[10px] font-bold tracking-widest text-amber-300 uppercase bg-amber-400/15 px-2.5 py-0.5 rounded-full border border-amber-400/30 mb-1">
+                  SUDAH HADIR SEBELUMNYA
+                </span>
+                <p className="text-xs text-amber-100 max-w-xs mt-1.5 leading-relaxed font-medium">
+                  {lastScannedResult?.error || 'Peserta dengan ID ini sudah tercatat hadir.'}
+                </p>
+                <div className="font-mono text-xs text-slate-300 bg-white/10 px-3 py-1 rounded-lg border border-white/15 my-2 select-all">
+                  {lastScannedResult.code}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleNextAttendee}
+                  className="w-full py-2.5 px-4 bg-white hover:bg-slate-100 active:scale-98 text-slate-900 rounded-2xl text-xs font-bold transition shadow-md flex items-center justify-center gap-2 mt-1"
+                >
+                  <FontAwesomeIcon icon={['fa-solid', 'fa-qrcode']} />
+                  <span>Scan Peserta Berikutnya</span>
+                </button>
+
+                {continuousMode && (
+                  <p className="mt-2 text-[10px] text-amber-300/80">
+                    Melanjutkan otomatis dalam hitungan detik...
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* CAMERA MODE: Error Floating Card Overlay */}
+          <AnimatePresence>
+            {activeMode === 'camera' && scannerStatus === 'error' && (
               <motion.div
                 initial={{ opacity: 0, y: 40, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -574,7 +784,7 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                       onClick={handleNextAttendee}
                       className="flex-1 py-2.5 px-3 bg-white hover:bg-slate-100 active:scale-98 text-slate-900 rounded-2xl text-xs font-bold transition shadow-md"
                     >
-                      {activeMode === 'camera' ? 'Ulangi Scan' : 'Ulangi Input'}
+                      Ulangi Scan
                     </button>
                     <button
                       type="button"
@@ -584,16 +794,14 @@ export default function QrScannerModal({ isOpen, onClose, onScan, eventTitle }) 
                       Tutup
                     </button>
                   </div>
-                  {activeMode === 'camera' && (
-                    <button
-                      type="button"
-                      onClick={() => switchMode('manual')}
-                      className="w-full py-2 px-3 bg-white/10 hover:bg-white/15 text-white rounded-2xl text-xs font-medium transition border border-white/15 flex items-center justify-center gap-1.5"
-                    >
-                      <FontAwesomeIcon icon={['fa-solid', 'fa-keyboard']} className="text-xs" />
-                      <span>Beralih ke Input Manual</span>
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => switchMode('manual')}
+                    className="w-full py-2 px-3 bg-white/10 hover:bg-white/15 text-white rounded-2xl text-xs font-medium transition border border-white/15 flex items-center justify-center gap-1.5"
+                  >
+                    <FontAwesomeIcon icon={['fa-solid', 'fa-keyboard']} className="text-xs" />
+                    <span>Beralih ke Input Manual</span>
+                  </button>
                 </div>
               </motion.div>
             )}

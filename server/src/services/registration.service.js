@@ -436,8 +436,8 @@ export const registrationService = {
       });
 
       if (existingAttendance) {
-        throw ApiError.badRequest(
-          `Peserta "${existingAttendance.name}" (ID: ${trimmedCode}) SUDAH tercatat hadir pada pukul ${formatTimeOnly(
+        throw ApiError.conflict(
+          `Peserta "${existingAttendance.name}" (ID: ${trimmedCode}) SUDAH tercatat hadir sebelumnya pada pukul ${formatTimeOnly(
             existingAttendance.checkInTime
           )} WIB.`
         );

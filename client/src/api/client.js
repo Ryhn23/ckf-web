@@ -18,7 +18,12 @@ client.interceptors.response.use(
 
 /** Ambil pesan error dari response API secara konsisten. */
 export function errMsg(err, fallback = 'Terjadi kesalahan, silakan coba lagi') {
-  return err?.response?.data?.error?.message || err?.message || fallback;
+  return (
+    err?.response?.data?.error?.message ||
+    err?.response?.data?.message ||
+    err?.message ||
+    fallback
+  );
 }
 
 export default client;

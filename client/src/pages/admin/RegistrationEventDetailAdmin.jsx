@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,6 +48,17 @@ export default function RegistrationEventDetailAdmin() {
   const [manualSaving, setManualSaving] = useState(false);
   const [manualError, setManualError] = useState('');
   const [manualSuccessMsg, setManualSuccessMsg] = useState('');
+  const manualCodeInputRef = useRef(null);
+
+  // Auto focus manual input when modal opens or mode switches to code
+  useEffect(() => {
+    if (manualModalOpen && manualMode === 'code') {
+      const timer = setTimeout(() => {
+        manualCodeInputRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [manualModalOpen, manualMode]);
 
   // Fetch Event & Attendances
   async function fetchEventData() {
@@ -602,8 +613,10 @@ export default function RegistrationEventDetailAdmin() {
                       ID Pendaftaran Formulir / Tiket <span className="text-rose-500">*</span>
                     </label>
                     <input
+                      ref={manualCodeInputRef}
                       type="text"
                       required
+                      autoFocus
                       value={inputCode}
                       onChange={(e) => setInputCode(e.target.value.toUpperCase())}
                       placeholder="Contoh: CKF-SAFIR-A1B2C3D4"

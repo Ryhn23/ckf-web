@@ -91,11 +91,11 @@ export default function RegistrationEventDetailAdmin() {
     setSearch(searchInput);
   }
 
-  // Handle QR scan checkin callback
-  async function handleScannerScan(scannedCode) {
+  // Handle QR scan / manual checkin callback
+  async function handleScannerScan(scannedCode, method = 'QR_SCAN') {
     const res = await checkInAttendee(eventId, {
       code: scannedCode,
-      method: 'QR_SCAN',
+      method: method || 'QR_SCAN',
     });
     // Refresh table in background
     fetchAttendances();

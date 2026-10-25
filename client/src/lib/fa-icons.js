@@ -96,6 +96,9 @@ import {
   faCamera,
   faIdCard,
   faKeyboard,
+  faSort,
+  faSortUp,
+  faSortDown,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faFacebookF,
@@ -214,6 +217,9 @@ library.add(
   faCamera,
   faIdCard,
   faKeyboard,
+  faSort,
+  faSortUp,
+  faSortDown,
   faFacebookF,
   faInstagram,
   faLinkedin,

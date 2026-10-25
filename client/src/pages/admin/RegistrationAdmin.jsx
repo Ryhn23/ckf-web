@@ -13,6 +13,7 @@ import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import StatusBadge from '../../components/ui/StatusBadge';
+import SortTh from '../../components/ui/SortTh';
 import { formatDate } from '../../utils/formatDate';
 import ModalPortal from '../../components/ui/ModalPortal';
 
@@ -23,6 +24,8 @@ export default function RegistrationAdmin() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [sortField, setSortField] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -43,6 +46,18 @@ export default function RegistrationAdmin() {
   const [linkedFormId, setLinkedFormId] = useState('');
   const [eventIsActive, setEventIsActive] = useState(true);
 
+  // Handle Sort Column Tap
+  function handleSort(field) {
+    if (sortField === field) {
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      const defaultDesc = ['createdAt', 'eventDate', 'attendances'];
+      setSortOrder(defaultDesc.includes(field) ? 'desc' : 'asc');
+    }
+    setPage(1);
+  }
+
   // Fetch events list
   async function fetchEvents() {
     setLoading(true);
@@ -53,6 +68,8 @@ export default function RegistrationAdmin() {
         limit: 10,
         search: search.trim() || undefined,
         isActive: statusFilter || undefined,
+        sortBy: sortField,
+        order: sortOrder,
       });
       setEvents(res.data || []);
       setMeta(res.meta || { page: 1, limit: 10, total: 0, totalPages: 1 });
@@ -76,7 +93,7 @@ export default function RegistrationAdmin() {
 
   useEffect(() => {
     fetchEvents();
-  }, [page, statusFilter]);
+  }, [page, statusFilter, sortField, sortOrder]);
 
   useEffect(() => {
     loadAvailableForms();
@@ -322,10 +339,18 @@ export default function RegistrationAdmin() {
               <thead>
                 <tr>
                   <th className="admin-th w-12 text-center">No</th>
-                  <th className="admin-th">Nama Acara & Jadwal</th>
-                  <th className="admin-th">Tautan Formulir Kustom</th>
-                  <th className="admin-th text-center">Total Presensi</th>
-                  <th className="admin-th text-center">Status</th>
+                  <SortTh field="title" sortField={sortField} sortOrder={sortOrder} onSort={handleSort}>
+                    Nama Acara & Jadwal
+                  </SortTh>
+                  <SortTh field="linkedForm" sortField={sortField} sortOrder={sortOrder} onSort={handleSort}>
+                    Tautan Formulir Kustom
+                  </SortTh>
+                  <SortTh field="attendances" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} align="center">
+                    Total Presensi
+                  </SortTh>
+                  <SortTh field="isActive" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} align="center">
+                    Status
+                  </SortTh>
                   <th className="admin-th text-right">Aksi</th>
                 </tr>
               </thead>

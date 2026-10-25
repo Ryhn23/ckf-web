@@ -115,7 +115,7 @@ export const registrationService = {
   /**
    * List events with pagination and attendance counts
    */
-  async listEvents({ search = '', page = 1, limit = 10, isActive = null } = {}) {
+  async listEvents({ search = '', page = 1, limit = 10, isActive = null, sortBy = 'createdAt', order = 'desc' } = {}) {
     const pageNum = Math.max(parseInt(page) || 1, 1);
     const limitNum = Math.min(Math.max(parseInt(limit) || 10, 1), 100);
     const skip = (pageNum - 1) * limitNum;
@@ -133,11 +133,28 @@ export const registrationService = {
       where.isActive = isActive === 'true' || isActive === true;
     }
 
+    const sortDir = order?.toLowerCase() === 'asc' ? 'asc' : 'desc';
+    let orderBy = { createdAt: sortDir };
+
+    if (sortBy === 'title') {
+      orderBy = { title: sortDir };
+    } else if (sortBy === 'eventDate') {
+      orderBy = { eventDate: sortDir };
+    } else if (sortBy === 'createdAt') {
+      orderBy = { createdAt: sortDir };
+    } else if (sortBy === 'isActive') {
+      orderBy = { isActive: sortDir };
+    } else if (sortBy === 'attendances') {
+      orderBy = { attendances: { _count: sortDir } };
+    } else if (sortBy === 'linkedForm') {
+      orderBy = { linkedForm: { title: sortDir } };
+    }
+
     const [total, events, totalActive, totalAttendances, attendancesToday] = await Promise.all([
       prisma.registrationEvent.count({ where }),
       prisma.registrationEvent.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy,
         skip,
         take: limitNum,
         include: {
@@ -334,7 +351,7 @@ export const registrationService = {
   /**
    * List attendances for an event
    */
-  async listAttendances(eventId, { search = '', method = '', page = 1, limit = 20 } = {}) {
+  async listAttendances(eventId, { search = '', method = '', page = 1, limit = 20, sortBy = 'checkInTime', order = 'desc' } = {}) {
     const event = await prisma.registrationEvent.findUnique({
       where: { id: eventId },
     });
@@ -361,11 +378,30 @@ export const registrationService = {
       ];
     }
 
+    const sortDir = order?.toLowerCase() === 'asc' ? 'asc' : 'desc';
+    let orderBy = { checkInTime: sortDir };
+
+    if (sortBy === 'checkInTime') {
+      orderBy = { checkInTime: sortDir };
+    } else if (sortBy === 'registrationId') {
+      orderBy = { registrationId: sortDir };
+    } else if (sortBy === 'name') {
+      orderBy = { name: sortDir };
+    } else if (sortBy === 'phone') {
+      orderBy = { phone: sortDir };
+    } else if (sortBy === 'institution') {
+      orderBy = { institution: sortDir };
+    } else if (sortBy === 'checkInMethod') {
+      orderBy = { checkInMethod: sortDir };
+    } else if (sortBy === 'notes') {
+      orderBy = { notes: sortDir };
+    }
+
     const [total, attendances, qrScanCount, manualCount] = await Promise.all([
       prisma.eventAttendance.count({ where }),
       prisma.eventAttendance.findMany({
         where,
-        orderBy: { checkInTime: 'desc' },
+        orderBy,
         skip,
         take: limitNum,
         include: {

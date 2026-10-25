@@ -84,7 +84,7 @@ export const customFormService = {
   /**
    * List forms with pagination, search, and submission counts
    */
-  async listForms({ search = '', page = 1, limit = 10, isActive = null } = {}) {
+  async listForms({ search = '', page = 1, limit = 10, isActive = null, sortBy = 'createdAt', order = 'desc' } = {}) {
     const pageNum = Math.max(parseInt(page) || 1, 1);
     const limitNum = Math.min(Math.max(parseInt(limit) || 10, 1), 100);
     const skip = (pageNum - 1) * limitNum;
@@ -102,11 +102,24 @@ export const customFormService = {
       where.isActive = isActive === 'true' || isActive === true;
     }
 
+    const sortDir = order?.toLowerCase() === 'asc' ? 'asc' : 'desc';
+    let orderBy = { createdAt: sortDir };
+
+    if (sortBy === 'title') {
+      orderBy = { title: sortDir };
+    } else if (sortBy === 'createdAt') {
+      orderBy = { createdAt: sortDir };
+    } else if (sortBy === 'isActive') {
+      orderBy = { isActive: sortDir };
+    } else if (sortBy === 'submissions') {
+      orderBy = { submissions: { _count: sortDir } };
+    }
+
     const [total, forms, totalActive, totalSubmissions, recentSubmissions] = await Promise.all([
       prisma.customForm.count({ where }),
       prisma.customForm.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy,
         skip,
         take: limitNum,
         include: {
@@ -468,7 +481,7 @@ export const customFormService = {
   /**
    * List submissions for a form
    */
-  async listSubmissions(formId, { search = '', status = '', page = 1, limit = 20 } = {}) {
+  async listSubmissions(formId, { search = '', status = '', page = 1, limit = 20, sortBy = 'createdAt', order = 'desc' } = {}) {
     const form = await prisma.customForm.findUnique({
       where: { id: formId },
     });
@@ -492,11 +505,22 @@ export const customFormService = {
       ];
     }
 
+    const sortDir = order?.toLowerCase() === 'asc' ? 'asc' : 'desc';
+    let orderBy = { createdAt: sortDir };
+
+    if (sortBy === 'id') {
+      orderBy = { id: sortDir };
+    } else if (sortBy === 'createdAt') {
+      orderBy = { createdAt: sortDir };
+    } else if (sortBy === 'status') {
+      orderBy = { status: sortDir };
+    }
+
     const [total, submissions, counts] = await Promise.all([
       prisma.customFormSubmission.count({ where }),
       prisma.customFormSubmission.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy,
         skip,
         take: limitNum,
       }),

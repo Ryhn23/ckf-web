@@ -12,6 +12,7 @@ import {
 import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
+import SortTh from '../../components/ui/SortTh';
 import { formatDate } from '../../utils/formatDate';
 import QrScannerModal from '../../components/admin/QrScannerModal';
 import ModalPortal from '../../components/ui/ModalPortal';
@@ -25,10 +26,24 @@ export default function RegistrationEventDetailAdmin() {
   const [meta, setMeta] = useState({ page: 1, limit: 20, total: 0, totalPages: 1 });
   const [page, setPage] = useState(1);
   const [methodFilter, setMethodFilter] = useState('');
+  const [sortField, setSortField] = useState('checkInTime');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Handle Sort Column Tap
+  function handleSort(field) {
+    if (sortField === field) {
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      const defaultDesc = ['checkInTime'];
+      setSortOrder(defaultDesc.includes(field) ? 'desc' : 'asc');
+    }
+    setPage(1);
+  }
 
   // Export State
   const [exporting, setExporting] = useState(false);
@@ -78,6 +93,8 @@ export default function RegistrationEventDetailAdmin() {
         limit: 20,
         method: methodFilter || undefined,
         search: search.trim() || undefined,
+        sortBy: sortField,
+        order: sortOrder,
       });
       setAttendances(res.data || []);
       setMeta(res.meta || { page: 1, limit: 20, total: 0, totalPages: 1 });
@@ -95,7 +112,7 @@ export default function RegistrationEventDetailAdmin() {
 
   useEffect(() => {
     fetchAttendances();
-  }, [eventId, page, methodFilter, search]);
+  }, [eventId, page, methodFilter, search, sortField, sortOrder]);
 
   function handleSearchSubmit(e) {
     e.preventDefault();
@@ -415,12 +432,24 @@ export default function RegistrationEventDetailAdmin() {
               <thead>
                 <tr>
                   <th className="admin-th w-12 text-center">No</th>
-                  <th className="admin-th whitespace-nowrap">Waktu Hadir</th>
-                  <th className="admin-th whitespace-nowrap">ID Pendaftaran / Tiket</th>
-                  <th className="admin-th">Nama Peserta</th>
-                  <th className="admin-th">Kontak & Instansi</th>
-                  <th className="admin-th text-center">Metode Presensi</th>
-                  <th className="admin-th">Sumber / Catatan</th>
+                  <SortTh field="checkInTime" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} className="whitespace-nowrap">
+                    Waktu Hadir
+                  </SortTh>
+                  <SortTh field="registrationId" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} className="whitespace-nowrap">
+                    ID Pendaftaran / Tiket
+                  </SortTh>
+                  <SortTh field="name" sortField={sortField} sortOrder={sortOrder} onSort={handleSort}>
+                    Nama Peserta
+                  </SortTh>
+                  <SortTh field="institution" sortField={sortField} sortOrder={sortOrder} onSort={handleSort}>
+                    Kontak & Instansi
+                  </SortTh>
+                  <SortTh field="checkInMethod" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} align="center">
+                    Metode Presensi
+                  </SortTh>
+                  <SortTh field="notes" sortField={sortField} sortOrder={sortOrder} onSort={handleSort}>
+                    Sumber / Catatan
+                  </SortTh>
                   <th className="admin-th text-right">Aksi</th>
                 </tr>
               </thead>

@@ -14,6 +14,7 @@ import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import StatusBadge from '../../components/ui/StatusBadge';
+import SortTh from '../../components/ui/SortTh';
 import { formatDate } from '../../utils/formatDate';
 import ModalPortal from '../../components/ui/ModalPortal';
 
@@ -50,6 +51,8 @@ export default function CustomFormsAdmin() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [sortField, setSortField] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -76,6 +79,18 @@ export default function CustomFormsAdmin() {
   const [copiedSlug, setCopiedSlug] = useState(null);
   const coverFileInputRef = useRef(null);
 
+  // Handle Sort Column Tap
+  function handleSort(field) {
+    if (sortField === field) {
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      const defaultDesc = ['createdAt', 'submissions', 'fields'];
+      setSortOrder(defaultDesc.includes(field) ? 'desc' : 'asc');
+    }
+    setPage(1);
+  }
+
   // Fetch forms
   async function fetchForms() {
     setLoading(true);
@@ -86,8 +101,20 @@ export default function CustomFormsAdmin() {
         limit: 10,
         search: search.trim() || undefined,
         isActive: statusFilter || undefined,
+        sortBy: sortField === 'fields' ? 'createdAt' : sortField,
+        order: sortOrder,
       });
-      setForms(res.data || []);
+
+      let fetchedForms = res.data || [];
+      if (sortField === 'fields') {
+        fetchedForms = [...fetchedForms].sort((a, b) => {
+          const countA = Array.isArray(a.fields) ? a.fields.length : 0;
+          const countB = Array.isArray(b.fields) ? b.fields.length : 0;
+          return sortOrder === 'asc' ? countA - countB : countB - countA;
+        });
+      }
+
+      setForms(fetchedForms);
       setMeta(res.meta || { page: 1, limit: 10, total: 0, totalPages: 1 });
       if (res.stats) setStats(res.stats);
     } catch (err) {
@@ -99,7 +126,7 @@ export default function CustomFormsAdmin() {
 
   useEffect(() => {
     fetchForms();
-  }, [page, statusFilter]);
+  }, [page, statusFilter, sortField, sortOrder]);
 
   function handleSearchSubmit(e) {
     e.preventDefault();
@@ -477,11 +504,21 @@ export default function CustomFormsAdmin() {
             <table className="w-full text-left text-sm text-slate-600">
               <thead>
                 <tr>
-                  <th className="admin-th">Formulir & Link Khusus</th>
-                  <th className="admin-th text-center">Jumlah Field</th>
-                  <th className="admin-th text-center">Respon Masuk</th>
-                  <th className="admin-th text-center">Status</th>
-                  <th className="admin-th text-right">Tanggal Buat</th>
+                  <SortTh field="title" sortField={sortField} sortOrder={sortOrder} onSort={handleSort}>
+                    Formulir & Link Khusus
+                  </SortTh>
+                  <SortTh field="fields" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} align="center">
+                    Jumlah Field
+                  </SortTh>
+                  <SortTh field="submissions" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} align="center">
+                    Respon Masuk
+                  </SortTh>
+                  <SortTh field="isActive" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} align="center">
+                    Status
+                  </SortTh>
+                  <SortTh field="createdAt" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} align="right">
+                    Tanggal Buat
+                  </SortTh>
                   <th className="admin-th text-right">Aksi</th>
                 </tr>
               </thead>

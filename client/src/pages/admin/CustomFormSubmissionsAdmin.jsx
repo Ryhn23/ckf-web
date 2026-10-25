@@ -13,6 +13,7 @@ import { errMsg } from '../../api/client';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import StatusBadge from '../../components/ui/StatusBadge';
+import SortTh from '../../components/ui/SortTh';
 import { formatDate } from '../../utils/formatDate';
 import { generateSubmissionPdf } from '../../utils/generateSubmissionPdf';
 import { downloadQrCodeImage } from '../../utils/generateQrCode';
@@ -96,10 +97,24 @@ export default function CustomFormSubmissionsAdmin() {
   const [meta, setMeta] = useState({ page: 1, limit: 20, total: 0, totalPages: 1 });
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('');
+  const [sortField, setSortField] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Handle Sort Tap
+  function handleSort(field) {
+    if (sortField === field) {
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      const defaultDesc = ['createdAt', 'images'];
+      setSortOrder(defaultDesc.includes(field) ? 'desc' : 'asc');
+    }
+    setPage(1);
+  }
 
   // Export State
   const [exporting, setExporting] = useState(false);
@@ -124,11 +139,14 @@ export default function CustomFormSubmissionsAdmin() {
     setLoading(true);
     setError(null);
     try {
+      const isDbSort = ['id', 'createdAt', 'status'].includes(sortField);
       const res = await getCustomFormSubmissions(formId, {
         page,
         limit: 20,
         status: statusFilter || undefined,
         search: search.trim() || undefined,
+        sortBy: isDbSort ? sortField : 'createdAt',
+        order: isDbSort ? sortOrder : 'desc',
       });
       setForm(res.form || null);
       setSubmissions(res.data || []);
@@ -143,7 +161,7 @@ export default function CustomFormSubmissionsAdmin() {
 
   useEffect(() => {
     fetchSubmissions();
-  }, [formId, page, statusFilter, search]);
+  }, [formId, page, statusFilter, search, sortField, sortOrder]);
 
   function handleSearchSubmit(e) {
     e?.preventDefault();
@@ -244,12 +262,54 @@ export default function CustomFormSubmissionsAdmin() {
 
   const fields = Array.isArray(form?.fields) ? form.fields : [];
 
+  // Client-side sorting enhancement (covers dynamic fields & image counts seamlessly)
+  const sortedSubmissions = useMemo(() => {
+    if (!submissions || submissions.length === 0) return [];
+    if (!sortField) return submissions;
+
+    return [...submissions].sort((a, b) => {
+      let valA, valB;
+
+      if (sortField === 'id') {
+        valA = a.id || '';
+        valB = b.id || '';
+      } else if (sortField === 'createdAt') {
+        valA = new Date(a.createdAt).getTime();
+        valB = new Date(b.createdAt).getTime();
+      } else if (sortField === 'status') {
+        valA = a.status || '';
+        valB = b.status || '';
+      } else if (sortField === 'images') {
+        valA = getSubmissionImages(a, fields).length;
+        valB = getSubmissionImages(b, fields).length;
+      } else if (sortField.startsWith('field_')) {
+        const fieldId = sortField.replace('field_', '');
+        valA = a.data?.[fieldId] ?? '';
+        valB = b.data?.[fieldId] ?? '';
+        if (typeof valA === 'number' && typeof valB === 'number') {
+          return sortOrder === 'asc' ? valA - valB : valB - valA;
+        }
+        valA = String(valA).toLowerCase();
+        valB = String(valB).toLowerCase();
+      } else {
+        return 0;
+      }
+
+      if (typeof valA === 'number' && typeof valB === 'number') {
+        return sortOrder === 'asc' ? valA - valB : valB - valA;
+      }
+
+      const cmp = String(valA).localeCompare(String(valB), 'id', { numeric: true, sensitivity: 'base' });
+      return sortOrder === 'asc' ? cmp : -cmp;
+    });
+  }, [submissions, sortField, sortOrder, fields]);
+
   // Submissions on current page that have at least one image
   const respondentsWithImages = useMemo(() => {
-    return submissions
+    return sortedSubmissions
       .map((s) => ({ sub: s, images: getSubmissionImages(s, fields) }))
       .filter((item) => item.images.length > 0);
-  }, [submissions, fields]);
+  }, [sortedSubmissions, fields]);
 
   // Open Lightbox for a specific submission and image index
   function handleOpenLightbox(sub, initialImgIndex = 0) {
@@ -608,21 +668,36 @@ export default function CustomFormSubmissionsAdmin() {
               <thead className="bg-slate-50/80 text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-slate-200/80">
                 <tr>
                   <th className="admin-th w-12 text-center">No</th>
-                  <th className="admin-th whitespace-nowrap">ID Pendaftaran</th>
-                  <th className="admin-th whitespace-nowrap">Tanggal Masuk</th>
+                  <SortTh field="id" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} className="whitespace-nowrap">
+                    ID Pendaftaran
+                  </SortTh>
+                  <SortTh field="createdAt" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} className="whitespace-nowrap">
+                    Tanggal Masuk
+                  </SortTh>
                   {/* Dynamic first 3 field headers */}
                   {fields.slice(0, 3).map((f) => (
-                    <th key={f.id} className="admin-th">
+                    <SortTh
+                      key={f.id}
+                      field={`field_${f.id}`}
+                      sortField={sortField}
+                      sortOrder={sortOrder}
+                      onSort={handleSort}
+                      title={`Klik untuk mengurutkan berdasarkan "${f.label}"`}
+                    >
                       {f.label}
-                    </th>
+                    </SortTh>
                   ))}
-                  <th className="admin-th text-center">Berkas / Foto</th>
-                  <th className="admin-th text-center">Status</th>
+                  <SortTh field="images" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} align="center">
+                    Berkas / Foto
+                  </SortTh>
+                  <SortTh field="status" sortField={sortField} sortOrder={sortOrder} onSort={handleSort} align="center">
+                    Status
+                  </SortTh>
                   <th className="admin-th text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200/60">
-                {submissions.map((sub, index) => {
+                {sortedSubmissions.map((sub, index) => {
                   const subData = sub.data || {};
                   const rowNum = (meta.page - 1) * meta.limit + index + 1;
 

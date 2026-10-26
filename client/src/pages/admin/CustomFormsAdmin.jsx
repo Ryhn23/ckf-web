@@ -457,18 +457,28 @@ export default function CustomFormsAdmin() {
         </div>
 
         <div className="flex items-center gap-2">
-          <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-64">
+          <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-72">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari formulir…"
-              className="admin-input pl-8 pr-4 py-1.5 w-full text-xs"
+              placeholder="Cari judul, kode ID, atau slug formulir…"
+              className="admin-input pl-8 pr-7 py-1.5 w-full text-xs"
             />
             <FontAwesomeIcon
               icon={['fa-solid', 'fa-magnifying-glass']}
               className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"
             />
+            {search && (
+              <button
+                type="button"
+                onClick={() => { setSearch(''); setPage(1); }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 text-xs"
+                title="Hapus pencarian"
+              >
+                <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
+              </button>
+            )}
           </form>
 
           <button

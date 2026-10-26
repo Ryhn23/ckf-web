@@ -615,13 +615,13 @@ export default function CustomFormSubmissionsAdmin() {
         </div>
 
         <div className="flex items-center gap-2">
-          <form onSubmit={handleSearchSubmit} className="relative flex-1 sm:w-64">
+          <form onSubmit={handleSearchSubmit} className="relative flex-1 sm:w-72">
             <input
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Cari ID Pendaftaran..."
-              className="admin-input py-1.5 pl-8 pr-7 text-xs w-full font-mono placeholder:font-sans"
+              placeholder="Cari ID, nama, kontak, atau jawaban…"
+              className="admin-input py-1.5 pl-8 pr-7 text-xs w-full"
             />
             <FontAwesomeIcon
               icon={['fa-solid', 'fa-magnifying-glass']}

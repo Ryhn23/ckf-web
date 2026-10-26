@@ -388,18 +388,28 @@ export default function RegistrationEventDetailAdmin() {
         </div>
 
         <div className="flex items-center gap-2">
-          <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-64">
+          <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
             <input
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Cari nama, ID, kontak…"
-              className="admin-input pl-8 pr-4 py-1.5 w-full text-xs"
+              placeholder="Cari nama, ID, instansi, kontak, catatan…"
+              className="admin-input pl-8 pr-7 py-1.5 w-full text-xs"
             />
             <FontAwesomeIcon
               icon={['fa-solid', 'fa-magnifying-glass']}
               className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"
             />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={() => { setSearchInput(''); setSearch(''); setPage(1); }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 text-xs"
+                title="Hapus pencarian"
+              >
+                <FontAwesomeIcon icon={['fa-solid', 'fa-xmark']} />
+              </button>
+            )}
           </form>
 
           <button

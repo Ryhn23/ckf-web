@@ -95,6 +95,7 @@ export const customFormService = {
         { title: { contains: search.trim(), mode: 'insensitive' } },
         { slug: { contains: search.trim(), mode: 'insensitive' } },
         { description: { contains: search.trim(), mode: 'insensitive' } },
+        { formCode: { contains: search.trim(), mode: 'insensitive' } },
       ];
     }
 
@@ -499,10 +500,14 @@ export const customFormService = {
       where.status = status.trim();
     }
     if (search && search.trim()) {
-      where.OR = [
-        { id: { contains: search.trim(), mode: 'insensitive' } },
-        { adminNotes: { contains: search.trim(), mode: 'insensitive' } },
-      ];
+      const term = `%${search.trim()}%`;
+      const matched = await prisma.$queryRawUnsafe(
+        `SELECT id FROM "CustomFormSubmission" WHERE "formId" = $1 AND ("id" ILIKE $2 OR "adminNotes" ILIKE $2 OR CAST("data" AS text) ILIKE $2)`,
+        formId,
+        term
+      );
+      const matchedIds = matched.map((r) => r.id);
+      where.id = { in: matchedIds };
     }
 
     const sortDir = order?.toLowerCase() === 'asc' ? 'asc' : 'desc';

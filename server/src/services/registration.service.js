@@ -126,6 +126,9 @@ export const registrationService = {
         { title: { contains: search.trim(), mode: 'insensitive' } },
         { description: { contains: search.trim(), mode: 'insensitive' } },
         { location: { contains: search.trim(), mode: 'insensitive' } },
+        { linkedForm: { title: { contains: search.trim(), mode: 'insensitive' } } },
+        { linkedForm: { formCode: { contains: search.trim(), mode: 'insensitive' } } },
+        { linkedForm: { slug: { contains: search.trim(), mode: 'insensitive' } } },
       ];
     }
 
@@ -369,12 +372,24 @@ export const registrationService = {
       where.checkInMethod = method.trim();
     }
     if (search && search.trim()) {
+      const term = `%${search.trim()}%`;
+      const matched = await prisma.$queryRawUnsafe(
+        `SELECT id FROM "EventAttendance" WHERE "eventId" = $1 AND (
+          "registrationId" ILIKE $2 OR
+          "name" ILIKE $2 OR
+          "phone" ILIKE $2 OR
+          "email" ILIKE $2 OR
+          "institution" ILIKE $2 OR
+          "notes" ILIKE $2 OR
+          CAST("formData" AS text) ILIKE $2
+        )`,
+        eventId,
+        term
+      );
+      const matchedIds = matched.map((r) => r.id);
       where.OR = [
-        { registrationId: { contains: search.trim(), mode: 'insensitive' } },
-        { name: { contains: search.trim(), mode: 'insensitive' } },
-        { phone: { contains: search.trim(), mode: 'insensitive' } },
-        { email: { contains: search.trim(), mode: 'insensitive' } },
-        { institution: { contains: search.trim(), mode: 'insensitive' } },
+        { id: { in: matchedIds } },
+        { submission: { form: { title: { contains: search.trim(), mode: 'insensitive' } } } },
       ];
     }
 
